@@ -7,6 +7,7 @@ import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import hamburgur from '../../public/hamburger.svg';
 import { FC, PropsWithChildren } from 'react';
+import { useRouter } from 'next/router';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -70,6 +71,7 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
 };
 
 const Home = () => {
+  const router = useRouter();
   return (
     <>
       <div className="mx-auto px-4">
@@ -174,6 +176,9 @@ const Home = () => {
 
           <div className="flex items-center justify-center">
             <button
+              onClick={() => {
+                router.push('/plan/new/name');
+              }}
               data-tooltip-target="tooltip-new"
               type="button"
               className="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
