@@ -1,11 +1,6 @@
 import { FC, useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
-interface DateRange {
-  startDate: Date | null;
-  endDate: Date | null;
-}
-
 const DateSelector: FC = () => {
   const [value, setValue] = useState({
     startDate: new Date(),
