@@ -12,6 +12,10 @@ const Theme: FC = () => {
     setThemeList([...themeList, theme]);
     setTheme('');
   };
+  const onClickCreate = () => {
+    // send plan data to backend
+    router.push('/plan/123');
+  };
   return (
     <div className="relative min-h-screen">
       <div>여행 태그를 입력해주세요.</div>
@@ -72,7 +76,9 @@ const Theme: FC = () => {
         <button className="btn" onClick={() => router.push('/plan/new/date')}>
           뒤로가기
         </button>
-        <button className="btn btn-primary">다음</button>
+        <button className="btn btn-primary" onClick={onClickCreate}>
+          생성
+        </button>
       </div>
     </div>
   );
