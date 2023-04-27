@@ -15,7 +15,6 @@ const DateSelector: FC = () => {
   };
   return (
     <div className="relative min-h-screen">
-      <div>뒤로가기</div>
       <div>언제 떠나세요?</div>
       <div>몇일동안 여행하시나요?</div>
       <Datepicker
@@ -23,8 +22,10 @@ const DateSelector: FC = () => {
         onChange={handleValueChange}
         showShortcuts={true}
       />
-      <div className="absolute bottom-1 right-1">
-        <button className="btn btn-ghost">취소</button>
+      <div className="absolute bottom-1 right-1 space-x-2">
+        <button className="btn" onClick={() => router.push('/plan/new/num')}>
+          뒤로가기
+        </button>
         <button
           className="btn btn-primary"
           onClick={() => router.push('/plan/new/theme')}

@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 
 const Theme: FC = () => {
+  const router = useRouter();
   const [themeList, setThemeList] = useState<string[]>([]);
   const [theme, setTheme] = useState('');
   const addTheme = () => {
@@ -66,8 +68,10 @@ const Theme: FC = () => {
         ))}
       </div>
 
-      <div className="absolute bottom-1 right-1">
-        <button className="btn btn-ghost">취소</button>
+      <div className="absolute bottom-1 right-1 space-x-2">
+        <button className="btn" onClick={() => router.push('/plan/new/date')}>
+          뒤로가기
+        </button>
         <button className="btn btn-primary">다음</button>
       </div>
     </div>
