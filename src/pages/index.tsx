@@ -1,13 +1,12 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import styles from '@/styles/Home.module.css';
 import younha from '../../public/younha.png';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
-import hamburgur from '../../public/hamburger.svg';
 import { FC, PropsWithChildren } from 'react';
 import { useRouter } from 'next/router';
+import Topbar from '@/components/Topbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -74,14 +73,11 @@ const Home = () => {
   const router = useRouter();
   return (
     <>
-      <div className="mx-auto px-4">
-        <div className="relative flex items-center justify-between h-12">
-          <div className="flex-shrink-0 flex items-center font-bold text-xl">
-            TripTopping
-          </div>
-          <Image src={hamburgur} alt="hamburgur" />
-        </div>
-      </div>
+      <Head>
+        <title>Trip Topping</title>
+      </Head>
+
+      <Topbar />
 
       <div className="carousel w-full h-72">
         <div id="item1" className="carousel-item w-full relative">
