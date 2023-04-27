@@ -1,7 +1,5 @@
-import Image from 'next/image';
 import { FC } from 'react';
-
-import hamburgur from '../../../public/hamburger.svg';
+import MenuToggle from './MenuToggle';
 
 const Topbar: FC = () => {
   return (
@@ -10,7 +8,7 @@ const Topbar: FC = () => {
         <div className="flex-shrink-0 flex items-center font-bold text-xl">
           TripTopping
         </div>
-        <Image src={hamburgur} alt="hamburgur" />
+        <MenuToggle />
       </div>
     </div>
   );
