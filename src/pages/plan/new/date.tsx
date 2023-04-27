@@ -1,7 +1,9 @@
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 
 const DateSelector: FC = () => {
+  const router = useRouter();
   const [value, setValue] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -23,7 +25,12 @@ const DateSelector: FC = () => {
       />
       <div className="absolute bottom-1 right-1">
         <button className="btn btn-ghost">취소</button>
-        <button className="btn btn-primary">다음</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => router.push('/plan/new/theme')}
+        >
+          다음
+        </button>
       </div>
     </div>
   );

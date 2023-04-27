@@ -1,6 +1,8 @@
+import { useRouter } from 'next/router';
 import { FC } from 'react';
 
 const Name: FC = () => {
+  const router = useRouter();
   return (
     <div>
       <div>뒤로가기</div>
@@ -12,7 +14,12 @@ const Name: FC = () => {
       />
       <div className="flex">
         <button className="btn btn-ghost">취소</button>
-        <button className="btn btn-primary">다음</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => router.push('/plan/new/num')}
+        >
+          다음
+        </button>
       </div>
     </div>
   );

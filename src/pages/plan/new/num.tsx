@@ -2,8 +2,10 @@ import { FC, useState } from 'react';
 import plus from '../../../../public/plus.svg';
 import dash from '../../../../public/dash.svg';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const Num: FC = () => {
+  const router = useRouter();
   const [num, setNum] = useState(1);
   const onChange = (plus: boolean) => {
     if (plus) {
@@ -26,7 +28,12 @@ const Num: FC = () => {
       </button>
       <div className="flex">
         <button className="btn btn-ghost">취소</button>
-        <button className="btn btn-primary">다음</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => router.push('/plan/new/date')}
+        >
+          다음
+        </button>
       </div>
     </div>
   );
