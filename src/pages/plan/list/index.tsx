@@ -2,7 +2,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { FC, PropsWithChildren } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-
+import Topbar from '@/components/Topbar';
 import plusCircle from '../../../../public/pluscircle.svg'
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -44,40 +44,44 @@ const PlanPage: NextPage = ({}) => {
   const router = useRouter();
 
   return (
-    <div>
-        <div className="p-4 pt-8">
-        <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-              내 여행 계획
-            </h5>
-          </div>
-          <div className="flow-root">
-            <ul
-              role="list"
-              className="divide-y divide-gray-200 dark:divide-gray-700"
-            >
-              <li className="py-3 sm:py-1">
-                <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                  <div className="flex items-center space-x-4">
-                    <Image src={plusCircle} alt="#" />
-                    <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                      새 여행계획을 만들어보세요
-                    </p>
-                  </div>
-                </a>
-              </li>
-              <li className="py-3 sm:py-1">
-                <ItineraryList />
-              </li>
-              <li className="py-3 sm:py-1">
-                <ItineraryList />
-              </li>
-            </ul>
+    <>
+      <Topbar />
+
+      <div>
+          <div className="p-4 pt-8">
+          <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                내 여행 계획
+              </h5>
+            </div>
+            <div className="flow-root">
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                <li className="py-3 sm:py-1">
+                  <a href="/plan/new/name" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <div className="flex items-center space-x-4">
+                      <Image src={plusCircle} alt="#" />
+                      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                        새 여행계획을 만들어보세요
+                      </p>
+                    </div>
+                  </a>
+                </li>
+                <li className="py-3 sm:py-1">
+                  <ItineraryList />
+                </li>
+                <li className="py-3 sm:py-1">
+                  <ItineraryList />
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

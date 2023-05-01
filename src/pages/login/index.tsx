@@ -18,7 +18,7 @@ const LoginPage: NextPage = ({}) => {
   return (
     <div>
       <div>로그인</div>
-      <GoogleOAuthProvider clientId="your clientId">
+      <GoogleOAuthProvider clientId="1089144693555-800hflqusq9stvt16h3qilrivop7v560.apps.googleusercontent.com">
         <GoogleLogin
           onSuccess={credentialResponse => {
             console.log(credentialResponse);

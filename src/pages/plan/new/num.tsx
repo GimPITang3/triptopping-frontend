@@ -32,7 +32,7 @@ const Num: FC = () => {
         </button>
         <button
           className="btn btn-primary"
-          onClick={() => router.push('/plan/new/date')}
+          onClick={() => router.push('/plan/new/budget')}
         >
           다음
         </button>
