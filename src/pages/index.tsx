@@ -16,18 +16,21 @@ const TestComponent: FC<PropsWithChildren> = ({ children }) => {
 
 const ItineraryList: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-              도쿄 여행
-            </p>
-            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-              D-1 | 4.17(월) - 4.21(금)
-            </p>
-          </div>
+    <a
+      href="#"
+      className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+    >
+      <div className="flex items-center space-x-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+            도쿄 여행
+          </p>
+          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+            D-1 | 4.17(월) - 4.21(금)
+          </p>
         </div>
-      </a>
+      </div>
+    </a>
   );
 };
 
@@ -62,13 +65,23 @@ const Home = () => {
 
       <div className="carousel w-full h-72">
         <div id="item1" className="carousel-item w-full relative">
-          <Image className="object-cover" src={banner1} alt="" />
+          <Image
+            className="object-cover"
+            src={banner1}
+            alt=""
+            priority={true}
+          />
           <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
             TripTopping
           </div>
         </div>
         <div id="item2" className="carousel-item w-full relative">
-          <Image className="object-cover" src={banner2} alt="" />
+          <Image
+            className="object-cover"
+            src={banner2}
+            alt=""
+            priority={true}
+          />
           <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
             트으립토핑
           </div>
@@ -81,12 +94,12 @@ const Home = () => {
             <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
               내 여행 계획
             </h5>
-            <a
-              href="/plan/list"
-              className="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+            <button
+              className="link text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+              onClick={() => router.push('/plan/list')}
             >
               View all
-            </a>
+            </button>
           </div>
           <div className="flow-root">
             <ul
@@ -168,8 +181,8 @@ const Home = () => {
                 aria-hidden="true"
               >
                 <path
-                  clip-rule="evenodd"
-                  fill-rule="evenodd"
+                  clipRule="evenodd"
+                  fillRule="evenodd"
                   d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                 ></path>
               </svg>
@@ -198,8 +211,8 @@ const Home = () => {
               aria-hidden="true"
             >
               <path
-                clip-rule="evenodd"
-                fill-rule="evenodd"
+                clipRule="evenodd"
+                fillRule="evenodd"
                 d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
               ></path>
             </svg>
