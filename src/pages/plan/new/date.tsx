@@ -52,12 +52,12 @@ const DateSelector: FC = () => {
         onChange={handleValueChange}
         showShortcuts={true}
       />
-      <div className="absolute bottom-1 right-1 space-x-2">
-        <button className="btn" onClick={() => router.push('/plan/new/num')}>
+      <div className="flex w-full space-x-4">
+        <button className="flex-1 btn" onClick={() => router.push('/plan/new/budget')}>
           뒤로가기
         </button>
         <button
-          className="btn btn-primary"
+          className="flex-1 btn btn-primary"
           onClick={() => router.push('/plan/new/tag')}
         >
           다음
