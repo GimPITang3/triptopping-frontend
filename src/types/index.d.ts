@@ -1,7 +1,6 @@
 export interface IPlan {
   name: string;
   num: number;
-  status: 'normal' | 'deleted';
   members: string[];
   budget: number;
   period: number;

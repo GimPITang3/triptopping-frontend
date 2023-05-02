@@ -18,9 +18,10 @@ const Tag: FC = () => {
 
   const onClickCreate = () => {
     setLoading(true);
-    axios.post('/plans', plan).then(() => {
+    axios.post('/plans', plan).then((res) => {
       setLoading(false);
-      router.push('/plan/123');
+      const { data } = res;
+      router.push('/plan/' + data._id);
     });
   };
 
