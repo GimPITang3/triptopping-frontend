@@ -6,7 +6,6 @@ const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [plan, setPlan] = useState<IPlan>({
     name: '',
     num: 0,
-    status: 'normal',
     members: [],
     budget: 0,
     period: 0,
