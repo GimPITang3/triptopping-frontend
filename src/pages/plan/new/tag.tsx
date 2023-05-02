@@ -1,19 +1,19 @@
 import { useRouter } from 'next/router';
-import { FC, useState } from 'react';
+import { FC, useContext, useState } from 'react';
+import { PlanContext } from '@/contexts';
 
 const Tag: FC = () => {
   const router = useRouter();
-  const [tagList, setTagList] = useState<string[]>([]);
+  const { plan, handlePlan } = useContext(PlanContext);
   const [tag, setTag] = useState('');
   const addTag = () => {
     if (!tag) {
       return;
     }
-    setTagList([...tagList, tag]);
+    handlePlan('tags', [...plan.tags, tag]);
     setTag('');
   };
   const onClickCreate = () => {
-    // send plan data to backend
     router.push('/plan/123');
   };
   return (
@@ -65,7 +65,7 @@ const Tag: FC = () => {
         </div>
       </div>
       <div className="space-x-2">
-        {tagList.map((tag, index) => (
+        {plan.tags.map((tag, index) => (
           <div key={`tag-${index}`} className="badge badge-outline">
             {tag}
           </div>
