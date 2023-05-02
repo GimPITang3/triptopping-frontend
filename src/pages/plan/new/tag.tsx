@@ -1,16 +1,16 @@
 import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 
-const Theme: FC = () => {
+const Tag: FC = () => {
   const router = useRouter();
-  const [themeList, setThemeList] = useState<string[]>([]);
-  const [theme, setTheme] = useState('');
-  const addTheme = () => {
-    if (!theme) {
+  const [tagList, setTagList] = useState<string[]>([]);
+  const [tag, setTag] = useState('');
+  const addTag = () => {
+    if (!tag) {
       return;
     }
-    setThemeList([...themeList, theme]);
-    setTheme('');
+    setTagList([...tagList, tag]);
+    setTag('');
   };
   const onClickCreate = () => {
     // send plan data to backend
@@ -46,18 +46,18 @@ const Theme: FC = () => {
           </div>
           <input
             autoComplete="off"
-            value={theme}
+            value={tag}
             onKeyUp={(e) => {
-              if (e.key === 'Enter') addTheme();
+              if (e.key === 'Enter') addTag();
             }}
-            onChange={(e) => setTheme(e.target.value)}
+            onChange={(e) => setTag(e.target.value)}
             type="text"
             className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search"
             required
           />
           <button
-            onClick={() => addTheme()}
+            onClick={() => addTag()}
             className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             추가
@@ -65,9 +65,9 @@ const Theme: FC = () => {
         </div>
       </div>
       <div className="space-x-2">
-        {themeList.map((theme, index) => (
-          <div key={`theme-${index}`} className="badge badge-outline">
-            {theme}
+        {tagList.map((tag, index) => (
+          <div key={`tag-${index}`} className="badge badge-outline">
+            {tag}
           </div>
         ))}
       </div>
@@ -84,4 +84,4 @@ const Theme: FC = () => {
   );
 };
 
-export default Theme;
+export default Tag;

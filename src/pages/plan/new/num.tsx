@@ -1,28 +1,30 @@
-import { FC, useState } from 'react';
+import { FC, useState, useContext } from 'react';
 import plus from '../../../../public/plus.svg';
 import dash from '../../../../public/dash.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { PlanContext } from '@/contexts';
 
 const Num: FC = () => {
   const router = useRouter();
-  const [num, setNum] = useState(1);
+  const { plan, handlePlan } = useContext(PlanContext);
   const onChange = (plus: boolean) => {
     if (plus) {
-      setNum(num + 1);
+      handlePlan('num', plan.num + 1);
     } else {
-      if (num > 1) {
-        setNum(num - 1);
+      if (plan.num > 1) {
+        handlePlan('num', plan.num - 1);
       }
     }
   };
+
   return (
     <div className="relative min-h-screen">
       <div>몇 명이서 여행 가시나요?</div>
       <button className="btn btn-ghost" onClick={() => onChange(false)}>
         <Image width={32} height={32} src={dash} alt="-" />
       </button>
-      {num}
+      {plan.num}
       <button className="btn btn-ghost" onClick={() => onChange(true)}>
         <Image width={32} height={32} src={plus} alt="+" />
       </button>
