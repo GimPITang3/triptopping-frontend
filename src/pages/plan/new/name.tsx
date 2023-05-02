@@ -1,6 +1,6 @@
+import { PlanContext } from '@/contexts';
 import { useRouter } from 'next/router';
 import { ChangeEvent, FC, useContext } from 'react';
-import { PlanContext } from '@/contexts';
 
 const Name: FC = () => {
   const router = useRouter();
@@ -11,21 +11,26 @@ const Name: FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen">
-      <div>이름을 설정해주세요.</div>
-      <input
-        type="text"
-        placeholder="이름"
-        className="input input-bordered w-full max-w-xs"
-        value={plan.name}
-        onChange={handleChange}
-      />
-      <div className="absolute bottom-1 right-1 space-x-2">
-        <button className="btn" onClick={() => router.push('/')}>
+    <div className="flex flex-col min-h-screen p-8">
+      <div className="font-bold text-3xl mb-8">
+        새 여행 계획
+      </div>
+      <div className="flex-grow">
+        <div className="text-xl my-4">여행 계획의 이름을 정해주세요</div>
+        <input
+          type="text"
+          placeholder="짱친들의 일본 여행!"
+          className="input input-bordered w-full"
+          value={plan.name}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="flex w-full space-x-4">
+        <button className="flex-1 btn" onClick={() => router.push('/')}>
           취소
         </button>
         <button
-          className="btn btn-primary"
+          className="flex-1 btn btn-primary"
           onClick={() => router.push('/plan/new/num')}
         >
           다음
