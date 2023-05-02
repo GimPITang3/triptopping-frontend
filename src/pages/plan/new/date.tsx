@@ -43,7 +43,7 @@ const DateSelector: FC = () => {
       <button className="btn btn-ghost" onClick={() => onChangePeriod(false)}>
         <Image width={32} height={32} src={dash} alt="-" />
       </button>
-      {plan.num}
+      {plan.period}
       <button className="btn btn-ghost" onClick={() => onChangePeriod(true)}>
         <Image width={32} height={32} src={plus} alt="+" />
       </button>
@@ -58,7 +58,7 @@ const DateSelector: FC = () => {
         </button>
         <button
           className="btn btn-primary"
-          onClick={() => router.push('/plan/new/theme')}
+          onClick={() => router.push('/plan/new/tag')}
         >
           다음
         </button>

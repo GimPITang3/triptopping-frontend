@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import { FC, useContext, useState } from 'react';
 import { PlanContext } from '@/contexts';
+import axios from '@/utils/AxiosInstance';
 
 const Tag: FC = () => {
   const router = useRouter();
   const { plan, handlePlan } = useContext(PlanContext);
+  const [loading, setLoading] = useState(false);
   const [tag, setTag] = useState('');
   const addTag = () => {
     if (!tag) {
@@ -13,9 +15,15 @@ const Tag: FC = () => {
     handlePlan('tags', [...plan.tags, tag]);
     setTag('');
   };
+
   const onClickCreate = () => {
-    router.push('/plan/123');
+    setLoading(true);
+    axios.post('/plans', plan).then(() => {
+      setLoading(false);
+      router.push('/plan/123');
+    });
   };
+
   return (
     <div className="relative min-h-screen">
       <div>여행 태그를 입력해주세요.</div>
