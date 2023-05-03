@@ -11,7 +11,6 @@ export const PlanContext = createContext<{
     members: [],
     budget: 0,
     period: 1,
-    startAt: new Date(),
     tags: [],
     itineraries: [],
   },

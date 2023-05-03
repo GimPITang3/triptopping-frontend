@@ -9,7 +9,6 @@ const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
     members: [],
     budget: 0,
     period: 0,
-    startAt: new Date(),
     tags: [],
     itineraries: [],
   });

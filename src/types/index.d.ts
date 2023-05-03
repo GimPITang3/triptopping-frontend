@@ -4,7 +4,7 @@ export interface IPlan {
   members: string[];
   budget: number;
   period: number;
-  startAt: Date;
+  startAt?: Date;
   tags: string[];
   itineraries: IItinerary[][];
   createdAt?: Date;

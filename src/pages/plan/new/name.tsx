@@ -10,11 +10,16 @@ const Name: FC = () => {
     handlePlan('name', e.target.value);
   };
 
+  const handleClickNext = () => {
+    if (plan.name === '') {
+      handlePlan('name', '폭풍을 부르는 우당탕탕 여행기!');
+    }
+    router.push('/plan/new/num');
+  };
+
   return (
     <div className="flex flex-col min-h-screen p-8">
-      <div className="font-bold text-3xl mb-8">
-        새 여행 계획
-      </div>
+      <div className="font-bold text-3xl mb-8">새 여행 계획</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 계획의 이름을 정해주세요</div>
         <input
@@ -29,10 +34,7 @@ const Name: FC = () => {
         <button className="flex-1 btn" onClick={() => router.push('/')}>
           취소
         </button>
-        <button
-          className="flex-1 btn btn-primary"
-          onClick={() => router.push('/plan/new/num')}
-        >
+        <button className="flex-1 btn btn-primary" onClick={handleClickNext}>
           다음
         </button>
       </div>
