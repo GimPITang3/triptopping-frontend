@@ -137,8 +137,8 @@ const ModifyNameModal: React.FC = () => {
 
   return (
     <div>
-      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
-      <label htmlFor="my-modal-4" className="modal cursor-pointer">
+      <input type="checkbox" id="modify-name-modal" className="modal-toggle" />
+      <label htmlFor="modify-name-modal" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
           <h3 className="text-lg font-bold">새로운 이름을 설정해주세요</h3>
           <input
@@ -147,10 +147,14 @@ const ModifyNameModal: React.FC = () => {
             onChange={onChange}
           />
           <div>
-            <label className="btn" htmlFor="my-modal-4">
+            <label className="btn" htmlFor="modify-name-modal">
               취소
             </label>
-            <label className="btn" htmlFor="my-modal-4" onClick={onClickOk}>
+            <label
+              className="btn"
+              htmlFor="modify-name-modal"
+              onClick={onClickOk}
+            >
               확인
             </label>
           </div>
@@ -236,9 +240,6 @@ const PlanPage: NextPage = ({}) => {
       <div>
         <div className="flex items-end">
           <div className="text-2xl font-bold">{plan.name}</div>
-          <label htmlFor="my-modal-4" className="link pl-2">
-            편집
-          </label>
         </div>
         <div>
           {plan.startAt ? (
@@ -261,6 +262,9 @@ const PlanPage: NextPage = ({}) => {
             </div>
           ))}
         </div>
+        <label htmlFor="modify-name-modal" className="link pl-2">
+          편집
+        </label>
       </div>
       <div className="divider"></div>
       <LoadScript
