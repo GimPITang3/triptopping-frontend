@@ -7,13 +7,13 @@ import plus from '../../../../public/plus.svg';
 
 const Num: FC = () => {
   const router = useRouter();
-  const { plan, handlePlan } = useContext(PlanContext);
+  const { plan, setPlan } = useContext(PlanContext);
   const onChange = (plus: boolean) => {
     if (plus) {
-      handlePlan('num', plan.num + 1);
+      setPlan({ ...plan, num: plan.num + 1 });
     } else {
       if (plan.num > 1) {
-        handlePlan('num', plan.num - 1);
+        setPlan({ ...plan, num: plan.num - 1 });
       }
     }
   };

@@ -4,14 +4,14 @@ import { PlanContext } from '@/contexts';
 
 const Budget: FC = () => {
   const router = useRouter();
-  const { plan, handlePlan } = useContext(PlanContext);
+  const { plan, setPlan } = useContext(PlanContext);
 
   const addBudget = (num: number) => {
-    handlePlan('budget', plan.budget + num);
+    setPlan({ ...plan, budget: plan.budget + num });
   };
   const changeEnteredBudget = (e: ChangeEvent<HTMLInputElement>) => {
     const budgetValue = parseInt(e.target.value.replace(/\,/g, ''));
-    handlePlan('budget', budgetValue);
+    setPlan({ ...plan, budget: budgetValue });
   };
 
   return (

@@ -5,24 +5,26 @@ import axios from '@/utils/AxiosInstance';
 
 const Tag: FC = () => {
   const router = useRouter();
-  const { plan, handlePlan } = useContext(PlanContext);
+  const { plan, setPlan } = useContext(PlanContext);
   const [loading, setLoading] = useState(false);
   const [tag, setTag] = useState('');
   const addTag = () => {
     if (!tag) {
       return;
     }
-    handlePlan('tags', [...plan.tags, tag]);
+    setPlan({ ...plan, tags: [...plan.tags, tag] });
     setTag('');
   };
 
   const onClickCreate = () => {
     setLoading(true);
-    axios.post('/plans', plan).then((res) => {
-      setLoading(false);
-      const { data } = res;
-      router.push('/plan/' + data._id);
-    });
+    console.log(plan);
+    router.push('/plan/123');
+    // axios.post('/plans', plan).then((res) => {
+    //   setLoading(false);
+    //   const { data } = res;
+    //   router.push('/plan/' + data._id);
+    // });
   };
 
   return (

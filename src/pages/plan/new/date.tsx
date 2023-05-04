@@ -9,14 +9,14 @@ import dash from '../../../../public/dash.svg';
 
 const DateSelector: FC = () => {
   const router = useRouter();
-  const { plan, handlePlan } = useContext(PlanContext);
+  const { plan, setPlan } = useContext(PlanContext);
 
   const onChangePeriod = (plus: boolean) => {
     if (plus) {
-      handlePlan('period', plan.period + 1);
+      setPlan({ ...plan, period: plan.period + 1 });
     } else {
       if (plan.num > 1) {
-        handlePlan('period', plan.period - 1);
+        setPlan({ ...plan, period: plan.period - 1 });
       }
     }
   };
@@ -25,8 +25,7 @@ const DateSelector: FC = () => {
     const s = DateTime.fromISO(newValue.startDate);
     const e = DateTime.fromISO(newValue.endDate);
     const period = e.diff(s, 'days').days;
-    handlePlan('startAt', s.toISODate());
-    handlePlan('period', period);
+    setPlan({ ...plan, startAt: s.toJSDate(), period: period });
   };
 
   return (

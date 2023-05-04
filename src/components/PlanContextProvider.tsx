@@ -12,10 +12,7 @@ const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
     tags: [],
     itineraries: [],
   });
-  const handlePlan = (key: string, value: any) => {
-    setPlan((prev: any) => ({ ...prev, [key]: value }));
-  };
-  const contextValue = { plan, handlePlan };
+  const contextValue = { plan, setPlan };
   return (
     <PlanContext.Provider value={contextValue}>{children}</PlanContext.Provider>
   );

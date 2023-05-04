@@ -4,15 +4,15 @@ import { ChangeEvent, FC, useContext } from 'react';
 
 const Name: FC = () => {
   const router = useRouter();
-  const { plan, handlePlan } = useContext(PlanContext);
+  const { plan, setPlan } = useContext(PlanContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handlePlan('name', e.target.value);
+    setPlan({ ...plan, name: e.target.value });
   };
 
   const handleClickNext = () => {
     if (plan.name === '') {
-      handlePlan('name', '폭풍을 부르는 우당탕탕 여행기!');
+      setPlan({ ...plan, name: '폭풍을 부르는 우당탕탕 여행기!' });
     }
     router.push('/plan/new/num');
   };
