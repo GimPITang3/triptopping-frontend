@@ -5,10 +5,10 @@ import { FC, PropsWithChildren, useState } from 'react';
 const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [plan, setPlan] = useState<IPlan>({
     name: '',
-    num: 0,
+    num: 1,
     members: [],
     budget: 0,
-    period: 0,
+    period: 1,
     tags: [],
     itineraries: [],
   });
