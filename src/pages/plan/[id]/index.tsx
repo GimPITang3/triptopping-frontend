@@ -1,6 +1,15 @@
+import { PlanContext } from '@/contexts';
+import { IItinerary, IPlan } from '@/types';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  StandaloneSearchBox,
+} from '@react-google-maps/api';
+import { DateTime } from 'luxon';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import {
   ChangeEvent,
   useCallback,
@@ -10,15 +19,6 @@ import {
 } from 'react';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import hamburger from '../../../../public/hamburger.svg';
-import { DateTime } from 'luxon';
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  StandaloneSearchBox,
-} from '@react-google-maps/api';
-import { PlanContext } from '@/contexts';
-import { IItinerary, IPlan } from '@/types';
 import dash from '../../../../public/dash.svg';
 import plus from '../../../../public/plus.svg';
 import Datepicker from 'react-tailwindcss-datepicker';
@@ -599,21 +599,23 @@ const PlanPage: NextPage = ({}) => {
       </LoadScript>
       <div className="space-y-2 p-4">
         {plan.itineraries.map((itineraryDaily: IItinerary[], idx: number) => (
-          <div key={`day-${idx}`}>
-            <h1 className="font-bold">{`Day${idx + 1}`}</h1>
+          <div className="py-4" key={`day-${idx}`}>
+            <h1 className="font-bold text-xl">{`Day${idx + 1}`}</h1>
             {itineraryDaily
               .filter((itinerary: IItinerary) => itinerary.type === 'place')
               .map((itinerary: IItinerary, idx: number) => (
                 <div className="py-1" key={`itinerary-${idx}`}>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex flex-col">
-                      <div />
-                      <div className="avatar placeholder">
-                        <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
-                          <span className="text-l">{idx + 1}</span>
+                  <div className="flex items-center space-x-4 h-[124px]">
+                    <div className="flex flex-col h-full">
+                      <div className="h-6"></div>
+                      <div className="grow mx-auto flex items-center justify-center">
+                        <div className="avatar placeholder">
+                          <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
+                            <span className="text-l">{idx + 1}</span>
+                          </div>
                         </div>
                       </div>
-                      <div>100m</div>
+                      <div className="relative top-4">100m</div>
                     </div>
                     <div className="card-body shadow-lg bg-[#fafcff]">
                       <h2 className="card-title">
