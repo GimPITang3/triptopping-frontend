@@ -1,12 +1,13 @@
+import Topbar from '@/components/Topbar';
+import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import younha from '../../public/younha.png';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC, PropsWithChildren } from 'react';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
-import { FC, PropsWithChildren } from 'react';
-import { useRouter } from 'next/router';
-import Topbar from '@/components/Topbar';
+import younha from '../../public/younha.png';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -117,7 +118,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 my-4">
         <div className="font-bold pb-4 text-xl">커뮤니티</div>
         <div
           className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14
@@ -134,99 +135,26 @@ const Home = () => {
         </div>
       </div>
 
-      <div
-        className="fixed z-50 w-full max-w-screen-md h-16 -translate-x-1/2 bg-white border border-gray-200
-      bottom-0 left-1/2 dark:bg-gray-700 dark:border-gray-600"
-      >
-        <div className="grid h-full max-w-lg grid-cols-3 mx-auto">
-          <button
-            data-tooltip-target="tooltip-home"
-            type="button"
-            className="inline-flex flex-col items-center justify-center px-5 rounded-l-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
-          >
-            <svg
-              className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+      <div className="btm-nav container mx-auto max-w-screen-md">
+        <button className="text-primary active">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
+          </svg>
+        </button>
+        <Link href="/plan/new/name">
+          <button className="text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z" />
+              <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
             </svg>
-            <span className="sr-only">Home</span>
           </button>
-          <div
-            id="tooltip-home"
-            role="tooltip"
-            className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-          >
-            Home
-            <div className="tooltip-arrow" data-popper-arrow></div>
-          </div>
-
-          <div className="flex items-center justify-center">
-            <button
-              onClick={() => {
-                router.push('/plan/new/name');
-              }}
-              data-tooltip-target="tooltip-new"
-              type="button"
-              className="inline-flex items-center justify-center w-10 h-10 font-medium bg-blue-600 rounded-full hover:bg-blue-700 group focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  clipRule="evenodd"
-                  fillRule="evenodd"
-                  d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                ></path>
-              </svg>
-              <span className="sr-only">New item</span>
-            </button>
-          </div>
-          <div
-            id="tooltip-new"
-            role="tooltip"
-            className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-          >
-            Create new item
-            <div className="tooltip-arrow" data-popper-arrow></div>
-          </div>
-
-          <button
-            data-tooltip-target="tooltip-profile"
-            type="button"
-            className="inline-flex flex-col items-center justify-center px-5 rounded-r-full hover:bg-gray-50 dark:hover:bg-gray-800 group"
-          >
-            <svg
-              className="w-6 h-6 mb-1 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                clipRule="evenodd"
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
-              ></path>
-            </svg>
-            <span className="sr-only">Profile</span>
-          </button>
-          <div
-            id="tooltip-profile"
-            role="tooltip"
-            className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-          >
-            Profile
-            <div className="tooltip-arrow" data-popper-arrow></div>
-          </div>
-        </div>
+        </Link>
+        <button className="text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+          </svg>
+        </button>
       </div>
     </>
   );
