@@ -1,9 +1,10 @@
-import { GetServerSideProps, NextPage } from 'next';
-import { FC, PropsWithChildren } from 'react';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
 import Topbar from '@/components/Topbar';
-import plusCircle from '../../../../public/pluscircle.svg'
+import { NextPage } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC, PropsWithChildren } from 'react';
+import plusCircle from '../../../../public/pluscircle.svg';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -61,14 +62,14 @@ const PlanPage: NextPage = ({}) => {
                 className="divide-y divide-gray-200 dark:divide-gray-700"
               >
                 <li className="py-3 sm:py-1">
-                  <a href="/plan/new/name" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <Link href="/plan/new/name" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                     <div className="flex items-center space-x-4">
                       <Image src={plusCircle} alt="#" />
                       <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                         새 여행계획을 만들어보세요
                       </p>
                     </div>
-                  </a>
+                  </Link>
                 </li>
                 <li className="py-3 sm:py-1">
                   <ItineraryList />
