@@ -6,13 +6,17 @@ export const PlanContext = createContext<{
   setPlan: Dispatch<SetStateAction<IPlan>>;
 }>({
   plan: {
-    name: '새로운 이름',
-    num: 1,
+    name: '',
+    numberOfMembers: 1,
+    author: '',
     members: [],
     budget: 0,
     period: 1,
     tags: [],
     itineraries: [],
+    planId: '',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   setPlan: () => {},
 });
