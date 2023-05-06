@@ -27,6 +27,8 @@ import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import hamburger from '../../../../public/hamburger.svg';
 import dash from '../../../../public/dash.svg';
 import plus from '../../../../public/plus.svg';
+import pencilSquare from '../../../../public/pencilsquare.svg';
+import trash from '../../../../public/trash.svg';
 import Datepicker from 'react-tailwindcss-datepicker';
 
 interface SearchResult {
@@ -520,6 +522,29 @@ const PlanPage: NextPage = ({}) => {
     lng: -122.4194,
   };
 
+  const onClickAddItinerary = (day: number) => {
+    console.log(day);
+    setPlan((prev) => {
+      prev.itineraries[day].push({
+        type: 'place',
+        system: {
+          place: {
+            name: '',
+          },
+        },
+        manual: {},
+      });
+      return { ...prev };
+    });
+  };
+
+  const onClickDeleteItinerary = (day: number, index: number) => {
+    setPlan((prev) => {
+      prev.itineraries[day].splice(index, 1);
+      return { ...prev };
+    });
+  };
+
   useEffect(() => {
     setPlan({ ...plan, itineraries: initialPlan.itineraries });
   }, [setPlan]);
@@ -608,36 +633,62 @@ const PlanPage: NextPage = ({}) => {
         </div>
       </LoadScript>
       <div className="space-y-2 p-4">
-        {plan.itineraries.map((itineraryDaily: ItinerariesDay, idx: number) => (
-          <div className="py-4" key={`day-${idx}`}>
-            <h1 className="font-bold text-xl">{`Day${idx + 1}`}</h1>
-            {itineraryDaily
-              .filter((itinerary: ItinerarySlot) => itinerary.type === 'place')
-              .map((itinerary: Itinerary<IPlace>, idx: number) => (
-                <div className="py-1" key={`itinerary-${idx}`}>
-                  <div className="flex items-center space-x-4 h-[124px]">
-                    <div className="flex flex-col h-full">
-                      <div className="h-6"></div>
-                      <div className="grow mx-auto flex items-center justify-center">
-                        <div className="avatar placeholder">
-                          <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
-                            <span className="text-l">{idx + 1}</span>
+        {plan.itineraries.map(
+          (itineraryDaily: ItinerariesDay, dayIdx: number) => (
+            <div className="py-4" key={`day-${dayIdx}`}>
+              <h1 className="font-bold text-xl">{`Day${dayIdx + 1}`}</h1>
+              {itineraryDaily
+                .filter(
+                  (itinerary: ItinerarySlot) => itinerary.type === 'place',
+                )
+                .map((itinerary: Itinerary<IPlace>, idx: number) => (
+                  <div className="py-1" key={`itinerary-${idx}`}>
+                    <div className="flex items-center space-x-4 h-[124px]">
+                      <div className="flex flex-col h-full">
+                        <div className="h-6"></div>
+                        <div className="grow mx-auto flex items-center justify-center">
+                          <div className="avatar placeholder">
+                            <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
+                              <span className="text-l">{idx + 1}</span>
+                            </div>
                           </div>
                         </div>
+                        <div className="relative top-4">100m</div>
                       </div>
-                      <div className="relative top-4">100m</div>
-                    </div>
-                    <div className="card-body shadow-lg bg-[#fafcff]">
-                      <h2 className="card-title">
-                        {GetItineraryValue(itinerary, 'place').name}
-                      </h2>
-                      <p>place details</p>
+                      <div className="card-body shadow-lg bg-[#fafcff]">
+                        <h2 className="card-title">
+                          {GetItineraryValue(itinerary, 'place').name}
+                          <Image
+                            src={pencilSquare}
+                            alt="edit"
+                            width={14}
+                            height={14}
+                          />
+                          <button
+                            onClick={() => onClickDeleteItinerary(dayIdx, idx)}
+                          >
+                            <Image
+                              src={trash}
+                              alt="delete"
+                              width={14}
+                              height={14}
+                            />
+                          </button>
+                        </h2>
+                        <p>place details</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-          </div>
-        ))}
+                ))}
+              <div
+                className="btn btn-ghost flex justify-center shadow-lg mt-2"
+                onClick={() => onClickAddItinerary(dayIdx)}
+              >
+                <Image src={plus} alt="plus" width={32} height={32} />
+              </div>
+            </div>
+          ),
+        )}
       </div>
       <ModifyNameModal />
     </div>
