@@ -574,7 +574,7 @@ const PlanPage: NextPage = ({}) => {
             </div>
           ) : (
             <div>
-              {plan.period}박{plan.period}일
+              {plan.period - 1}박{plan.period}일
             </div>
           )}
         </div>
