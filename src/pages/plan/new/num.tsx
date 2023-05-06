@@ -10,10 +10,10 @@ const Num: FC = () => {
   const { plan, setPlan } = useContext(PlanContext);
   const onChange = (plus: boolean) => {
     if (plus) {
-      setPlan({ ...plan, num: plan.num + 1 });
+      setPlan({ ...plan, numberOfMembers: plan.numberOfMembers + 1 });
     } else {
-      if (plan.num > 1) {
-        setPlan({ ...plan, num: plan.num - 1 });
+      if (plan.numberOfMembers > 1) {
+        setPlan({ ...plan, numberOfMembers: plan.numberOfMembers - 1 });
       }
     }
   };
@@ -31,7 +31,7 @@ const Num: FC = () => {
             <Image width={32} height={32} src={dash} alt="-" />
           </button>
           <div className="text-4xl font-bold self-center mx-16 rounded">
-            {plan.num}
+            {plan.numberOfMembers}
           </div>
           <button
             className="btn btn-outline hover:bg-slate-300"

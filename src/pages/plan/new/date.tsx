@@ -26,7 +26,7 @@ const DateSelector: FC = () => {
     const s = DateTime.fromISO(newValue.startDate);
     const e = DateTime.fromISO(newValue.endDate);
     const period = e.diff(s, 'days').days;
-    setPlan({ ...plan, startAt: s.toJSDate(), period: period });
+    setPlan({ ...plan, startDate: s.toJSDate(), period: period });
   };
 
   return (
@@ -36,34 +36,46 @@ const DateSelector: FC = () => {
       <div className="flex-grow">
         <div className="flex justify-center">
           <div className="tabs tabs-boxed bg-white">
-            <a className={`tab tab-lg ${selected ? "tab-active" : ''}`} onClick={() => setSelected(true)}>날짜를 정했어요</a>
-            <a className={`tab tab-lg ${selected ? '' : "tab-active"}`} onClick={() => setSelected(false)}>기간만 정할게요</a>
+            <a
+              className={`tab tab-lg ${selected ? 'tab-active' : ''}`}
+              onClick={() => setSelected(true)}
+            >
+              날짜를 정했어요
+            </a>
+            <a
+              className={`tab tab-lg ${selected ? '' : 'tab-active'}`}
+              onClick={() => setSelected(false)}
+            >
+              기간만 정할게요
+            </a>
           </div>
         </div>
-        
-        {selected ? <div>
-          <div className="text-xl my-8">출발 - 도착 날짜를 입력해주세요!</div>
-          <Datepicker
-            value={{
-              startDate: plan.startAt === undefined ? null : plan.startAt,
-              endDate:
-                plan.startAt === undefined
-                  ? null
-                  : DateTime.fromJSDate(plan.startAt)
-                      .plus({ day: plan.period })
-                      .toJSDate(),
-            }}
-            onChange={handleValueChange}
-            showShortcuts={true}
-          />
-        </div> :
+
+        {selected ? (
+          <div>
+            <div className="text-xl my-8">출발 - 도착 날짜를 입력해주세요!</div>
+            <Datepicker
+              value={{
+                startDate: plan.startDate === undefined ? null : plan.startDate,
+                endDate:
+                  plan.startDate === undefined
+                    ? null
+                    : DateTime.fromJSDate(plan.startDate)
+                        .plus({ day: plan.period })
+                        .toJSDate(),
+              }}
+              onChange={handleValueChange}
+              showShortcuts={true}
+            />
+          </div>
+        ) : (
           <div>
             <div className="text-xl my-8">며칠간 여행하시는지 알려주세요!</div>
             <div className="flex py-8 justify-center">
               <button
-              disabled={plan.startAt !== undefined}
-              className="btn btn-outline hover:bg-slate-300"
-              onClick={() => onChangePeriod(false)}
+                disabled={plan.startDate !== undefined}
+                className="btn btn-outline hover:bg-slate-300"
+                onClick={() => onChangePeriod(false)}
               >
                 <Image width={32} height={32} src={dash} alt="-" />
               </button>
@@ -71,14 +83,15 @@ const DateSelector: FC = () => {
                 {plan.period}
               </div>
               <button
-                disabled={plan.startAt !== undefined}
+                disabled={plan.startDate !== undefined}
                 className="btn btn-outline hover:bg-slate-300"
                 onClick={() => onChangePeriod(true)}
               >
-              <Image width={32} height={32} src={plus} alt="+" />
-            </button>
+                <Image width={32} height={32} src={plus} alt="+" />
+              </button>
+            </div>
           </div>
-        </div>}
+        )}
       </div>
       <div className="flex w-full space-x-4">
         <button

@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import { PlanContext } from '@/contexts';
 import axios from '@/utils/AxiosInstance';
+import { IPlan } from '@/types';
+import { AxiosResponse } from 'axios';
 
 const Tag: FC = () => {
   const router = useRouter();
@@ -16,20 +18,30 @@ const Tag: FC = () => {
     setTag('');
   };
   const delTag = (tag: string) => {
-    setPlan({ ...plan, tags: plan.tags.filter(item => item !== tag)});
+    setPlan({ ...plan, tags: plan.tags.filter((item) => item !== tag) });
     console.log(...plan.tags);
   };
 
   const onClickCreate = () => {
     setLoading(true);
-    console.log(plan);
-    router.push('/plan/123');
-    // axios.post('/plans', plan).then((res) => {
+    setPlan({
+      ...plan,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      author: "it's me! mario!",
+      planId: Math.floor(Math.random() * 10000000 + 1).toString(),
+    });
+    // axios.post<IPlan, AxiosResponse<IPlan>>('/plans', plan).then((res) => {
     //   setLoading(false);
     //   const { data } = res;
-    //   router.push('/plan/' + data._id);
+    //   router.push('/plan/' + data.planId);
     // });
   };
+
+  useEffect(() => {
+    if (plan.planId === '') return;
+    router.push('/plan/' + plan.planId);
+  }, [plan, router]);
 
   return (
     <div className="flex flex-col min-h-screen p-8">
@@ -85,7 +97,20 @@ const Tag: FC = () => {
           {plan.tags.map((tag, index) => (
             <div key={`tag-${index}`} className="badge badge-outline">
               {'#' + tag}
-              <svg onClick={() => delTag(tag)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="hover:bg-slate-200 inline-block w-4 h-4 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <svg
+                onClick={() => delTag(tag)}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="hover:bg-slate-200 inline-block w-4 h-4 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
             </div>
           ))}
         </div>
@@ -97,10 +122,7 @@ const Tag: FC = () => {
         >
           뒤로가기
         </button>
-        <button
-          className="flex-1 btn btn-primary"
-          onClick={onClickCreate}
-        >
+        <button className="flex-1 btn btn-primary" onClick={onClickCreate}>
           생성
         </button>
       </div>

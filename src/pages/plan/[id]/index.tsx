@@ -1,5 +1,11 @@
 import { PlanContext } from '@/contexts';
-import { IItinerary, IPlan } from '@/types';
+import {
+  Itinerary,
+  ItinerariesDay,
+  ItinerarySlot,
+  IPlace,
+  IPlan,
+} from '@/types';
 import {
   GoogleMap,
   LoadScript,
@@ -36,14 +42,16 @@ const GetItineraryValue = (itinerary: any, key: string) => {
 };
 
 const initialPlan: IPlan = {
+  planId: '123',
   name: '지수의 콩국수 여행기',
-  num: 4,
+  numberOfMembers: 4,
   members: [],
+  author: '',
   // 예산 설정, 단위는 원
   budget: 2000000,
   // 기간 설정
   period: 3, // 3일, 이게 필수
-  startAt: new Date('2024-01-01'), // 이건 선택
+  startDate: new Date('2024-01-01'), // 이건 선택
   tags: ['바다', '식도락', '힐링'],
   // 일정
   itineraries: [
@@ -138,10 +146,10 @@ const ModifyNameModal: React.FC = () => {
 
   const onChangeNum = (plus: boolean) => {
     if (plus) {
-      setPlan({ ...plan, num: plan.num + 1 });
+      setPlan({ ...plan, numberOfMembers: plan.numberOfMembers + 1 });
     } else {
-      if (plan.num > 1) {
-        setPlan({ ...plan, num: plan.num - 1 });
+      if (plan.numberOfMembers > 1) {
+        setPlan({ ...plan, numberOfMembers: plan.numberOfMembers - 1 });
       }
     }
   };
@@ -149,6 +157,7 @@ const ModifyNameModal: React.FC = () => {
   const addBudget = (num: number) => {
     setPlan({ ...plan, budget: plan.budget + num });
   };
+
   const changeEnteredBudget = (e: ChangeEvent<HTMLInputElement>) => {
     const budgetValue = parseInt(e.target.value.replace(/\,/g, ''));
     setPlan({ ...plan, budget: budgetValue });
@@ -168,7 +177,7 @@ const ModifyNameModal: React.FC = () => {
     const s = DateTime.fromISO(newValue.startDate);
     const e = DateTime.fromISO(newValue.endDate);
     const period = e.diff(s, 'days').days;
-    setPlan({ ...plan, startAt: s.toJSDate(), period: period });
+    setPlan({ ...plan, startDate: s.toJSDate(), period: period });
   };
 
   const addTag = () => {
@@ -205,7 +214,7 @@ const ModifyNameModal: React.FC = () => {
                 <Image width={32} height={32} src={dash} alt="-" />
               </button>
               <div className="text-4xl font-bold self-center mx-16 rounded">
-                {plan.num}
+                {plan.numberOfMembers}
               </div>
               <button
                 className="btn btn-outline hover:bg-slate-300"
@@ -299,11 +308,11 @@ const ModifyNameModal: React.FC = () => {
                   <Datepicker
                     value={{
                       startDate:
-                        plan.startAt === undefined ? null : plan.startAt,
+                        plan.startDate === undefined ? null : plan.startDate,
                       endDate:
-                        plan.startAt === undefined
+                        plan.startDate === undefined
                           ? null
-                          : DateTime.fromJSDate(plan.startAt)
+                          : DateTime.fromJSDate(plan.startDate)
                               .plus({ day: plan.period })
                               .toJSDate(),
                     }}
@@ -318,7 +327,7 @@ const ModifyNameModal: React.FC = () => {
                   </div>
                   <div className="flex py-8 justify-center">
                     <button
-                      disabled={plan.startAt !== undefined}
+                      disabled={plan.startDate !== undefined}
                       className="btn btn-outline hover:bg-slate-300"
                       onClick={() => onChangePeriod(false)}
                     >
@@ -328,7 +337,7 @@ const ModifyNameModal: React.FC = () => {
                       {plan.period}
                     </div>
                     <button
-                      disabled={plan.startAt !== undefined}
+                      disabled={plan.startDate !== undefined}
                       className="btn btn-outline hover:bg-slate-300"
                       onClick={() => onChangePeriod(true)}
                     >
@@ -512,7 +521,7 @@ const PlanPage: NextPage = ({}) => {
   };
 
   useEffect(() => {
-    setPlan(initialPlan);
+    setPlan({ ...plan, itineraries: initialPlan.itineraries });
   }, [setPlan]);
 
   return (
@@ -530,10 +539,11 @@ const PlanPage: NextPage = ({}) => {
           <div className="text-2xl font-bold">{plan.name}</div>
         </div>
         <div>
-          {plan.startAt ? (
+          {plan.startDate ? (
             <div>
-              {DateTime.fromJSDate(plan.startAt).toFormat('yyyy년 MM월 dd일')} ~{' '}
-              {DateTime.fromJSDate(plan.startAt)
+              {DateTime.fromJSDate(plan.startDate).toFormat('yyyy년 MM월 dd일')}{' '}
+              ~{' '}
+              {DateTime.fromJSDate(plan.startDate)
                 .plus({ days: plan.period })
                 .toFormat('yyyy년 MM월 dd일')}
             </div>
@@ -598,12 +608,12 @@ const PlanPage: NextPage = ({}) => {
         </div>
       </LoadScript>
       <div className="space-y-2 p-4">
-        {plan.itineraries.map((itineraryDaily: IItinerary[], idx: number) => (
+        {plan.itineraries.map((itineraryDaily: ItinerariesDay, idx: number) => (
           <div className="py-4" key={`day-${idx}`}>
             <h1 className="font-bold text-xl">{`Day${idx + 1}`}</h1>
             {itineraryDaily
-              .filter((itinerary: IItinerary) => itinerary.type === 'place')
-              .map((itinerary: IItinerary, idx: number) => (
+              .filter((itinerary: ItinerarySlot) => itinerary.type === 'place')
+              .map((itinerary: Itinerary<IPlace>, idx: number) => (
                 <div className="py-1" key={`itinerary-${idx}`}>
                   <div className="flex items-center space-x-4 h-[124px]">
                     <div className="flex flex-col h-full">

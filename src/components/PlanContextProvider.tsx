@@ -4,13 +4,17 @@ import { FC, PropsWithChildren, useState } from 'react';
 
 const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [plan, setPlan] = useState<IPlan>({
+    planId: '',
     name: '',
-    num: 1,
+    numberOfMembers: 1,
     members: [],
+    author: '',
     budget: 0,
     period: 1,
     tags: [],
     itineraries: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
   const contextValue = { plan, setPlan };
   return (
