@@ -19,7 +19,6 @@ const Tag: FC = () => {
   };
   const delTag = (tag: string) => {
     setPlan({ ...plan, tags: plan.tags.filter((item) => item !== tag) });
-    console.log(...plan.tags);
   };
 
   const onClickCreate = () => {

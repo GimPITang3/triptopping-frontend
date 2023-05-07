@@ -12,6 +12,7 @@ import {
   Marker,
   StandaloneSearchBox,
 } from '@react-google-maps/api';
+import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Image from 'next/image';
@@ -188,6 +189,9 @@ const ModifyNameModal: React.FC = () => {
     }
     setPlan({ ...plan, tags: [...plan.tags, tag] });
     setTag('');
+  };
+  const delTag = (tag: string) => {
+    setPlan({ ...plan, tags: plan.tags.filter((item) => item !== tag) });
   };
 
   const GetTab = () => {
@@ -403,7 +407,21 @@ const ModifyNameModal: React.FC = () => {
             <div className="space-x-2">
               {plan.tags.map((tag, index) => (
                 <div key={`tag-${index}`} className="badge badge-outline">
-                  {tag}
+                  {'#' + tag}
+                  <svg
+                    onClick={() => delTag(tag)}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="hover:bg-slate-200 inline-block w-4 h-4 stroke-current"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
                 </div>
               ))}
             </div>
@@ -549,6 +567,26 @@ const PlanPage: NextPage = ({}) => {
     setPlan({ ...plan, itineraries: initialPlan.itineraries });
   }, [setPlan]);
 
+  const handleOnDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+
+    const sourceDay = parseInt(result.source.droppableId);
+    const destinationDay = parseInt(result.destination.droppableId);
+
+    const sourceIdx = result.source.index;
+    const destIdx = result.destination.index;
+
+    const item = plan.itineraries[sourceDay][sourceIdx];
+
+    setPlan((prev) => {
+      prev.itineraries[sourceDay].splice(sourceIdx, 1);
+      prev.itineraries[destinationDay].splice(destIdx, 0, item);
+      return { ...prev };
+    });
+
+    console.log(plan.itineraries);
+  };
+
   return (
     <div className="min-h-screen">
       <div className="flex justify-between">
@@ -632,64 +670,88 @@ const PlanPage: NextPage = ({}) => {
           </GoogleMap>
         </div>
       </LoadScript>
-      <div className="space-y-2 p-4">
-        {plan.itineraries.map(
-          (itineraryDaily: ItinerariesDay, dayIdx: number) => (
-            <div className="py-4" key={`day-${dayIdx}`}>
-              <h1 className="font-bold text-xl">{`Day${dayIdx + 1}`}</h1>
-              {itineraryDaily
-                .filter(
-                  (itinerary: ItinerarySlot) => itinerary.type === 'place',
-                )
-                .map((itinerary: Itinerary<IPlace>, idx: number) => (
-                  <div className="py-1" key={`itinerary-${idx}`}>
-                    <div className="flex items-center space-x-4 h-[124px]">
-                      <div className="flex flex-col h-full">
-                        <div className="h-6"></div>
-                        <div className="grow mx-auto flex items-center justify-center">
-                          <div className="avatar placeholder">
-                            <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
-                              <span className="text-l">{idx + 1}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="relative top-4">100m</div>
-                      </div>
-                      <div className="card-body shadow-lg bg-[#fafcff]">
-                        <h2 className="card-title">
-                          {GetItineraryValue(itinerary, 'place').name}
-                          <Image
-                            src={pencilSquare}
-                            alt="edit"
-                            width={14}
-                            height={14}
-                          />
-                          <button
-                            onClick={() => onClickDeleteItinerary(dayIdx, idx)}
-                          >
-                            <Image
-                              src={trash}
-                              alt="delete"
-                              width={14}
-                              height={14}
-                            />
-                          </button>
-                        </h2>
-                        <p>place details</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              <div
-                className="btn btn-ghost flex justify-center shadow-lg mt-2"
-                onClick={() => onClickAddItinerary(dayIdx)}
-              >
-                <Image src={plus} alt="plus" width={32} height={32} />
+      {/* TODO: 편집버튼으로 enableDefaultSensors 토글 */}
+      <button className="btn btn-link">편집</button>
+      <DragDropContext onDragEnd={handleOnDragEnd} enableDefaultSensors={true}>
+        <div className="space-y-2 p-4">
+          {plan.itineraries.map(
+            (itineraryDaily: ItinerariesDay, dayIdx: number) => (
+              <div className="py-4" key={`day-${dayIdx}`}>
+                <h1 className="font-bold text-xl">{`Day${dayIdx + 1}`}</h1>
+                <Droppable key={dayIdx} droppableId={dayIdx.toString()}>
+                  {(provided) => (
+                    <ul 
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                    >
+                      {itineraryDaily
+                      .filter(
+                        (itinerary: ItinerarySlot) => itinerary.type === 'place',
+                      )
+                      .map((itinerary: Itinerary<IPlace>, idx: number) => (
+                        <Draggable key={`itinerary${dayIdx}-${idx}`} draggableId={`itinerary${dayIdx}-${idx}`} index={idx}>
+                          {(provided) => (
+                            <li
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                            >
+                              <div className="py-1" key={`itinerary-${idx}`}>
+                                <div className="flex items-center space-x-4 h-[124px]">
+                                  <div className="flex flex-col h-full">
+                                    <div className="h-6"></div>
+                                    <div className="grow mx-auto flex items-center justify-center">
+                                      <div className="avatar placeholder">
+                                        <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
+                                          <span className="text-l">{idx + 1}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="relative top-4">100m</div>
+                                  </div>
+                                  <div className="card-body shadow-lg bg-[#fafcff]">
+                                    <h2 className="card-title">
+                                      {GetItineraryValue(itinerary, 'place').name}
+                                      <Image
+                                        src={pencilSquare}
+                                        alt="edit"
+                                        width={14}
+                                        height={14}
+                                      />
+                                      <button
+                                        onClick={() => onClickDeleteItinerary(dayIdx, idx)}
+                                      >
+                                        <Image
+                                          src={trash}
+                                          alt="delete"
+                                          width={14}
+                                          height={14}
+                                        />
+                                      </button>
+                                    </h2>
+                                    <p>place details</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </ul>
+                  )}
+                </Droppable>
+                <div
+                  className="btn btn-ghost flex justify-center shadow-lg mt-2"
+                  onClick={() => onClickAddItinerary(dayIdx)}
+                >
+                  <Image src={plus} alt="plus" width={32} height={32} />
+                </div>
               </div>
-            </div>
-          ),
-        )}
-      </div>
+            ),
+          )}
+        </div>
+      </DragDropContext>
       <ModifyNameModal />
     </div>
   );

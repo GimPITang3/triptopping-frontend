@@ -62,99 +62,112 @@ const Home = () => {
         <title>Trip Topping</title>
       </Head>
 
-      <Topbar />
+      <div className="drawer drawer-end">
+        <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content">
+          <Topbar />
 
-      <div className="carousel w-full h-72">
-        <div id="item1" className="carousel-item w-full relative">
-          <Image
-            className="object-cover"
-            src={banner1}
-            alt=""
-            priority={true}
-          />
-          <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
-            TripTopping
+          <div className="carousel w-full h-72">
+            <div id="item1" className="carousel-item w-full relative">
+              <Image
+                className="object-cover"
+                src={banner1}
+                alt=""
+                priority={true}
+              />
+              <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
+                TripTopping
+              </div>
+            </div>
+            <div id="item2" className="carousel-item w-full relative">
+              <Image
+                className="object-cover"
+                src={banner2}
+                alt=""
+                priority={true}
+              />
+              <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
+                트으립토핑
+              </div>
+            </div>
           </div>
-        </div>
-        <div id="item2" className="carousel-item w-full relative">
-          <Image
-            className="object-cover"
-            src={banner2}
-            alt=""
-            priority={true}
-          />
-          <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
-            트으립토핑
+          
+          <div className="p-4 pt-8">
+            <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                  내 여행 계획
+                </h5>
+                <button
+                  className="link text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
+                  onClick={() => router.push('/plan/list')}
+                >
+                  View all
+                </button>
+              </div>
+              <div className="flow-root">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-200 dark:divide-gray-700"
+                >
+                  <li className="py-3 sm:py-1">
+                    <ItineraryList />
+                  </li>
+                  <li className="py-3 sm:py-1">
+                    <ItineraryList />
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div className="p-4 pt-8">
-        <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-4">
-            <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-              내 여행 계획
-            </h5>
-            <button
-              className="link text-sm font-medium text-blue-600 hover:underline dark:text-blue-500"
-              onClick={() => router.push('/plan/list')}
+          <div className="p-4 my-4">
+            <div className="font-bold pb-4 text-xl">커뮤니티</div>
+            <div
+              className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14
+            [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
             >
-              View all
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+              <CommunityCard />
+            </div>
+          </div>
+
+          
+        </div> 
+        <div className="drawer-side">
+          <div className="btm-nav container mx-auto max-w-screen-md">
+            <button className="text-primary active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
+              </svg>
+            </button>
+            <Link href="/plan/new/name">
+              <button className="text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                  <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z" />
+                  <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
+                </svg>
+              </button>
+            </Link>
+            <button className="text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+              </svg>
             </button>
           </div>
-          <div className="flow-root">
-            <ul
-              role="list"
-              className="divide-y divide-gray-200 dark:divide-gray-700"
-            >
-              <li className="py-3 sm:py-1">
-                <ItineraryList />
-              </li>
-              <li className="py-3 sm:py-1">
-                <ItineraryList />
-              </li>
-            </ul>
-          </div>
+          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+          <ul className="menu p-4 w-80 bg-base-100 text-base-content">
+            <li><a>Sidebar Item 1</a></li>
+            <li><a>Sidebar Item 2</a></li>
+          </ul>
         </div>
-      </div>
-
-      <div className="p-4 my-4">
-        <div className="font-bold pb-4 text-xl">커뮤니티</div>
-        <div
-          className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14
-        [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
-        >
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-          <CommunityCard />
-        </div>
-      </div>
-
-      <div className="btm-nav container mx-auto max-w-screen-md">
-        <button className="text-primary active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
-            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
-          </svg>
-        </button>
-        <Link href="/plan/new/name">
-          <button className="text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
-              <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z" />
-              <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
-            </svg>
-          </button>
-        </Link>
-        <button className="text-primary">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
-            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-            <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-          </svg>
-        </button>
       </div>
     </>
   );

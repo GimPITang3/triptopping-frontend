@@ -46,40 +46,52 @@ const PlanPage: NextPage = ({}) => {
 
   return (
     <>
-      <Topbar />
+      <div className="drawer drawer-end">
+        <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content">
+          <Topbar />
 
-      <div>
-          <div className="p-4 pt-8">
-          <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-            <div className="flex items-center justify-between mb-4">
-              <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                내 여행 계획
-              </h5>
-            </div>
-            <div className="flow-root">
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 dark:divide-gray-700"
-              >
-                <li className="py-3 sm:py-1">
-                  <Link href="/plan/new/name" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-                    <div className="flex items-center space-x-4">
-                      <Image src={plusCircle} alt="#" />
-                      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                        새 여행계획을 만들어보세요
-                      </p>
-                    </div>
-                  </Link>
-                </li>
-                <li className="py-3 sm:py-1">
-                  <ItineraryList />
-                </li>
-                <li className="py-3 sm:py-1">
-                  <ItineraryList />
-                </li>
-              </ul>
+          <div>
+              <div className="p-4 pt-8">
+              <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div className="flex items-center justify-between mb-4">
+                  <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                    내 여행 계획
+                  </h5>
+                </div>
+                <div className="flow-root">
+                  <ul
+                    role="list"
+                    className="divide-y divide-gray-200 dark:divide-gray-700"
+                  >
+                    <li className="py-3 sm:py-1">
+                      <Link href="/plan/new/name" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <div className="flex items-center space-x-4">
+                          <Image src={plusCircle} alt="#" />
+                          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                            새 여행계획을 만들어보세요
+                          </p>
+                        </div>
+                      </Link>
+                    </li>
+                    <li className="py-3 sm:py-1">
+                      <ItineraryList />
+                    </li>
+                    <li className="py-3 sm:py-1">
+                      <ItineraryList />
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
+        </div> 
+        <div className="drawer-side">
+          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
+          <ul className="menu p-4 w-80 bg-base-100 text-base-content">
+            <li><a>Sidebar Item 1</a></li>
+            <li><a>Sidebar Item 2</a></li>
+          </ul>
         </div>
       </div>
     </>
