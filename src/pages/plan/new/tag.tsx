@@ -30,11 +30,11 @@ const Tag: FC = () => {
       author: "it's me! mario!",
       planId: Math.floor(Math.random() * 10000000 + 1).toString(),
     });
-    // axios.post<IPlan, AxiosResponse<IPlan>>('/plans', plan).then((res) => {
-    //   setLoading(false);
-    //   const { data } = res;
-    //   router.push('/plan/' + data.planId);
-    // });
+    axios.post<IPlan, AxiosResponse<IPlan>>('/plans', plan).then((res) => {
+      setLoading(false);
+      const { data } = res;
+      router.push('/plan/' + data.planId);
+    });
   };
 
   useEffect(() => {
