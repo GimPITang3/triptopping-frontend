@@ -37,13 +37,13 @@ const DateSelector: FC = () => {
         <div className="flex justify-center">
           <div className="tabs tabs-boxed bg-white">
             <a
-              className={`tab tab-lg ${selected ? 'tab-active' : ''}`}
+              className={`mx-auto tab tab-lg ${selected ? 'tab-active' : ''}`}
               onClick={() => setSelected(true)}
             >
               날짜를 정했어요
             </a>
             <a
-              className={`tab tab-lg ${selected ? '' : 'tab-active'}`}
+              className={`mx-auto tab tab-lg ${selected ? '' : 'tab-active'}`}
               onClick={() => setSelected(false)}
             >
               기간만 정할게요

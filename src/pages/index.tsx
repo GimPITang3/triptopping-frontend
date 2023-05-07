@@ -4,10 +4,18 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useState } from 'react';
+import axios from '@/utils/AxiosInstance';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
+
+interface ItineraryListProps {
+  planId: string;
+  title: string;
+  date: Date;
+  period: number;
+}
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,7 +23,32 @@ const TestComponent: FC<PropsWithChildren> = ({ children }) => {
   return <></>;
 };
 
-const ItineraryList: FC<PropsWithChildren> = ({ children }) => {
+const ItineraryList: FC<PropsWithChildren<ItineraryListProps>> = ({
+  children,
+  planId,
+  title,
+  date,
+  period,
+ }) => {
+  let dateString = '';
+  if(date) {
+    const today = new Date();
+    const remainDate = Math.ceil((date.getTime() - today.getTime())/(1000 * 60 * 60 * 24));
+    const dDay = remainDate===0 ? 'Day' : remainDate;
+    const startDate = date;
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + period);
+
+    const startMonth = (startDate.getMonth() + 1 < 10) ? ('0' + startDate.getMonth() + 1) : (startDate.getMonth() + 1);
+    const endMonth = (endDate.getMonth() + 1 < 10) ? ('0' + endDate.getMonth() + 1) : (endDate.getMonth() + 1);
+    const startDay = startDate.getDate() < 10 ? ('0' + startDate.getDate()) : (startDate.getDate());
+    const endDay = endDate.getDate() < 10 ? ('0' + endDate.getDate()) : (endDate.getDate());
+    const startWeekday = ['일', '월', '화', '수', '목', '금', '토'][startDate.getDay()];
+    const endWeekday = ['일', '월', '화', '수', '목', '금', '토'][endDate.getDay()];
+
+    dateString = dDay + '|' + startMonth + '.' + startDay + '(' + startWeekday + ')' + ' - ' + endMonth + '.' + endDay + '(' + endWeekday + ')';
+    console.log(dateString);
+  }
   return (
     <a
       href="#"
@@ -24,10 +57,10 @@ const ItineraryList: FC<PropsWithChildren> = ({ children }) => {
       <div className="flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            도쿄 여행
+            {title}
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-            D-1 | 4.17(월) - 4.21(금)
+            {dateString}
           </p>
         </div>
       </div>
@@ -54,8 +87,13 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-const Home = () => {
+const Home = async () => {
   const router = useRouter();
+
+  const data = await axios.get('/plans').then((res) => {
+    return res.data;
+  })
+
   return (
     <>
       <Head>
@@ -110,12 +148,13 @@ const Home = () => {
                   role="list"
                   className="divide-y divide-gray-200 dark:divide-gray-700"
                 >
-                  <li className="py-3 sm:py-1">
-                    <ItineraryList />
-                  </li>
-                  <li className="py-3 sm:py-1">
-                    <ItineraryList />
-                  </li>
+                  {data.map(
+                    (planId: string, title: string, date: Date, period: number) => {
+                      <li className="py-3 sm:py-1">
+                        <ItineraryList planId={planId} title={title} date={date} period={period} />
+                      </li>
+                    }
+                  )}
                 </ul>
               </div>
             </div>
