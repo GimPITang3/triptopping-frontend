@@ -4,15 +4,16 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import axios from '@/utils/AxiosInstance';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
+import { IPlan } from '@/types';
 
 interface ItineraryListProps {
   planId: string;
-  title: string;
+  name: string;
   date: Date;
   period: number;
 }
@@ -23,30 +24,60 @@ const TestComponent: FC<PropsWithChildren> = ({ children }) => {
   return <></>;
 };
 
-const ItineraryList: FC<PropsWithChildren<ItineraryListProps>> = ({
-  children,
+const ItineraryList: FC<ItineraryListProps> = ({
   planId,
-  title,
+  name,
   date,
   period,
- }) => {
+}) => {
   let dateString = '';
-  if(date) {
+  if (date) {
     const today = new Date();
-    const remainDate = Math.ceil((date.getTime() - today.getTime())/(1000 * 60 * 60 * 24));
-    const dDay = remainDate===0 ? 'Day' : remainDate;
+    const remainDate = Math.ceil(
+      (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    const dDay = remainDate === 0 ? 'Day' : remainDate;
     const startDate = date;
     const endDate = new Date();
     endDate.setDate(startDate.getDate() + period);
 
-    const startMonth = (startDate.getMonth() + 1 < 10) ? ('0' + startDate.getMonth() + 1) : (startDate.getMonth() + 1);
-    const endMonth = (endDate.getMonth() + 1 < 10) ? ('0' + endDate.getMonth() + 1) : (endDate.getMonth() + 1);
-    const startDay = startDate.getDate() < 10 ? ('0' + startDate.getDate()) : (startDate.getDate());
-    const endDay = endDate.getDate() < 10 ? ('0' + endDate.getDate()) : (endDate.getDate());
-    const startWeekday = ['일', '월', '화', '수', '목', '금', '토'][startDate.getDay()];
-    const endWeekday = ['일', '월', '화', '수', '목', '금', '토'][endDate.getDay()];
+    const startMonth =
+      startDate.getMonth() + 1 < 10
+        ? '0' + startDate.getMonth() + 1
+        : startDate.getMonth() + 1;
+    const endMonth =
+      endDate.getMonth() + 1 < 10
+        ? '0' + endDate.getMonth() + 1
+        : endDate.getMonth() + 1;
+    const startDay =
+      startDate.getDate() < 10
+        ? '0' + startDate.getDate()
+        : startDate.getDate();
+    const endDay =
+      endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
+    const startWeekday = ['일', '월', '화', '수', '목', '금', '토'][
+      startDate.getDay()
+    ];
+    const endWeekday = ['일', '월', '화', '수', '목', '금', '토'][
+      endDate.getDay()
+    ];
 
-    dateString = dDay + '|' + startMonth + '.' + startDay + '(' + startWeekday + ')' + ' - ' + endMonth + '.' + endDay + '(' + endWeekday + ')';
+    dateString =
+      dDay +
+      '|' +
+      startMonth +
+      '.' +
+      startDay +
+      '(' +
+      startWeekday +
+      ')' +
+      ' - ' +
+      endMonth +
+      '.' +
+      endDay +
+      '(' +
+      endWeekday +
+      ')';
     console.log(dateString);
   }
   return (
@@ -57,7 +88,7 @@ const ItineraryList: FC<PropsWithChildren<ItineraryListProps>> = ({
       <div className="flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            {title}
+            {name}
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
             {dateString}
@@ -75,7 +106,7 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
         <Image src={younha} alt="Shoes" />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">지리는 여행</h2>
+        <h2 className="card-name">지리는 여행</h2>
         <div className="badge badge-secondary">NEW</div>
         <p>그녀의 쌀국수 여행기!</p>
         <div className="card-actions justify-end">
@@ -87,12 +118,17 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-const Home = async () => {
+const Home = () => {
   const router = useRouter();
+  const [planList, setPlanList] = useState<IPlan[]>([]);
 
-  const data = await axios.get('/plans').then((res) => {
-    return res.data;
-  })
+  useEffect(() => {
+    const SetPlanList = async () => {
+      const { data } = await axios.get<IPlan[]>('/plans');
+      setPlanList(data);
+    };
+    SetPlanList();
+  }, []);
 
   return (
     <>
@@ -129,7 +165,7 @@ const Home = async () => {
               </div>
             </div>
           </div>
-          
+
           <div className="p-4 pt-8">
             <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex items-center justify-between mb-4">
@@ -148,12 +184,19 @@ const Home = async () => {
                   role="list"
                   className="divide-y divide-gray-200 dark:divide-gray-700"
                 >
-                  {data.map(
-                    (planId: string, title: string, date: Date, period: number) => {
-                      <li className="py-3 sm:py-1">
-                        <ItineraryList planId={planId} title={title} date={date} period={period} />
-                      </li>
-                    }
+                  {planList.map(
+                    ({ planId, name, startDate, period }, index) => {
+                      return (
+                        <li key={`plan-${index}`} className="py-3 sm:py-1">
+                          <ItineraryList
+                            planId={planId}
+                            name={name}
+                            date={startDate || new Date()}
+                            period={period}
+                          />
+                        </li>
+                      );
+                    },
                   )}
                 </ul>
               </div>
@@ -176,35 +219,64 @@ const Home = async () => {
               <CommunityCard />
             </div>
           </div>
-
-          
-        </div> 
+        </div>
         <div className="drawer-side">
           <div className="btm-nav container mx-auto max-w-screen-md">
             <button className="text-primary active">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                className="h-5 w-5"
+                viewBox="0 0 16 16"
+              >
                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
               </svg>
             </button>
             <Link href="/plan/new/name">
               <button className="text-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
-                  <path fillRule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  className="h-5 w-5"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"
+                  />
                   <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
                 </svg>
               </button>
             </Link>
             <button className="text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                className="h-5 w-5"
+                viewBox="0 0 16 16"
+              >
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                <path
+                  fillRule="evenodd"
+                  d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
+                />
               </svg>
             </button>
           </div>
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 bg-base-100 text-base-content">
-            <li><a>Sidebar Item 1</a></li>
-            <li><a>Sidebar Item 2</a></li>
+            <li>
+              <a>Sidebar Item 1</a>
+            </li>
+            <li>
+              <a>Sidebar Item 2</a>
+            </li>
           </ul>
         </div>
       </div>
