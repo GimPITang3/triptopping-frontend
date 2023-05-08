@@ -98,7 +98,7 @@ const Home = () => {
 
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
+        <div className="drawer-content scrollbar-hide">
           <Topbar />
 
           <div className="carousel w-full h-72">
@@ -165,10 +165,7 @@ const Home = () => {
 
           <div className="p-4 my-4">
             <div className="font-bold pb-4 text-xl">커뮤니티</div>
-            <div
-              className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14
-            [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
-            >
+            <div className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14 scrollbar-hide">
               <CommunityCard />
               <CommunityCard />
               <CommunityCard />
