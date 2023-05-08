@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
 import axios from '@/utils/AxiosInstance';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
@@ -14,7 +15,7 @@ import { IPlan } from '@/types';
 interface ItineraryListProps {
   planId: string;
   name: string;
-  date: Date;
+  date: Date | undefined;
   period: number;
 }
 
@@ -30,59 +31,18 @@ const ItineraryList: FC<ItineraryListProps> = ({
   date,
   period,
 }) => {
-  let dateString = '';
-  if (date) {
-    const today = new Date();
-    const remainDate = Math.ceil(
-      (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    const dDay = remainDate === 0 ? 'Day' : remainDate;
-    const startDate = date;
-    const endDate = new Date();
-    endDate.setDate(startDate.getDate() + period);
+  let dateString = date ? (()=>{
+    const startDate = DateTime.fromISO(date.toISOString());
+    const endDate = startDate.plus({days: period});
+    const diff = startDate.diff(DateTime.now(), ['days']).days;
+    const dDay = Math.ceil(diff);
 
-    const startMonth =
-      startDate.getMonth() + 1 < 10
-        ? '0' + startDate.getMonth() + 1
-        : startDate.getMonth() + 1;
-    const endMonth =
-      endDate.getMonth() + 1 < 10
-        ? '0' + endDate.getMonth() + 1
-        : endDate.getMonth() + 1;
-    const startDay =
-      startDate.getDate() < 10
-        ? '0' + startDate.getDate()
-        : startDate.getDate();
-    const endDay =
-      endDate.getDate() < 10 ? '0' + endDate.getDate() : endDate.getDate();
-    const startWeekday = ['일', '월', '화', '수', '목', '금', '토'][
-      startDate.getDay()
-    ];
-    const endWeekday = ['일', '월', '화', '수', '목', '금', '토'][
-      endDate.getDay()
-    ];
-
-    dateString =
-      dDay +
-      '|' +
-      startMonth +
-      '.' +
-      startDay +
-      '(' +
-      startWeekday +
-      ')' +
-      ' - ' +
-      endMonth +
-      '.' +
-      endDay +
-      '(' +
-      endWeekday +
-      ')';
-    console.log(dateString);
-  }
+    return 'D-' + (dDay===0 ? 'day' : dDay) + ' | ' + startDate.toFormat('MM.dd(EEE)') + ' - ' + endDate.toFormat('MM.dd(EEE)');
+  })() : (period - 1) + '박' + (period) + '일';
+  
   return (
     <a
-      href="#"
+      href={"/plan/" + planId}
       className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
       <div className="flex items-center space-x-4">
@@ -125,7 +85,7 @@ const Home = () => {
   useEffect(() => {
     const SetPlanList = async () => {
       const { data } = await axios.get<IPlan[]>('/plans');
-      setPlanList(data);
+      setPlanList(data.slice(0, 3));
     };
     SetPlanList();
   }, []);
@@ -191,7 +151,7 @@ const Home = () => {
                           <ItineraryList
                             planId={planId}
                             name={name}
-                            date={startDate || new Date()}
+                            date={startDate}
                             period={period}
                           />
                         </li>

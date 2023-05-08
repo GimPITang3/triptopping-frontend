@@ -3,8 +3,11 @@ import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren } from 'react';
+import { DateTime } from 'luxon';
+import axios from '@/utils/AxiosInstance';
+import { FC, PropsWithChildren, useState, useEffect, MouseEventHandler } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
+import { IPlan } from '@/types';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -14,41 +17,97 @@ import plusCircle from '../../../../public/pluscircle.svg';
 //   };
 // };
 
-const ItineraryList: FC<PropsWithChildren> = ({ children }) => {
-    return (
-      <a href="#" className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-              도쿄 여행
-            </p>
-            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-              D-1 | 4.17(월) - 4.21(금)
-            </p>
-          </div>
-          <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">          
-            <div className="inline-flex rounded-md shadow-sm" role="group">
-              <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                수정
-              </button>
-              <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-2 focus:ring-red-700 focus:text-red-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-red-500 dark:focus:text-white">
-                삭제
-              </button>
-            </div>
+interface ItineraryListProps {
+  planId: string;
+  name: string;
+  date: Date | undefined;
+  period: number;
+  onClickDelPlan: Function;
+}
+
+const ItineraryList: FC<ItineraryListProps> = ({
+  planId,
+  name,
+  date,
+  period,
+  onClickDelPlan,
+}) => {
+  const router = useRouter();
+
+  let dateString = date ? (()=>{
+    const startDate = DateTime.fromISO(date.toISOString());
+    const endDate = startDate.plus({days: period});
+    const diff = startDate.diff(DateTime.now(), ['days']).days;
+    const dDay = Math.ceil(diff);
+
+    return 'D-' + (dDay===0 ? 'day' : dDay) + ' | ' + startDate.toFormat('MM.dd(EEE)') + ' - ' + endDate.toFormat('MM.dd(EEE)');
+  })() : (period - 1) + '박' + (period) + '일';
+
+  return (
+    <a href={"/plan/" + planId} className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+      <div className="flex items-center space-x-4">
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+            {name}
+          </p>
+          <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+            {dateString}
+          </p>
+        </div>
+        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">          
+          <div className="inline-flex rounded-md shadow-sm" role="group">
+            <button type="button" onClick={() => router.push('/plan/' + planId)} className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+              수정
+            </button>
+            <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-2 focus:ring-red-700 focus:text-red-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-red-500 dark:focus:text-white">
+              <label onClick={() => onClickDelPlan(planId)} htmlFor="del-modal">삭제</label>
+            </button>
           </div>
         </div>
-      </a>
-    );
-  };
+      </div>
+    </a>
+  );
+};
 
 const PlanPage: NextPage = ({}) => {
   const router = useRouter();
+  const [planList, setPlanList] = useState<IPlan[]>([]);
+  const [delId, setDelId] = useState('');
+
+  const handleDelId = (id: string) => {
+    setDelId(id);
+  }
+
+  const delPlan = () => {
+    setPlanList(planList.filter(item => item.planId !== delId));
+    console.log(planList);
+  }
+
+  useEffect(() => {
+    const SetPlanList = async () => {
+      const { data } = await axios.get<IPlan[]>('/plans');
+      setPlanList(data);
+    };
+    SetPlanList();
+  }, []);
 
   return (
     <>
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
+          <input type="checkbox" id="del-modal" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">일정이 삭제돼요</h3>
+              <p className="py-4">선택하신 일정이 삭제됩니다. 삭제하시겠습니까?</p>
+              <div className="modal-action">
+                <label onClick={delPlan} htmlFor="del-modal" className="btn btn-primary">예</label>
+                <label htmlFor="del-modal" className="btn">아니오</label>
+              </div>
+            </div>
+          </div>
+
           <Topbar />
 
           <div>
@@ -74,12 +133,21 @@ const PlanPage: NextPage = ({}) => {
                         </div>
                       </Link>
                     </li>
-                    <li className="py-3 sm:py-1">
-                      <ItineraryList />
-                    </li>
-                    <li className="py-3 sm:py-1">
-                      <ItineraryList />
-                    </li>
+                    {planList.map(
+                      ({ planId, name, startDate, period }, index) => {
+                        return (
+                          <li key={`plan-${index}`} className="py-3 sm:py-1">
+                            <ItineraryList
+                              planId={planId}
+                              name={name}
+                              date={startDate}
+                              period={period}
+                              onClickDelPlan={handleDelId}
+                            />
+                          </li>
+                        );
+                      },
+                    )}
                   </ul>
                 </div>
               </div>
