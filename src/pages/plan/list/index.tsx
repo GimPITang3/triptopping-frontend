@@ -35,7 +35,8 @@ const ItineraryList: FC<ItineraryListProps> = ({
   const router = useRouter();
 
   let dateString = date ? (()=>{
-    const startDate = DateTime.fromISO(date.toISOString());
+    console.log(date);
+    const startDate = DateTime.fromISO(new Date(date).toISOString());
     const endDate = startDate.plus({days: period});
     const diff = startDate.diff(DateTime.now(), ['days']).days;
     const dDay = Math.ceil(diff);
@@ -44,7 +45,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
   })() : (period - 1) + '박' + (period) + '일';
 
   return (
-    <a href={"/plan/" + planId} className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+    <a onClick={() => router.push('/')} className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
       <div className="flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -54,14 +55,10 @@ const ItineraryList: FC<ItineraryListProps> = ({
             {dateString}
           </p>
         </div>
-        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">          
-          <div className="inline-flex rounded-md shadow-sm" role="group">
-            <button type="button" onClick={() => router.push('/plan/' + planId)} className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-              수정
-            </button>
-            <button type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-red-700 focus:z-10 focus:ring-2 focus:ring-red-700 focus:text-red-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-red-500 dark:focus:text-white">
-              <label onClick={() => onClickDelPlan(planId)} htmlFor="del-modal">삭제</label>
-            </button>
+        <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+          <div className="btn-group">
+            <label onClick={(e) => {e.stopPropagation(); router.push('/plan/' + planId);}} className="btn">수정</label>
+            <label onClick={(e) => {e.stopPropagation(); onClickDelPlan(planId);}} htmlFor="del-modal" className="btn btn-secondary">삭제</label>
           </div>
         </div>
       </div>

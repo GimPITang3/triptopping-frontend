@@ -11,6 +11,7 @@ import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
 import { IPlan } from '@/types';
+import { debug } from 'console';
 
 interface ItineraryListProps {
   planId: string;
@@ -32,6 +33,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
   period,
 }) => {
   let dateString = date ? (()=>{
+    console.log(date);
     const startDate = DateTime.fromISO(date.toISOString());
     const endDate = startDate.plus({days: period});
     const diff = startDate.diff(DateTime.now(), ['days']).days;
