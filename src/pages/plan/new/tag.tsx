@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 import { PlanContext } from '@/contexts';
 import axios from '@/utils/AxiosInstance';
-import { IPlan } from '@/types';
+import { Plan } from '@/types';
 import { AxiosResponse } from 'axios';
 
 const Tag: FC = () => {
@@ -23,24 +23,26 @@ const Tag: FC = () => {
 
   const onClickCreate = () => {
     setLoading(true);
-    setPlan({
+    console.log({
       ...plan,
       createdAt: new Date(),
       updatedAt: new Date(),
-      author: "it's me! mario!",
-      planId: Math.floor(Math.random() * 10000000 + 1).toString(),
+      author: '5bf142459b72e12b2b1b2cd',
     });
-    axios.post<IPlan, AxiosResponse<IPlan>>('/plans', plan).then((res) => {
-      setLoading(false);
-      const { data } = res;
-      router.push('/plan/' + data.planId);
-    });
+    console.log(typeof plan.startDate);
+    axios
+      .post<Plan, AxiosResponse<Plan>>('/plans', {
+        ...plan,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        author: '15bf142459b72e12b2b1b2cd',
+      })
+      .then((res) => {
+        setLoading(false);
+        const { data } = res;
+        router.push('/plan/' + data.planId);
+      });
   };
-
-  useEffect(() => {
-    if (plan.planId === '') return;
-    router.push('/plan/' + plan.planId);
-  }, [plan, router]);
 
   return (
     <div className="flex flex-col min-h-screen p-8">
