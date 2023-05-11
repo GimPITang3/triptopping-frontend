@@ -50,7 +50,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
     : period - 1 + '박' + period + '일';
 
   return (
-    <a
+    <Link
       href={'/plan/' + planId}
       className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
@@ -64,7 +64,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
           </p>
         </div>
       </div>
-    </a>
+    </Link>
   );
 };
 
