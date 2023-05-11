@@ -1,21 +1,16 @@
 import Topbar from '@/components/Topbar';
+import { Plan } from '@/types';
+import axios from '@/utils/AxiosInstance';
+import { DateTime } from 'luxon';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
-import { DateTime } from 'luxon';
-import axios from '@/utils/AxiosInstance';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
-<<<<<<< HEAD
-import { IPlan } from '@/types';
-import { debug } from 'console';
-=======
-import { Plan } from '@/types';
->>>>>>> b4249f0bd05d70118bb81aea87aad98db5e39a3d
 
 interface ItineraryListProps {
   planId: string;
@@ -36,14 +31,6 @@ const ItineraryList: FC<ItineraryListProps> = ({
   date,
   period,
 }) => {
-<<<<<<< HEAD
-  let dateString = date ? (()=>{
-    console.log(date);
-    const startDate = DateTime.fromISO(date.toISOString());
-    const endDate = startDate.plus({days: period});
-    const diff = startDate.diff(DateTime.now(), ['days']).days;
-    const dDay = Math.ceil(diff);
-=======
   let dateString = date
     ? (() => {
         const startDate = DateTime.fromISO(date.toISOString());
@@ -61,7 +48,6 @@ const ItineraryList: FC<ItineraryListProps> = ({
         );
       })()
     : period - 1 + '박' + period + '일';
->>>>>>> b4249f0bd05d70118bb81aea87aad98db5e39a3d
 
   return (
     <a
