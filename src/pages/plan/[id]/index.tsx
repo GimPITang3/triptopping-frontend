@@ -1,10 +1,13 @@
 import { PlanContext } from '@/contexts';
 import {
   Itinerary,
-  ItinerariesDay,
-  ItinerarySlot,
-  IPlace,
-  IPlan,
+  Place,
+  Plan,
+  ItineraryDaily,
+  Schedule,
+  ScheduleSlot,
+  ScheduleType,
+  Transport,
 } from '@/types';
 import {
   GoogleMap,
@@ -36,6 +39,7 @@ import plus from '../../../../public/plus.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import trash from '../../../../public/trash.svg';
 import Datepicker from 'react-tailwindcss-datepicker';
+import axios from '@/utils/AxiosInstance';
 
 interface SearchResult {
   position: {
@@ -45,101 +49,11 @@ interface SearchResult {
   name: string;
 }
 
-const GetItineraryValue = (itinerary: any, key: string) => {
-  return itinerary.manual[key] || itinerary.system[key];
-};
-
-const initialPlan: IPlan = {
-  planId: '123',
-  name: '지수의 콩국수 여행기',
-  numberOfMembers: 4,
-  members: [],
-  author: '',
-  // 예산 설정, 단위는 원
-  budget: 2000000,
-  // 기간 설정
-  period: 3, // 3일, 이게 필수
-  startDate: new Date('2024-01-01'), // 이건 선택
-  tags: ['바다', '식도락', '힐링'],
-  // 일정
-  itineraries: [
-    [
-      {
-        type: 'place',
-        system: {
-          place: {
-            name: '인천국제공항',
-          },
-          time: '2023-02-28 10:00:00',
-        },
-        manual: {},
-      },
-
-      {
-        type: 'place',
-        system: {
-          // 추천에 의해 결정된 내용
-          time: '2023-02-28 17:00:00',
-          place: {
-            name: '시부야',
-          },
-        },
-        manual: {
-          // 사용자에 의해 결정된 내용
-        },
-      },
-      {
-        type: 'transport',
-        // 대충 구글 API 결과 그대로 저장하기 (맵에 그릴수 있는 정도로만)
-        system: {},
-        manual: {},
-      },
-    ],
-    [
-      {
-        type: 'place',
-        system: {
-          // 추천에 의해 결정된 내용
-          time: '2023-03-01 17:00:00',
-        },
-        manual: {
-          // 사용자에 의해 결정된 내용
-          place: {
-            name: '돈키호테',
-          },
-        },
-      },
-      {
-        type: 'place',
-        system: {
-          // 추천에 의해 결정된 내용
-          time: '2023-03-01 20:00:00',
-          place: {
-            name: '도쿄타워',
-          },
-        },
-        manual: {
-          // 사용자에 의해 결정된 내용
-        },
-      },
-      {
-        type: 'place',
-        system: {
-          // 추천에 의해 결정된 내용
-          time: '2023-03-01 22:00:00',
-          place: {
-            name: '규카츠 집',
-          },
-        },
-        manual: {
-          // 사용자에 의해 결정된 내용
-        },
-      },
-    ],
-  ],
-  createdAt: new Date('2023-03-20 20:33:56'),
-  updatedAt: new Date('2023-03-20 20:33:56'),
-  deletedAt: undefined,
+const GetItineraryValue = (itinerary: ScheduleSlot, key: string) => {
+  return (
+    (itinerary.manual && itinerary.manual[key]) ||
+    (itinerary.system && itinerary.system[key])
+  );
 };
 
 const ModifyNameModal: React.FC = () => {
@@ -548,10 +462,10 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
     }
     setPlan((prev) => {
       const newPlan = { ...prev };
-      newPlan.itineraries[day].push({
+      newPlan.itinerary[day].push({
         type: 'place',
         system: {},
-        manual: { place: searchResult },
+        manual: { details: searchResult },
       });
       return newPlan;
     });
@@ -683,14 +597,19 @@ const PlanPage: NextPage = ({}) => {
 
   const onClickDeleteItinerary = (day: number, index: number) => {
     setPlan((prev) => {
-      prev.itineraries[day].splice(index, 1);
+      prev.itinerary[day].splice(index, 1);
       return { ...prev };
     });
   };
 
   useEffect(() => {
-    setPlan({ ...plan, itineraries: initialPlan.itineraries });
-  }, [setPlan]);
+    if (id !== undefined) {
+      axios.get<Plan>(`/plans/${id}`).then((res) => {
+        console.log(res.data);
+        setPlan(res.data);
+      });
+    }
+  }, [id]);
 
   const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -701,14 +620,18 @@ const PlanPage: NextPage = ({}) => {
     const sourceIdx = result.source.index;
     const destIdx = result.destination.index;
 
-    const item = plan.itineraries[sourceDay][sourceIdx];
+    const item = plan.itinerary[sourceDay][sourceIdx];
 
     setPlan((prev) => {
-      prev.itineraries[sourceDay].splice(sourceIdx, 1);
-      prev.itineraries[destinationDay].splice(destIdx, 0, item);
+      prev.itinerary[sourceDay].splice(sourceIdx, 1);
+      prev.itinerary[destinationDay].splice(destIdx, 0, item);
       return { ...prev };
     });
   };
+
+  if (!plan.planId) {
+    return <div></div>;
+  }
 
   return (
     <div className="min-h-screen">
@@ -797,8 +720,8 @@ const PlanPage: NextPage = ({}) => {
       <button className="btn btn-link">편집</button>
       <DragDropContext onDragEnd={handleOnDragEnd} enableDefaultSensors={true}>
         <div className="space-y-2 p-4">
-          {plan.itineraries.map(
-            (itineraryDaily: ItinerariesDay, dayIdx: number) => (
+          {plan.itinerary.map(
+            (itineraryDaily: ItineraryDaily, dayIdx: number) => (
               <div className="py-4" key={`day-${dayIdx}`}>
                 <h1 className="font-bold text-xl">{`Day${dayIdx + 1}`}</h1>
                 <Droppable key={dayIdx} droppableId={dayIdx.toString()}>
@@ -806,10 +729,10 @@ const PlanPage: NextPage = ({}) => {
                     <ul {...provided.droppableProps} ref={provided.innerRef}>
                       {itineraryDaily
                         .filter(
-                          (itinerary: ItinerarySlot) =>
+                          (itinerary: ScheduleSlot) =>
                             itinerary.type === 'place',
                         )
-                        .map((itinerary: Itinerary<IPlace>, idx: number) => (
+                        .map((itinerary: ScheduleSlot, idx: number) => (
                           <Draggable
                             key={`itinerary${dayIdx}-${idx}`}
                             draggableId={`itinerary${dayIdx}-${idx}`}
@@ -839,8 +762,10 @@ const PlanPage: NextPage = ({}) => {
                                     <div className="card-body shadow-lg bg-[#fafcff]">
                                       <h2 className="card-title">
                                         {
-                                          GetItineraryValue(itinerary, 'place')
-                                            .name
+                                          GetItineraryValue(
+                                            itinerary,
+                                            'details',
+                                          ).name
                                         }
                                         <Image
                                           src={pencilSquare}

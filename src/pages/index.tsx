@@ -10,8 +10,12 @@ import axios from '@/utils/AxiosInstance';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
+<<<<<<< HEAD
 import { IPlan } from '@/types';
 import { debug } from 'console';
+=======
+import { Plan } from '@/types';
+>>>>>>> b4249f0bd05d70118bb81aea87aad98db5e39a3d
 
 interface ItineraryListProps {
   planId: string;
@@ -32,19 +36,36 @@ const ItineraryList: FC<ItineraryListProps> = ({
   date,
   period,
 }) => {
+<<<<<<< HEAD
   let dateString = date ? (()=>{
     console.log(date);
     const startDate = DateTime.fromISO(date.toISOString());
     const endDate = startDate.plus({days: period});
     const diff = startDate.diff(DateTime.now(), ['days']).days;
     const dDay = Math.ceil(diff);
+=======
+  let dateString = date
+    ? (() => {
+        const startDate = DateTime.fromISO(date.toISOString());
+        const endDate = startDate.plus({ days: period });
+        const diff = startDate.diff(DateTime.now(), ['days']).days;
+        const dDay = Math.ceil(diff);
 
-    return 'D-' + (dDay===0 ? 'day' : dDay) + ' | ' + startDate.toFormat('MM.dd(EEE)') + ' - ' + endDate.toFormat('MM.dd(EEE)');
-  })() : (period - 1) + '박' + (period) + '일';
-  
+        return (
+          'D-' +
+          (dDay === 0 ? 'day' : dDay) +
+          ' | ' +
+          startDate.toFormat('MM.dd(EEE)') +
+          ' - ' +
+          endDate.toFormat('MM.dd(EEE)')
+        );
+      })()
+    : period - 1 + '박' + period + '일';
+>>>>>>> b4249f0bd05d70118bb81aea87aad98db5e39a3d
+
   return (
     <a
-      href={"/plan/" + planId}
+      href={'/plan/' + planId}
       className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
       <div className="flex items-center space-x-4">
@@ -82,11 +103,11 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
 
 const Home = () => {
   const router = useRouter();
-  const [planList, setPlanList] = useState<IPlan[]>([]);
+  const [planList, setPlanList] = useState<Plan[]>([]);
 
   useEffect(() => {
     const SetPlanList = async () => {
-      const { data } = await axios.get<IPlan[]>('/plans');
+      const { data } = await axios.get<Plan[]>('/plans');
       setPlanList(data.slice(0, 3));
     };
     SetPlanList();

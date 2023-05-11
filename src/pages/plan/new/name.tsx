@@ -28,6 +28,9 @@ const Name: FC = () => {
           className="input input-bordered w-full"
           value={plan.name}
           onChange={handleChange}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') handleClickNext();
+          }}
         />
       </div>
       <div className="flex w-full space-x-4">

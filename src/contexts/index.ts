@@ -1,9 +1,9 @@
-import { IPlan } from '@/types';
+import { Plan } from '@/types';
 import { SetStateAction, createContext, Dispatch } from 'react';
 
 export const PlanContext = createContext<{
-  plan: IPlan;
-  setPlan: Dispatch<SetStateAction<IPlan>>;
+  plan: Plan;
+  setPlan: Dispatch<SetStateAction<Plan>>;
 }>({
   plan: {
     name: '',
@@ -13,7 +13,7 @@ export const PlanContext = createContext<{
     budget: 0,
     period: 1,
     tags: [],
-    itineraries: [],
+    itinerary: [],
     planId: '',
     createdAt: new Date(),
     updatedAt: new Date(),

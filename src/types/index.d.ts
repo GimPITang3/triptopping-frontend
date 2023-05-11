@@ -1,26 +1,32 @@
 import { PlaceData } from '@googlemaps/google-maps-services-js';
 
-export interface IPlace {
+export interface Place {
+  [key: string]: any;
   type: 'place';
 
-  time: Date;
-  duration: number;
-  cost: number;
+  /** milli seconds */
+  time?: number;
+  /** milli seconds */
+  duration?: number;
+  cost?: number;
 
-  details: Partial<IPlaceData>;
+  details?: Partial<PlaceData>;
 }
 
-export interface ITransport {
+export interface Transport {
+  [key: string]: any;
   type: 'transport';
 
-  time: Date;
-  duration: number;
-  cost: number;
+  /** milli seconds */
+  time?: number;
+  /** milli seconds */
+  duration?: number;
+  cost?: number;
 }
 
-export type ItineraryType = IPlace | Transport;
+export type ScheduleType = Place | Transport;
 
-export type Itinerary<T> = T extends { type: string }
+export type Schedule<T> = T extends { type: string }
   ? {
       type: T['type'];
       system?: Partial<Omit<T, 'type'>>;
@@ -28,13 +34,13 @@ export type Itinerary<T> = T extends { type: string }
     }
   : never;
 
-export type ItinerarySlot = Itinerary<ItineraryType>;
+export type ScheduleSlot = Schedule<ScheduleType>;
 
-export type ItinerariesDay = ItinerarySlot[];
+export type ItineraryDaily = ScheduleSlot[];
 
-export type Itineraries = ItinerariesDay[];
+export type Itinerary = ItineraryDaily[];
 
-export interface IPlan {
+export interface Plan {
   planId: string;
   name: string;
   author: Types.ObjectId;
@@ -44,7 +50,7 @@ export interface IPlan {
   period: number;
   budget: number;
   tags: string[];
-  itineraries: Itineraries;
+  itinerary: Itinerary;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
