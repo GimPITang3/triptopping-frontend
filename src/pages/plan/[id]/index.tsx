@@ -39,7 +39,7 @@ import plus from '../../../../public/plus.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import trash from '../../../../public/trash.svg';
 import Datepicker from 'react-tailwindcss-datepicker';
-import axios from '@/utils/AxiosInstance';
+import api from '@/utils/AxiosInstance';
 
 interface SearchResult {
   position: {
@@ -604,7 +604,7 @@ const PlanPage: NextPage = ({}) => {
 
   useEffect(() => {
     if (id !== undefined) {
-      axios.get<Plan>(`/plans/${id}`).then((res) => {
+      api.get<Plan>(`/plans/${id}`).then((res) => {
         console.log(res.data);
         setPlan(res.data);
       });

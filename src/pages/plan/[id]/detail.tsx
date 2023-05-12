@@ -1,5 +1,7 @@
-const detail = () => {
+import { FC } from 'react';
+
+const Detail: FC = () => {
   return <div>detail</div>;
 };
 
-export default detail;
+export default Detail;

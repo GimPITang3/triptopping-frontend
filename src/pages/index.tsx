@@ -1,6 +1,6 @@
 import Topbar from '@/components/Topbar';
 import { Plan } from '@/types';
-import axios from '@/utils/AxiosInstance';
+import api from '@/utils/AxiosInstance';
 import { DateTime } from 'luxon';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
@@ -93,7 +93,7 @@ const Home = () => {
 
   useEffect(() => {
     const SetPlanList = async () => {
-      const { data } = await axios.get<Plan[]>('/plans');
+      const { data } = await api.get<Plan[]>('/plans');
       setPlanList(data.slice(0, 3));
     };
     SetPlanList();

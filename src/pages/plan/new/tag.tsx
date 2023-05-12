@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 import { PlanContext } from '@/contexts';
-import axios from '@/utils/AxiosInstance';
+import api from '@/utils/AxiosInstance';
 import { Plan } from '@/types';
 import { AxiosResponse } from 'axios';
 

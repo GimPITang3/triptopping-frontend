@@ -1,16 +1,12 @@
 import Topbar from '@/components/Topbar';
 import { Plan } from '@/types';
-import axios from '@/utils/AxiosInstance';
+import api from '@/utils/AxiosInstance';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  FC,
-  useEffect,
-  useState
-} from 'react';
+import { FC, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
@@ -38,12 +34,13 @@ const ItineraryList: FC<ItineraryListProps> = ({
 }) => {
   const router = useRouter();
 
-  let dateString = date ? (()=>{
-    console.log(date);
-    const startDate = DateTime.fromISO(new Date(date).toISOString());
-    const endDate = startDate.plus({days: period});
-    const diff = startDate.diff(DateTime.now(), ['days']).days;
-    const dDay = Math.ceil(diff);
+  let dateString = date
+    ? (() => {
+        console.log(date);
+        const startDate = DateTime.fromISO(new Date(date).toISOString());
+        const endDate = startDate.plus({ days: period });
+        const diff = startDate.diff(DateTime.now(), ['days']).days;
+        const dDay = Math.ceil(diff);
 
         return (
           'D-' +
@@ -57,7 +54,10 @@ const ItineraryList: FC<ItineraryListProps> = ({
     : period - 1 + '박' + period + '일';
 
   return (
-    <a onClick={() => router.push('/')} className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
+    <a
+      onClick={() => router.push('/')}
+      className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+    >
       <div className="flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
@@ -69,8 +69,25 @@ const ItineraryList: FC<ItineraryListProps> = ({
         </div>
         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
           <div className="btn-group">
-            <label onClick={(e) => {e.stopPropagation(); router.push('/plan/' + planId);}} className="btn">수정</label>
-            <label onClick={(e) => { e.stopPropagation(); onClickDelPlan(planId); }} htmlFor="del-modal" className="btn btn-secondary">삭제</label>
+            <label
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push('/plan/' + planId);
+              }}
+              className="btn"
+            >
+              수정
+            </label>
+            <label
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickDelPlan(planId);
+              }}
+              htmlFor="del-modal"
+              className="btn btn-secondary"
+            >
+              삭제
+            </label>
           </div>
         </div>
       </div>
@@ -94,7 +111,7 @@ const PlanPage: NextPage = ({}) => {
 
   useEffect(() => {
     const SetPlanList = async () => {
-      const { data } = await axios.get<Plan[]>('/plans');
+      const { data } = await api.get<Plan[]>('/plans');
       setPlanList(data);
     };
     SetPlanList();
