@@ -408,6 +408,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
+    map.setCenter(center);
     setMap(map);
   }, []);
 
@@ -505,7 +506,6 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
               </StandaloneSearchBox>
               <GoogleMap
                 mapContainerStyle={containerStyle}
-                center={center}
                 zoom={10}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
@@ -547,6 +547,7 @@ const PlanPage: NextPage = ({}) => {
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
+    map.setCenter(center);
     setMap(map);
   }, []);
 
@@ -706,7 +707,6 @@ const PlanPage: NextPage = ({}) => {
           </StandaloneSearchBox>
           <GoogleMap
             mapContainerStyle={containerStyle}
-            center={center}
             zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
@@ -720,9 +720,7 @@ const PlanPage: NextPage = ({}) => {
           </GoogleMap>
         </div>
       </LoadScript>
-      {/* TODO: 편집버튼으로 enableDefaultSensors 토글 */}
-      <button className="btn btn-link">편집</button>
-      <DragDropContext onDragEnd={handleOnDragEnd} enableDefaultSensors={true}>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className="space-y-2 p-4">
           {plan.itinerary.map(
             (itineraryDaily: ItineraryDaily, dayIdx: number) => (
