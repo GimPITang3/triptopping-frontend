@@ -132,11 +132,11 @@ const Detail: FC = () => {
         </div>
       </LoadScript>
 
-      <div className="absolute top-0 left-0 flex flex-col w-full z-10">
-        <div className="backdrop-blur-sm bg-white/80 w-full">
+      <div className="absolute top-0 left-0 flex flex-col w-full z-10 items-start pointer-events-none">
+        <div className="backdrop-blur-sm bg-white/80 w-full pointer-events-auto">
           <Topbar />
         </div>
-        <div>
+        <div className="pointer-events-auto">
           <ul
             key={`day-${page}`}
             onScroll={(e) => {
@@ -157,7 +157,7 @@ const Detail: FC = () => {
             <li className="min-h-screen"></li>
           </ul>
         </div>
-        <div className="tabs tabs-boxed mx-auto bg-white/90">
+        <div className="tabs tabs-boxed mx-auto bg-white/90 pointer-events-auto">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
