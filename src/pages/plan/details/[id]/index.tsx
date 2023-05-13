@@ -21,7 +21,7 @@ import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
   return (
-    <div className="mx-auto px-4">
+    <div className="mx-auto px-4 w-full">
       <div className="relative flex items-center justify-between h-12">
         <div className="flex-shrink-0 flex items-center font-bold text-xl">
           <Image
@@ -58,8 +58,8 @@ const Detail: FC = () => {
   }, []);
 
   const containerStyle = {
-    width: '90%',
-    height: '400px',
+    width: '100%',
+    height: '100vh',
   };
 
   const handleScroll = (height: number) => {
@@ -103,8 +103,6 @@ const Detail: FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      <Topbar />
-
       <LoadScript
         // googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
@@ -134,35 +132,39 @@ const Detail: FC = () => {
         </div>
       </LoadScript>
 
-      <div className="absolute top-4 left-0 flex flex-col">
-        <ul
-          key={`day-${page}`}
-          onScroll={(e) => {
-            handleScroll(e.currentTarget.scrollTop);
-          }}
-          className="steps steps-vertical snap-y snap-mandatory max-h-[85vh] overflow-auto scrollbar-hide w-full"
-        >
-          {itineraryDaily
-            .filter((itinerary) => itinerary.type === 'place')
-            .map((itinerary, index) => (
-              <li
-                key={`it-${index}`}
-                className="w-full step step-neutral snap-start"
-              >
-                <div>{itinerary.system && itinerary.system.details.name} </div>
-              </li>
-            ))}
-          <li className="min-h-screen"></li>
-        </ul>
-
-        <div className="btn-group">
+      <div className="absolute top-0 left-0 flex flex-col w-full z-10">
+        <div className="backdrop-blur-sm bg-white/80 w-full">
+          <Topbar />
+        </div>
+        <div>
+          <ul
+            key={`day-${page}`}
+            onScroll={(e) => {
+              handleScroll(e.currentTarget.scrollTop);
+            }}
+            className="steps steps-vertical snap-y snap-mandatory h-[85vh] overflow-auto scrollbar-hide"
+          >
+            {itineraryDaily
+              .filter((itinerary) => itinerary.type === 'place')
+              .map((itinerary, index) => (
+                <li
+                  key={`it-${index}`}
+                  className="w-full step step-neutral snap-start bg-white/90"
+                >
+                  <div>{itinerary.system && itinerary.system.details.name} </div>
+                </li>
+              ))}
+            <li className="min-h-screen"></li>
+          </ul>
+        </div>
+        <div className="tabs tabs-boxed mx-auto bg-white/90">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
               onClick={() => setPage(index)}
-              className={'btn' + (index === page ? ' btn-active' : '')}
+              className={'tab tab-lg' + (index === page ? ' tab-active' : '')}
             >
-              {index + 1}
+              Day {index + 1}
             </button>
           ))}
         </div>
