@@ -55,7 +55,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
 
   return (
     <a
-      onClick={() => router.push('/')}
+      onClick={() => router.push('/plan/details/' + planId)}
       className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
       <div className="flex items-center space-x-4">
@@ -106,7 +106,7 @@ const PlanPage: NextPage = ({}) => {
 
   const delPlan = () => {
     setPlanList(planList.filter((item) => item.planId !== delId));
-    console.log(planList);
+    api.delete('/plans/' + delId);
   };
 
   useEffect(() => {
