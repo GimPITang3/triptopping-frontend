@@ -1,26 +1,22 @@
+import { PlanContext } from '@/contexts';
+import { Place, Plan } from '@/types';
+import api from '@/utils/AxiosInstance';
+import { decode } from '@googlemaps/polyline-codec';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker
+} from '@react-google-maps/api';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 import {
   FC,
   useCallback,
   useContext,
   useEffect,
-  useRef,
-  useState,
+  useState
 } from 'react';
-import api from '@/utils/AxiosInstance';
-import { useRouter } from 'next/router';
-import { PlanContext } from '@/contexts';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
-import home from '../../../../../public/home.svg';
-import Image from 'next/image';
-import { Place, Plan } from '@/types';
-import {
-  LoadScript,
-  StandaloneSearchBox,
-  GoogleMap,
-  Marker,
-  Polyline,
-} from '@react-google-maps/api';
-import { decode } from '@googlemaps/polyline-codec';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -106,30 +102,11 @@ const Detail: FC = () => {
   };
 
   return (
-    <div>
+    <div className="relative min-h-screen">
       <Topbar />
-      <ul
-        key={`day-${page}`}
-        onScroll={(e) => {
-          handleScroll(e.currentTarget.scrollTop);
-        }}
-        className="steps steps-vertical snap-y snap-mandatory max-h-[85vh] overflow-auto scrollbar-hide"
-      >
-        {itineraryDaily
-          .filter((itinerary) => itinerary.type === 'place')
-          .map((itinerary, index) => (
-            <li
-              key={`it-${index}`}
-              className="w-full step step-neutral snap-center"
-            >
-              <div>{itinerary.system && itinerary.system.details.name} </div>
-            </li>
-          ))}
-        <div className="min-h-screen"></div>
-      </ul>
 
       <LoadScript
-        googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
+        // googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
       >
         <div className="h-full">
@@ -157,16 +134,38 @@ const Detail: FC = () => {
         </div>
       </LoadScript>
 
-      <div className="btn-group">
-        {plan.itinerary.map((_value, index) => (
-          <button
-            key={`page-${index}`}
-            onClick={() => setPage(index)}
-            className={'btn' + (index === page ? ' btn-active' : '')}
-          >
-            {index + 1}
-          </button>
-        ))}
+      <div className="absolute top-4 left-0 flex flex-col">
+        <ul
+          key={`day-${page}`}
+          onScroll={(e) => {
+            handleScroll(e.currentTarget.scrollTop);
+          }}
+          className="steps steps-vertical snap-y snap-mandatory max-h-[85vh] overflow-auto scrollbar-hide w-full"
+        >
+          {itineraryDaily
+            .filter((itinerary) => itinerary.type === 'place')
+            .map((itinerary, index) => (
+              <li
+                key={`it-${index}`}
+                className="w-full step step-neutral snap-start"
+              >
+                <div>{itinerary.system && itinerary.system.details.name} </div>
+              </li>
+            ))}
+          <li className="min-h-screen"></li>
+        </ul>
+
+        <div className="btn-group">
+          {plan.itinerary.map((_value, index) => (
+            <button
+              key={`page-${index}`}
+              onClick={() => setPage(index)}
+              className={'btn' + (index === page ? ' btn-active' : '')}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
