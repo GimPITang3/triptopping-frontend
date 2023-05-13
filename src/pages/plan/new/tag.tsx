@@ -1,9 +1,9 @@
-import { useRouter } from 'next/router';
-import { FC, useContext, useEffect, useState } from 'react';
 import { PlanContext } from '@/contexts';
-import api from '@/utils/AxiosInstance';
 import { Plan } from '@/types';
+import api from '@/utils/AxiosInstance';
 import { AxiosResponse } from 'axios';
+import { useRouter } from 'next/router';
+import { FC, useContext, useState } from 'react';
 
 const Tag: FC = () => {
   const router = useRouter();
@@ -30,7 +30,7 @@ const Tag: FC = () => {
       author: '5bf142459b72e12b2b1b2cd',
     });
     console.log(typeof plan.startDate);
-    axios
+    api
       .post<Plan, AxiosResponse<Plan>>('/plans', {
         ...plan,
         createdAt: new Date(),
