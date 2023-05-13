@@ -104,7 +104,7 @@ const Detail: FC = () => {
   return (
     <div className="relative min-h-screen">
       <LoadScript
-        // googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
+        googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
       >
         <div className="h-full">
