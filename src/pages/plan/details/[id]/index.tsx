@@ -63,8 +63,9 @@ const Detail: FC = () => {
   };
 
   const handleScroll = (height: number) => {
-    // magic number. please change.
-    const idx = Math.floor(height / 64);
+    //! magic number. please change.
+    // console.log(height);
+    const idx = Math.floor(height / 96);
     if (idx > plan.itinerary[page].length - 1) {
       return;
     }
@@ -132,32 +133,32 @@ const Detail: FC = () => {
         </div>
       </LoadScript>
 
-      <div className="absolute top-0 left-0 flex flex-col w-full z-10 items-start pointer-events-none">
+      <div className="absolute top-0 left-0 flex flex-col w-full z-10 items-start pointer-events-none h-screen">
         <div className="backdrop-blur-sm bg-white/80 w-full pointer-events-auto">
           <Topbar />
         </div>
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide">
           <ul
             key={`day-${page}`}
             onScroll={(e) => {
               handleScroll(e.currentTarget.scrollTop);
             }}
-            className="steps steps-vertical snap-y snap-mandatory h-[85vh] overflow-auto scrollbar-hide"
+            className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide"
           >
             {itineraryDaily
               .filter((itinerary) => itinerary.type === 'place')
               .map((itinerary, index) => (
                 <li
                   key={`it-${index}`}
-                  className="w-full step step-neutral snap-start bg-white/90"
+                  className="step step-neutral snap-always snap-start h-24"
                 >
-                  <div>{itinerary.system && itinerary.system.details.name} </div>
+                  <div>{itinerary.system && itinerary.system.details.name}</div>
                 </li>
               ))}
-            <li className="min-h-screen"></li>
+            <li className="h-screen"></li>
           </ul>
         </div>
-        <div className="tabs tabs-boxed mx-auto bg-white/90 pointer-events-auto">
+        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
