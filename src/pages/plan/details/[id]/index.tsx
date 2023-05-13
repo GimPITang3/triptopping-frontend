@@ -18,7 +18,9 @@ import {
   StandaloneSearchBox,
   GoogleMap,
   Marker,
+  Polyline,
 } from '@react-google-maps/api';
+import { decode } from '@googlemaps/polyline-codec';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -39,13 +41,16 @@ const Topbar: FC = () => {
   );
 };
 
+const decodePolyline = (encoded: string) => {
+  return decode(encoded, 5);
+};
+
 const Detail: FC = () => {
   const router = useRouter();
   const { id } = router.query;
   const { plan, setPlan } = useContext(PlanContext);
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [focusIdx, setFocusIdx] = useState(0);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
@@ -59,11 +64,6 @@ const Detail: FC = () => {
   const containerStyle = {
     width: '90%',
     height: '400px',
-  };
-
-  const center = {
-    lat: 37.7749,
-    lng: -122.4194,
   };
 
   const handleScroll = (height: number) => {
@@ -89,6 +89,8 @@ const Detail: FC = () => {
       api.get<Plan>(`/plans/${id}`).then((res) => {
         // console.log(res);
         setPlan(res.data);
+        console.log(res.data.itinerary[0][0].system?.details);
+        setFocusedPlace(res.data.itinerary[0][0].system?.details || null);
       });
     }
   }, [id]);
@@ -98,6 +100,11 @@ const Detail: FC = () => {
   }
 
   const itineraryDaily = plan.itinerary[page];
+  const center = focusedPlace?.geometry?.location || {
+    lat: 0,
+    lng: 0,
+  };
+
   return (
     <div>
       <Topbar />
@@ -129,10 +136,24 @@ const Detail: FC = () => {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={10}
+            zoom={15}
             onLoad={onLoad}
             onUnmount={onUnmount}
-          ></GoogleMap>
+          >
+            {itineraryDaily
+              .filter((itinerary) => itinerary.type === 'place')
+              .map((itinerary, index) => (
+                <Marker
+                  key={`it-${index}`}
+                  position={
+                    itinerary.system?.details.geometry?.location || {
+                      lat: 0,
+                      lng: 0,
+                    }
+                  }
+                ></Marker>
+              ))}
+          </GoogleMap>
         </div>
       </LoadScript>
 
