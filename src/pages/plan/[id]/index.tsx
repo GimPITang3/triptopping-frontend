@@ -633,10 +633,14 @@ const PlanPage: NextPage = ({}) => {
     return <div></div>;
   }
 
+  const onBackClick = () => {
+    router.back();
+  };
+
   return (
     <div className="min-h-screen">
       <div className="flex justify-between">
-        <button>
+        <button onClick={onBackClick}>
           <Image src={arrowLeftCircle} alt="back" width={32} height={32} />
         </button>
         <button>
