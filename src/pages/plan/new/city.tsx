@@ -132,7 +132,7 @@ const Num: FC = () => {
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">어디로 여행가세요?</div>
-        <div className="flex py-8 justify-center">
+        <div className="flex-grow py-8 justify-center">
           <LoadScript
           googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
           libraries={['places']}

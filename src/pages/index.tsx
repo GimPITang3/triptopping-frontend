@@ -1,5 +1,6 @@
 import Topbar from '@/components/Topbar';
-import { Plan } from '@/types';
+import { Plan, User } from '@/types';
+import { UserContext } from '@/contexts';
 import api from '@/utils/AxiosInstance';
 import { DateTime } from 'luxon';
 import { Inter } from 'next/font/google';
@@ -7,7 +8,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren, useEffect, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useState, useContext } from 'react';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
@@ -90,6 +91,7 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
 const Home = () => {
   const router = useRouter();
   const [planList, setPlanList] = useState<Plan[]>([]);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     const SetPlanList = async () => {
@@ -231,7 +233,7 @@ const Home = () => {
               </svg>
             </button>
           </Link>
-          <Link href="/">
+          <Link href={user.userId? ("/account/" + user.userId) : "/account/login"}>
             <button className="text-primary">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,4 @@
-import { Plan } from '@/types';
+import { Plan, User } from '@/types';
 import { SetStateAction, createContext, Dispatch } from 'react';
 
 export const PlanContext = createContext<{
@@ -19,4 +19,15 @@ export const PlanContext = createContext<{
     updatedAt: new Date(),
   },
   setPlan: () => {},
+});
+
+export const UserContext = createContext<{
+  user: User;
+  setUser: Dispatch<SetStateAction<User>>;
+}>({
+  user: {
+    userId: '',
+    nickname: '',
+  },
+  setUser: () => {},
 });

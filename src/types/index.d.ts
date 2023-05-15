@@ -55,3 +55,8 @@ export interface Plan {
   updatedAt: Date;
   deletedAt?: Date;
 }
+
+export interface User {
+  userId: string;
+  nickname: string;
+}
