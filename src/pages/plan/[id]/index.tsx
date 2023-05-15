@@ -1,29 +1,20 @@
 import { PlanContext } from '@/contexts';
 import {
-  Itinerary,
-  Place,
-  Plan,
   ItineraryDaily,
-  Schedule,
-  ScheduleSlot,
-  ScheduleType,
-  Transport,
+  Plan,
+  ScheduleSlot
 } from '@/types';
+import api from '@/utils/AxiosInstance';
 import {
   GoogleMap,
   LoadScript,
   Marker,
   StandaloneSearchBox,
 } from '@react-google-maps/api';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from 'react-beautiful-dnd';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   ChangeEvent,
@@ -32,14 +23,19 @@ import {
   useEffect,
   useState,
 } from 'react';
-import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
-import hamburger from '../../../../public/hamburger.svg';
-import dash from '../../../../public/dash.svg';
-import plus from '../../../../public/plus.svg';
-import pencilSquare from '../../../../public/pencilsquare.svg';
-import trash from '../../../../public/trash.svg';
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from 'react-beautiful-dnd';
 import Datepicker from 'react-tailwindcss-datepicker';
-import api from '@/utils/AxiosInstance';
+import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
+import dash from '../../../../public/dash.svg';
+import hamburger from '../../../../public/hamburger.svg';
+import pencilSquare from '../../../../public/pencilsquare.svg';
+import plus from '../../../../public/plus.svg';
+import trash from '../../../../public/trash.svg';
 
 interface SearchResult {
   position: {
@@ -634,16 +630,12 @@ const PlanPage: NextPage = ({}) => {
     return <div></div>;
   }
 
-  const onBackClick = () => {
-    router.back();
-  };
-
   return (
     <div className="min-h-screen">
       <div className="flex justify-between">
-        <button onClick={onBackClick}>
+        <Link href="/plan/list">
           <Image src={arrowLeftCircle} alt="back" width={32} height={32} />
-        </button>
+        </Link>
         <button>
           <Image src={hamburger} alt="menu" width={32} height={32} />
         </button>

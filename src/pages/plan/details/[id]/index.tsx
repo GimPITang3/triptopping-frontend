@@ -15,16 +15,23 @@ import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
+  const router = useRouter();
+  const onBackClick = () => {
+    router.back();
+  };
+
   return (
     <div className="mx-auto px-4 w-full">
       <div className="relative flex items-center justify-between h-12">
         <div className="flex-shrink-0 flex items-center font-bold text-xl">
-          <Image
-            src={arrowLeftCircle}
-            alt="arrowLeftCircle"
-            width={24}
-            height={24}
-          />
+          <button onClick={onBackClick}>
+            <Image
+              src={arrowLeftCircle}
+              alt="arrowLeftCircle"
+              width={24}
+              height={24}
+            />
+          </button>
           <div>{plan.name}</div>
         </div>
       </div>
