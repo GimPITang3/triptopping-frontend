@@ -50,7 +50,7 @@ const Num: FC = () => {
         </button>
         <button
           className="flex-1 btn btn-primary"
-          onClick={() => router.push('/plan/new/budget')}
+          onClick={() => router.push('/plan/new/city')}
         >
           다음
         </button>

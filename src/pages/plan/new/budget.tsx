@@ -70,7 +70,7 @@ const Budget: FC = () => {
       <div className="flex w-full space-x-4">
         <button
           className="flex-1 btn"
-          onClick={() => router.push('/plan/new/num')}
+          onClick={() => router.push('/plan/new/city')}
         >
           뒤로가기
         </button>
