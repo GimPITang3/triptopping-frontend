@@ -1,6 +1,6 @@
-import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import { PlanContext } from '@/contexts';
+import { useRouter } from 'next/router';
+import { ChangeEvent, FC, useContext } from 'react';
 
 const Budget: FC = () => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const Budget: FC = () => {
                 type="text"
                 value={plan.budget.toLocaleString()}
                 onChange={changeEnteredBudget}
-                className="input input-bordered text-right grow"
+                className="input input-bordered text-right grow min-w-0"
               />
               <span>원</span>
             </label>

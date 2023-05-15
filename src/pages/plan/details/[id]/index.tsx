@@ -5,31 +5,33 @@ import { decode } from '@googlemaps/polyline-codec';
 import {
   GoogleMap,
   LoadScript,
-  Marker
+  Marker,
+  Polyline,
 } from '@react-google-maps/api';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
+  const router = useRouter();
+  const onBackClick = () => {
+    router.back();
+  };
+
   return (
     <div className="mx-auto px-4 w-full">
       <div className="relative flex items-center justify-between h-12">
         <div className="flex-shrink-0 flex items-center font-bold text-xl">
-          <Image
-            src={arrowLeftCircle}
-            alt="arrowLeftCircle"
-            width={24}
-            height={24}
-          />
+          <button onClick={onBackClick}>
+            <Image
+              src={arrowLeftCircle}
+              alt="arrowLeftCircle"
+              width={24}
+              height={24}
+            />
+          </button>
           <div>{plan.name}</div>
         </div>
       </div>
@@ -83,7 +85,7 @@ const Detail: FC = () => {
 
   useEffect(() => {
     if (id) {
-      api.get<Plan>(`/plans/${id}`).then((res) => {
+      api.get<Plan>(`/plans/${id}/detail`).then((res) => {
         // console.log(res);
         setPlan(res.data);
         console.log(res.data.itinerary[0][0].system?.details);
@@ -110,6 +112,7 @@ const Detail: FC = () => {
       >
         <div className="h-full">
           <GoogleMap
+            options={{ disableDefaultUI: true }}
             mapContainerStyle={containerStyle}
             center={center}
             zoom={15}
@@ -129,6 +132,26 @@ const Detail: FC = () => {
                   }
                 ></Marker>
               ))}
+
+            <Polyline
+              options={{
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                clickable: false,
+                draggable: false,
+                editable: false,
+                visible: true,
+                path: itineraryDaily.slice(0, -1).map(
+                  (itinerary) =>
+                    itinerary.system?.details.geometry?.location || {
+                      lat: 0,
+                      lng: 0,
+                    },
+                ),
+                zIndex: 1,
+              }}
+            />
           </GoogleMap>
         </div>
       </LoadScript>
