@@ -49,13 +49,28 @@ const Tag: FC = () => {
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 태그를 입력해주세요.</div>
+        <div className="space-x-2 space-y-2 py-8 min-h-[160px]">
+          {plan.tags.map((tag, index) => (
+            <div key={`tag-${index}`} className="badge badge-lg badge-outline">
+              {'#' + tag}
+              <svg
+                onClick={() => delTag(tag)}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="hover:bg-slate-200 inline-block w-4 h-4 stroke-current"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            </div>
+          ))}
+        </div>
         <div>
-          <label
-            htmlFor="search"
-            className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
-          >
-            Search
-          </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
@@ -83,7 +98,7 @@ const Tag: FC = () => {
               onChange={(e) => setTag(e.target.value)}
               type="text"
               className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search"
+              placeholder="맛집"
               required
             />
             <button
@@ -93,27 +108,6 @@ const Tag: FC = () => {
               추가
             </button>
           </div>
-        </div>
-        <div className="space-x-2">
-          {plan.tags.map((tag, index) => (
-            <div key={`tag-${index}`} className="badge badge-outline">
-              {'#' + tag}
-              <svg
-                onClick={() => delTag(tag)}
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="hover:bg-slate-200 inline-block w-4 h-4 stroke-current"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                ></path>
-              </svg>
-            </div>
-          ))}
         </div>
       </div>
       <div className="flex w-full space-x-4">
