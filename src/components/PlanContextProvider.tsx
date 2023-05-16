@@ -1,6 +1,6 @@
 import { PlanContext } from '@/contexts';
 import { Plan } from '@/types';
-import { FC, PropsWithChildren, useState } from 'react';
+import { FC, PropsWithChildren, useCallback, useState } from 'react';
 
 const initPlan = (): Plan => ({
   planId: '',
@@ -20,7 +20,7 @@ const initPlan = (): Plan => ({
 const PlanContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [plan, setPlan] = useState<Plan>(initPlan());
 
-  const clearPlan = () => setPlan(initPlan());
+  const clearPlan = useCallback(() => setPlan(initPlan()), []);
 
   return (
     <PlanContext.Provider value={{ plan, setPlan, clearPlan }}>

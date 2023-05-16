@@ -1,4 +1,5 @@
 import { PlanContext, UserContext } from '@/contexts';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ChangeEvent, FC, useContext, useEffect } from 'react';
 
@@ -24,13 +25,15 @@ const Name: FC = () => {
   };
 
   useEffect(() => {
-    console.log(user);
-
     clearPlan();
-  });
+  }, [clearPlan]);
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 이름</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">새 여행 계획</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 계획의 이름을 정해주세요</div>

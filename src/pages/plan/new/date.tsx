@@ -6,6 +6,7 @@ import { FC, useContext, useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 import dash from '../../../../public/dash.svg';
 import plus from '../../../../public/plus.svg';
+import Head from 'next/head';
 
 const DateSelector: FC = () => {
   const router = useRouter();
@@ -31,6 +32,10 @@ const DateSelector: FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 날짜</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="text-xl my-4">여행 날짜가 정해지셨나요?</div>
       <div className="flex-grow">

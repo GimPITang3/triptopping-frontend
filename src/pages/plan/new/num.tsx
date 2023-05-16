@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { FC, useContext } from 'react';
 import dash from '../../../../public/dash.svg';
 import plus from '../../../../public/plus.svg';
+import Head from 'next/head';
 
 const Num: FC = () => {
   const router = useRouter();
@@ -20,6 +21,10 @@ const Num: FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 인원</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">총 여행 인원을 알려주세요!</div>
