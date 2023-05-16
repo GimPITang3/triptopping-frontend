@@ -1,10 +1,5 @@
 import { PlanContext } from '@/contexts';
-import {
-  ItineraryDaily,
-  Plan,
-  ScheduleSlot
-} from '@/types';
-import api from '@/utils/AxiosInstance';
+import { ItineraryDaily, Plan, ScheduleSlot } from '@/types';
 import {
   GoogleMap,
   LoadScript,
@@ -36,6 +31,7 @@ import hamburger from '../../../../public/hamburger.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
+import { getPlan } from '@/services/plansService';
 
 interface SearchResult {
   position: {
@@ -600,13 +596,13 @@ const PlanPage: NextPage = ({}) => {
   };
 
   useEffect(() => {
-    if (id !== undefined) {
-      api.get<Plan>(`/plans/${id}`).then((res) => {
-        console.log(res.data);
-        setPlan(res.data);
-      });
-    }
-  }, [id]);
+    if (id === undefined) return;
+
+    getPlan(`${id}`).then((plan) => {
+      console.log(plan);
+      setPlan(plan);
+    });
+  }, [id, setPlan]);
 
   const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return;

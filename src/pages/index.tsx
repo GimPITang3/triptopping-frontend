@@ -1,7 +1,6 @@
 import Topbar from '@/components/Topbar';
 import { Plan, User } from '@/types';
 import { UserContext } from '@/contexts';
-import api from '@/utils/AxiosInstance';
 import { DateTime } from 'luxon';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
@@ -12,6 +11,7 @@ import { FC, PropsWithChildren, useEffect, useState, useContext } from 'react';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
+import { getPlans } from '@/services/plansService';
 
 interface ItineraryListProps {
   planId: string;
@@ -95,8 +95,8 @@ const Home = () => {
 
   useEffect(() => {
     const SetPlanList = async () => {
-      const { data } = await api.get<Plan[]>('/plans');
-      setPlanList(data.slice(0, 3));
+      const plans = await getPlans();
+      setPlanList(plans.slice(0, 3));
     };
     SetPlanList();
   }, []);
@@ -233,7 +233,9 @@ const Home = () => {
               </svg>
             </button>
           </Link>
-          <Link href={user.userId? ("/account/" + user.userId) : "/account/login"}>
+          <Link
+            href={user.userId ? '/account/' + user.userId : '/account/login'}
+          >
             <button className="text-primary">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

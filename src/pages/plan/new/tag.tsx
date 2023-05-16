@@ -1,7 +1,5 @@
 import { PlanContext } from '@/contexts';
-import { Plan } from '@/types';
-import api from '@/utils/AxiosInstance';
-import { AxiosResponse } from 'axios';
+import { createPlan } from '@/services/plansService';
 import { useRouter } from 'next/router';
 import { FC, useContext, useState } from 'react';
 
@@ -30,18 +28,15 @@ const Tag: FC = () => {
       author: '5bf142459b72e12b2b1b2cd',
     });
     console.log(typeof plan.startDate);
-    api
-      .post<Plan, AxiosResponse<Plan>>('/plans', {
-        ...plan,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        author: '15bf142459b72e12b2b1b2cd',
-      })
-      .then((res) => {
-        setLoading(false);
-        const { data } = res;
-        router.push('/plan/' + data.planId);
-      });
+    createPlan({
+      ...plan,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      author: '15bf142459b72e12b2b1b2cd',
+    }).then((plan) => {
+      setLoading(false);
+      router.push('/plan/' + plan.planId);
+    });
   };
 
   return (

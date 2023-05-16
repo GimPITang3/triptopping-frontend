@@ -1,6 +1,5 @@
 import { PlanContext } from '@/contexts';
 import { Place, Plan } from '@/types';
-import api from '@/utils/AxiosInstance';
 import { decode } from '@googlemaps/polyline-codec';
 import {
   GoogleMap,
@@ -12,6 +11,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
+import { getPlanDetails } from '@/services/plansService';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -85,14 +85,13 @@ const Detail: FC = () => {
 
   useEffect(() => {
     if (id) {
-      api.get<Plan>(`/plans/${id}/detail`).then((res) => {
-        // console.log(res);
-        setPlan(res.data);
-        console.log(res.data.itinerary[0][0].system?.details);
-        setFocusedPlace(res.data.itinerary[0][0].system?.details || null);
+      getPlanDetails(`${id}`).then((plan) => {
+        setPlan(plan);
+        console.log(plan.itinerary[0][0].system?.details);
+        setFocusedPlace(plan.itinerary[0][0].system?.details || null);
       });
     }
-  }, [id]);
+  }, [id, setPlan]);
 
   if (!plan.planId) {
     return <div></div>;

@@ -1,6 +1,5 @@
 import Topbar from '@/components/Topbar';
 import { Plan } from '@/types';
-import api from '@/utils/AxiosInstance';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Image from 'next/image';
@@ -8,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
+import { deletePlan, getPlans } from '@/services/plansService';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -106,13 +106,13 @@ const PlanPage: NextPage = ({}) => {
 
   const delPlan = () => {
     setPlanList(planList.filter((item) => item.planId !== delId));
-    api.delete('/plans/' + delId);
+    deletePlan(delId);
   };
 
   useEffect(() => {
     const SetPlanList = async () => {
-      const { data } = await api.get<Plan[]>('/plans');
-      setPlanList(data);
+      const plans = await getPlans();
+      setPlanList(plans);
     };
     SetPlanList();
   }, []);
