@@ -40,6 +40,11 @@ export type ItineraryDaily = ScheduleSlot[];
 
 export type Itinerary = ItineraryDaily[];
 
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
 export interface Plan {
   planId: string;
   name: string;
@@ -50,6 +55,7 @@ export interface Plan {
   period: number;
   budget: number;
   tags: string[];
+  loc: LatLng;
   itinerary: Itinerary;
   createdAt: Date;
   updatedAt: Date;
