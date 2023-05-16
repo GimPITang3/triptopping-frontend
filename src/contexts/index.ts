@@ -31,6 +31,7 @@ export const UserContext = createContext<{
   user: {
     userId: '',
     nickname: '',
+    introduce: '안녕하세요',
   },
   setUser: () => {},
 });
