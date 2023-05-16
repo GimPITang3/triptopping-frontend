@@ -1,4 +1,5 @@
 import { PlanContext } from '@/contexts';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ChangeEvent, FC, useContext } from 'react';
 
@@ -16,6 +17,10 @@ const Budget: FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 예산</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">예산을 설정해주세요.</div>

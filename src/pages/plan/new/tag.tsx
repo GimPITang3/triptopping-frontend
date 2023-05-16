@@ -1,5 +1,6 @@
 import { PlanContext } from '@/contexts';
 import { createPlan } from '@/services/plansService';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { FC, useContext, useState } from 'react';
 
@@ -41,6 +42,10 @@ const Tag: FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 태그</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 태그를 입력해주세요.</div>

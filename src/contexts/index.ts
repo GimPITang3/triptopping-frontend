@@ -4,6 +4,7 @@ import { SetStateAction, createContext, Dispatch } from 'react';
 export const PlanContext = createContext<{
   plan: Plan;
   setPlan: Dispatch<SetStateAction<Plan>>;
+  clearPlan: () => void;
 }>({
   plan: {
     name: '',
@@ -14,11 +15,13 @@ export const PlanContext = createContext<{
     period: 1,
     tags: [],
     itinerary: [],
+    loc: { lat: 0, lng: 0 },
     planId: '',
     createdAt: new Date(),
     updatedAt: new Date(),
   },
   setPlan: () => {},
+  clearPlan: () => {},
 });
 
 export const UserContext = createContext<{

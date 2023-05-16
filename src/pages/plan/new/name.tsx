@@ -1,10 +1,11 @@
 import { PlanContext, UserContext } from '@/contexts';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FC, useContext } from 'react';
+import { ChangeEvent, FC, useContext, useEffect } from 'react';
 
 const Name: FC = () => {
   const router = useRouter();
-  const { plan, setPlan } = useContext(PlanContext);
+  const { plan, setPlan, clearPlan } = useContext(PlanContext);
   const { user, setUser } = useContext(UserContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -13,15 +14,26 @@ const Name: FC = () => {
 
   const handleClickNext = () => {
     if (plan.name === '') {
-      setPlan({ ...plan, name: (user.nickname ? user.nickname + '님의 ' : '') + '폭풍을 부르는 우당탕탕 여행기!' });
+      setPlan({
+        ...plan,
+        name:
+          (user.nickname ? user.nickname + '님의 ' : '') +
+          '폭풍을 부르는 우당탕탕 여행기!',
+      });
     }
     router.push('/plan/new/num');
   };
 
-  console.log(user);
+  useEffect(() => {
+    clearPlan();
+  }, [clearPlan]);
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 이름</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">새 여행 계획</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 계획의 이름을 정해주세요</div>

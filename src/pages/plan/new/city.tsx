@@ -1,6 +1,6 @@
 import { PlanContext } from '@/contexts';
 import { useRouter } from 'next/router';
-import { 
+import {
   FC,
   ChangeEvent,
   useCallback,
@@ -14,6 +14,7 @@ import {
   Marker,
   StandaloneSearchBox,
 } from '@react-google-maps/api';
+import Head from 'next/head';
 
 interface SearchResult {
   position: {
@@ -37,8 +38,8 @@ const Num: FC = () => {
   const onLoad = useCallback((map: google.maps.Map) => {
     map.setCenter(center);
     setMap(map);
-    setMarker(new google.maps.Marker);
-    setGeocoder(new google.maps.Geocoder);
+    setMarker(new google.maps.Marker());
+    setGeocoder(new google.maps.Geocoder());
   }, []);
 
   const onUnmount = useCallback(() => {
@@ -54,9 +55,9 @@ const Num: FC = () => {
 
   const onPlacesChanged = useCallback(() => {
     if (!searchBox) return;
-    
+
     const places = searchBox.getPlaces();
-    
+
     if (!places || places.length === 0) {
       return;
     }
@@ -86,7 +87,7 @@ const Num: FC = () => {
 
   const clear = () => {
     marker?.setMap(null);
-  }
+  };
 
   const onClickGeocode = (e: google.maps.MapMouseEvent) => {
     if(!e.latLng) return;
@@ -97,12 +98,12 @@ const Num: FC = () => {
       },
     });
     geocode({ location: e.latLng });
-  }
+  };
 
   const geocode = (req: google.maps.GeocoderRequest) => {
     clear();
 
-    if(!geocoder || !map || !marker) return;
+    if (!geocoder || !map || !marker) return;
 
     geocoder
       .geocode(req)
@@ -113,14 +114,19 @@ const Num: FC = () => {
         marker.setPosition(results[0].geometry.location);
         marker.setMap(map);
         console.log(results);
-        for (let i=0; i<results[0].address_components.length; i++) {
-          for (let j=0;j<results[0].address_components[i].types.length;j++) {
-            if(results[0].address_components[i].types[j] == "country")
-            {
+        for (let i = 0; i < results[0].address_components.length; i++) {
+          for (
+            let j = 0;
+            j < results[0].address_components[i].types.length;
+            j++
+          ) {
+            if (results[0].address_components[i].types[j] == 'country') {
               setCountryName(results[0].address_components[i].long_name);
             }
-            if(results[0].address_components[i].types[j] == "administrative_area_level_1")
-            {
+            if (
+              results[0].address_components[i].types[j] ==
+              'administrative_area_level_1'
+            ) {
               setCityName(results[0].address_components[i].long_name);
             }
           }
@@ -128,20 +134,24 @@ const Num: FC = () => {
         return results;
       })
       .catch((e) => {
-        alert("Geocode was not successful for the following reason: " + e);
+        alert('Geocode was not successful for the following reason: ' + e);
       });
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen p-8">
+      <Head>
+        <title>여행 계획 설정 - 지역</title>
+      </Head>
+
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">어디로 여행가세요?</div>
         <div className="flex-grow py-8 justify-center">
           <LoadScript
-          googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
-          libraries={['places']}
-        >
+            googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
+            libraries={['places']}
+          >
             <div className="h-full">
               <StandaloneSearchBox
                 onLoad={onSearchBoxLoad}
@@ -171,13 +181,13 @@ const Num: FC = () => {
                 onLoad={onLoad}
                 onClick={onClickGeocode}
                 onUnmount={onUnmount}
-              >
-                
-              </GoogleMap>
+              ></GoogleMap>
             </div>
           </LoadScript>
         </div>
-        <div className="flex text-xl my-4 justify-center">{countryName + ' ' + cityName} (으)로 여행갈래요.</div>
+        <div className="flex text-xl my-4 justify-center">
+          {countryName + ' ' + cityName} (으)로 여행갈래요.
+        </div>
       </div>
       <div className="flex w-full space-x-4">
         <button
