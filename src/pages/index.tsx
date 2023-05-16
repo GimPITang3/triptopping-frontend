@@ -259,11 +259,21 @@ const Home: NextPage = () => {
         <div className="drawer-side">
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 bg-base-100 text-base-content">
+            <div className="flex flex-col">
+              <div className="avatar placeholder flex justify-center">
+                <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
+                  <span className="text-3xl">{user.nickname.slice(0,1)}</span>
+                </div>
+              </div>
+              <h2 className="card-title justify-center my-4">{user.nickname}</h2>
+              <Link href={'/account/' + user.userId} className="flex justify-end">프로필 편집</Link>
+            </div>
+            <div className="divider"></div>
             <li>
-              <a>Sidebar Item 1</a>
+              <Link href="/plan/list">내 여행 계획</Link>
             </li>
             <li>
-              <a>Sidebar Item 2</a>
+              <a>내 작성 글</a>
             </li>
           </ul>
         </div>

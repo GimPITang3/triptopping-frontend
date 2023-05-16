@@ -20,7 +20,6 @@ interface SearchResult {
     lat: number;
     lng: number;
   };
-  name: string;
 }
 
 const Num: FC = () => {
@@ -71,7 +70,6 @@ const Num: FC = () => {
         lat: place.geometry.location.lat() || 0,
         lng: place.geometry.location.lng() || 0,
       },
-      name: place.name,
     });
     geocode({ location: place.geometry.location });
   }, [searchBox, map]);
@@ -91,6 +89,13 @@ const Num: FC = () => {
   }
 
   const onClickGeocode = (e: google.maps.MapMouseEvent) => {
+    if(!e.latLng) return;
+    setSearchResult({
+      position: {
+        lat: e.latLng.lat() || 0,
+        lng: e.latLng.lng() || 0,
+      },
+    });
     geocode({ location: e.latLng });
   }
 

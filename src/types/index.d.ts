@@ -59,4 +59,5 @@ export interface Plan {
 export interface User {
   userId: string;
   nickname: string;
+  introduce: string;
 }
