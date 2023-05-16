@@ -6,6 +6,7 @@ const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User>({
     userId: '',
     nickname: '',
+    introduce: '',
   });
   const contextValue = { user, setUser };
   return (
