@@ -1,5 +1,7 @@
+import { TopbarContainer } from '@/components/TopbarContainer';
 import { PlanContext } from '@/contexts';
-import { Place, Plan } from '@/types';
+import { getPlanDetails } from '@/services/plansService';
+import { Place } from '@/types';
 import { decode } from '@googlemaps/polyline-codec';
 import {
   GoogleMap,
@@ -11,8 +13,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
-import { getPlanDetails } from '@/services/plansService';
-import { TopbarContainer } from '@/components/TopbarContainer';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -160,13 +160,16 @@ const Detail: FC = () => {
         <div className="backdrop-blur-sm bg-white/80 w-full pointer-events-auto">
           <Topbar />
         </div>
+        <div className="absolute top-12 w-full pointer-events-auto backdrop-blur-sm bg-white/80">
+          대충 설명이 들어가야 하는 부분
+        </div>
         <div className="pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide">
           <ul
             key={`day-${page}`}
             onScroll={(e) => {
               handleScroll(e.currentTarget.scrollTop);
             }}
-            className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide"
+            className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4 pr-2"
           >
             {itineraryDaily
               .filter((itinerary) => itinerary.type === 'place')
@@ -181,7 +184,7 @@ const Detail: FC = () => {
             <li className="h-screen"></li>
           </ul>
         </div>
-        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full">
+        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
