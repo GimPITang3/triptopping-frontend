@@ -29,7 +29,7 @@ import Datepicker from 'react-tailwindcss-datepicker';
 import { PlanContext } from '@/contexts';
 import { ItineraryDaily, Plan, ScheduleSlot } from '@/types';
 
-import { getPlan } from '@/services/plansService';
+import { UpdatePlanDto, getPlan, updatePlan } from '@/services/plansService';
 
 import { TopbarContainer } from '@/components/TopbarContainer';
 import MenuToggle from '@/components/Topbar/MenuToggle';
@@ -55,72 +55,73 @@ const GetItineraryValue = (itinerary: ScheduleSlot, key: string) => {
   );
 };
 
-const ModifyNameModal: React.FC = () => {
+const ModifyPlanModal: React.FC = () => {
   const { plan, setPlan } = useContext(PlanContext);
+
   const [tabIndex, setTabIndex] = useState(0);
   const [tag, setTag] = useState('');
-  const [selected, setSelected] = useState(true);
+  const [startDateSelected, setStartDateSelected] = useState(true);
+
+  const [planName, setPlanName] = useState(plan.name);
+  const [planNumberOfMembers, setPlanNumberOfMembers] = useState(
+    plan.numberOfMembers,
+  );
+  const [planBudget, setPlanBudget] = useState(plan.budget);
+  const [planPeriod, setPlanPeriod] = useState(plan.period);
+  const [planStartDate, setPlanStartDate] = useState(plan.startDate);
+  const [planTags, setPlanTags] = useState(plan.tags);
 
   const onChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-    setPlan({ ...plan, name: e.target.value });
+    setPlanName(e.target.value);
   };
 
   const onChangeNum = (plus: boolean) => {
-    if (plus) {
-      setPlan({ ...plan, numberOfMembers: plan.numberOfMembers + 1 });
-    } else {
-      if (plan.numberOfMembers > 1) {
-        setPlan({ ...plan, numberOfMembers: plan.numberOfMembers - 1 });
-      }
-    }
+    setPlanNumberOfMembers((prev) => Math.max(prev + (plus ? 1 : -1), 1));
   };
 
   const addBudget = (num: number) => {
-    setPlan({ ...plan, budget: plan.budget + num });
+    setPlanBudget((prev) => Math.max(prev + num, 0));
   };
 
   const changeEnteredBudget = (e: ChangeEvent<HTMLInputElement>) => {
     const budgetValue = parseInt(e.target.value.replace(/\,/g, ''));
-    setPlan({ ...plan, budget: budgetValue });
+
+    setPlanBudget(budgetValue);
   };
 
   const onChangePeriod = (plus: boolean) => {
-    if (plus) {
-      setPlan({ ...plan, period: plan.period + 1 });
-    } else {
-      if (plan.period > 1) {
-        setPlan({ ...plan, period: plan.period - 1 });
-      }
-    }
+    setPlanPeriod((prev) => Math.max(prev + (plus ? 1 : -1), 1));
   };
 
   const handleValueChange = (newValue: any) => {
     const s = DateTime.fromISO(newValue.startDate);
     const e = DateTime.fromISO(newValue.endDate);
     const period = e.diff(s, 'days').days;
-    setPlan({ ...plan, startDate: s.toJSDate(), period: period });
+
+    setPlanPeriod(period);
+    setPlanStartDate(s.toJSDate());
   };
 
   const addTag = () => {
     if (!tag) {
       return;
     }
-    setPlan({ ...plan, tags: [...plan.tags, tag] });
+    setPlanTags((prev) => [...prev, tag]);
     setTag('');
   };
   const delTag = (tag: string) => {
-    setPlan({ ...plan, tags: plan.tags.filter((item) => item !== tag) });
+    setPlanTags((prev) => prev.filter((item) => item !== tag));
   };
 
   const GetTab = () => {
     switch (tabIndex) {
       case 0:
         return (
-          <div>
+          <div className="space-y-2">
             <h3 className="text-lg font-bold">새로운 이름을 설정해주세요</h3>
             <input
-              value={plan.name}
-              className="input input-bordered py-4"
+              value={planName}
+              className="input input-bordered py-4 w-full"
               onChange={onChangeName}
             />
           </div>
@@ -138,7 +139,7 @@ const ModifyNameModal: React.FC = () => {
                 <Image width={32} height={32} src={dash} alt="-" />
               </button>
               <div className="text-4xl font-bold self-center mx-16 rounded">
-                {plan.numberOfMembers}
+                {planNumberOfMembers}
               </div>
               <button
                 className="btn btn-outline hover:bg-slate-300"
@@ -160,7 +161,7 @@ const ModifyNameModal: React.FC = () => {
                   <span>금액</span>
                   <input
                     type="text"
-                    value={plan.budget.toLocaleString()}
+                    value={planBudget.toLocaleString()}
                     onChange={changeEnteredBudget}
                     className="input input-bordered text-right grow"
                   />
@@ -210,35 +211,38 @@ const ModifyNameModal: React.FC = () => {
               <div className="flex justify-center">
                 <div className="tabs tabs-boxed bg-white">
                   <a
-                    className={`tab tab-lg ${selected ? 'tab-active' : ''}`}
-                    onClick={() => setSelected(true)}
+                    className={`tab tab-lg ${
+                      startDateSelected ? 'tab-active' : ''
+                    }`}
+                    onClick={() => setStartDateSelected(true)}
                   >
                     날짜를 정했어요
                   </a>
                   <a
-                    className={`tab tab-lg ${selected ? '' : 'tab-active'}`}
-                    onClick={() => setSelected(false)}
+                    className={`tab tab-lg ${
+                      startDateSelected ? '' : 'tab-active'
+                    }`}
+                    onClick={() => setStartDateSelected(false)}
                   >
                     기간만 정할게요
                   </a>
                 </div>
               </div>
 
-              {selected ? (
+              {startDateSelected ? (
                 <div>
                   <div className="text-xl my-8">
                     출발 - 도착 날짜를 입력해주세요!
                   </div>
                   <Datepicker
                     value={{
-                      startDate:
-                        plan.startDate === undefined ? null : plan.startDate,
+                      startDate: planStartDate || null,
                       endDate:
-                        plan.startDate === undefined
-                          ? null
-                          : DateTime.fromJSDate(plan.startDate)
-                              .plus({ day: plan.period })
-                              .toJSDate(),
+                        (planStartDate &&
+                          DateTime.fromJSDate(planStartDate)
+                            .plus({ day: plan.period })
+                            .toJSDate()) ||
+                        null,
                     }}
                     onChange={handleValueChange}
                     showShortcuts={true}
@@ -251,17 +255,17 @@ const ModifyNameModal: React.FC = () => {
                   </div>
                   <div className="flex py-8 justify-center">
                     <button
-                      disabled={plan.startDate !== undefined}
+                      disabled={planStartDate !== undefined}
                       className="btn btn-outline hover:bg-slate-300"
                       onClick={() => onChangePeriod(false)}
                     >
                       <Image width={32} height={32} src={dash} alt="-" />
                     </button>
                     <div className="text-4xl font-bold self-center mx-16 rounded">
-                      {plan.period}
+                      {planPeriod}
                     </div>
                     <button
-                      disabled={plan.startDate !== undefined}
+                      disabled={planStartDate !== undefined}
                       className="btn btn-outline hover:bg-slate-300"
                       onClick={() => onChangePeriod(true)}
                     >
@@ -275,7 +279,7 @@ const ModifyNameModal: React.FC = () => {
         );
       case 4:
         return (
-          <div>
+          <div className="space-y-2">
             <h3 className="text-lg font-bold">태그를 설정해주세요</h3>
             <div>
               <label
@@ -323,7 +327,7 @@ const ModifyNameModal: React.FC = () => {
               </div>
             </div>
             <div className="space-x-2">
-              {plan.tags.map((tag, index) => (
+              {planTags.map((tag, index) => (
                 <div key={`tag-${index}`} className="badge badge-outline">
                   {'#' + tag}
                   <svg
@@ -350,48 +354,72 @@ const ModifyNameModal: React.FC = () => {
     }
   };
 
+  const onConfirm = async () => {
+    const updatePlanDto: UpdatePlanDto = {
+      budget: planBudget,
+      name: planName,
+      numberOfMembers: planNumberOfMembers,
+      period: planPeriod,
+      startDate: planStartDate,
+      tags: planTags,
+    };
+
+    const newPlan = await updatePlan(plan.planId, updatePlanDto);
+
+    setPlan(newPlan);
+  };
+
   return (
     <div>
       <input type="checkbox" id="modify-name-modal" className="modal-toggle" />
       <label htmlFor="modify-name-modal" className="modal cursor-pointer">
         <label className="modal-box relative" htmlFor="">
-          <div className="tabs tabs-boxed">
-            <a
-              onClick={() => setTabIndex(0)}
-              className={'tab ' + (tabIndex === 0 ? 'tab-active' : '')}
-            >
-              이름
-            </a>
-            <a
-              onClick={() => setTabIndex(1)}
-              className={'tab ' + (tabIndex === 1 ? 'tab-active' : '')}
-            >
-              인원 수
-            </a>
-            <a
-              onClick={() => setTabIndex(2)}
-              className={'tab ' + (tabIndex === 2 ? 'tab-active' : '')}
-            >
-              예산
-            </a>
-            <a
-              onClick={() => setTabIndex(3)}
-              className={'tab ' + (tabIndex === 3 ? 'tab-active' : '')}
-            >
-              날짜
-            </a>
-            <a
-              onClick={() => setTabIndex(4)}
-              className={'tab ' + (tabIndex === 4 ? 'tab-active' : '')}
-            >
-              태그
-            </a>
-          </div>
-          {GetTab()}
-          <div>
-            <label className="btn" htmlFor="modify-name-modal">
-              확인
-            </label>
+          <div className="space-y-4">
+            <div className="tabs tabs-boxed">
+              <a
+                onClick={() => setTabIndex(0)}
+                className={'tab ' + (tabIndex === 0 ? 'tab-active' : '')}
+              >
+                이름
+              </a>
+              <a
+                onClick={() => setTabIndex(1)}
+                className={'tab ' + (tabIndex === 1 ? 'tab-active' : '')}
+              >
+                인원 수
+              </a>
+              <a
+                onClick={() => setTabIndex(2)}
+                className={'tab ' + (tabIndex === 2 ? 'tab-active' : '')}
+              >
+                예산
+              </a>
+              <a
+                onClick={() => setTabIndex(3)}
+                className={'tab ' + (tabIndex === 3 ? 'tab-active' : '')}
+              >
+                날짜
+              </a>
+              <a
+                onClick={() => setTabIndex(4)}
+                className={'tab ' + (tabIndex === 4 ? 'tab-active' : '')}
+              >
+                태그
+              </a>
+            </div>
+            {GetTab()}
+            <div className="flex flex-row justify-end gap-x-2">
+              <label className="btn btn-error" htmlFor="modify-name-modal">
+                취소
+              </label>
+              <label
+                className="btn btn-success"
+                htmlFor="modify-name-modal"
+                onClick={onConfirm}
+              >
+                확인
+              </label>
+            </div>
           </div>
         </label>
       </label>
@@ -647,35 +675,47 @@ const PlanPage: NextPage = ({}) => {
           <MenuToggle />
         </div>
       </TopbarContainer>
-      <div className="px-4 my-4 space-y-2">
-        <div className="flex items-end">
-          <div className="text-2xl font-bold">{plan.name}</div>
+      <div className="px-4 my-4 space-y-4">
+        <header className="space-y-2">
+          <div className="flex items-end">
+            <div className="text-2xl font-bold">{plan.name}</div>
+          </div>
+          <div>
+            {plan.startDate ? (
+              <div>
+                {DateTime.fromJSDate(plan.startDate).toFormat(
+                  'yyyy년 MM월 dd일',
+                )}{' '}
+                ~{' '}
+                {DateTime.fromJSDate(plan.startDate)
+                  .plus({ days: plan.period })
+                  .toFormat('yyyy년 MM월 dd일')}
+              </div>
+            ) : (
+              <div>
+                {plan.period - 1}박{plan.period}일
+              </div>
+            )}
+          </div>
+          <div className="space-x-2">
+            {plan.tags.map((tag: string, idx: number) => (
+              <div key={idx} className="badge">
+                {tag}
+              </div>
+            ))}
+          </div>
+        </header>
+        <div className="flex flex-row justify-between">
+          <label htmlFor="modify-name-modal" className="btn btn-secondary">
+            편집
+          </label>
+          <button
+            className="btn btn-primary"
+            onClick={() => router.push(`/plan/details/${plan.planId}`)}
+          >
+            경로 보기
+          </button>
         </div>
-        <div>
-          {plan.startDate ? (
-            <div>
-              {DateTime.fromJSDate(plan.startDate).toFormat('yyyy년 MM월 dd일')}{' '}
-              ~{' '}
-              {DateTime.fromJSDate(plan.startDate)
-                .plus({ days: plan.period })
-                .toFormat('yyyy년 MM월 dd일')}
-            </div>
-          ) : (
-            <div>
-              {plan.period - 1}박{plan.period}일
-            </div>
-          )}
-        </div>
-        <div className="space-x-2">
-          {plan.tags.map((tag: string, idx: number) => (
-            <div key={idx} className="badge">
-              {tag}
-            </div>
-          ))}
-        </div>
-        <label htmlFor="modify-name-modal" className="link pl-2">
-          편집
-        </label>
       </div>
       <div className="divider"></div>
       <LoadScript
@@ -811,7 +851,7 @@ const PlanPage: NextPage = ({}) => {
           )}
         </div>
       </DragDropContext>
-      <ModifyNameModal />
+      <ModifyPlanModal />
       <GoogleMapModal day={selectDay} />
     </div>
   );

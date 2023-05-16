@@ -2,6 +2,18 @@ import { AxiosResponse } from 'axios';
 import client from '@/services/axiosClient';
 import { Plan } from '@/types';
 
+export type UpdatePlanDto = Pick<
+  Partial<Plan>,
+  | 'name'
+  | 'budget'
+  | 'tags'
+  | 'loc'
+  | 'period'
+  | 'startDate'
+  | 'itinerary'
+  | 'numberOfMembers'
+>;
+
 export const getPlans = async (): Promise<Plan[]> => {
   const resp = await client.get<Plan[]>('/plans');
 
@@ -26,6 +38,15 @@ export const deletePlan = async (id: string) => {
 
 export const createPlan = async (plan: Plan): Promise<Plan> => {
   const resp = await client.post<Plan, AxiosResponse<Plan>>('/plans', plan);
+
+  return resp.data;
+};
+
+export const updatePlan = async (
+  id: string,
+  dto: UpdatePlanDto,
+): Promise<Plan> => {
+  const resp = await client.patch<Plan>(`/plans/${id}`, dto);
 
   return resp.data;
 };
