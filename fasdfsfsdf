@@ -1,0 +1,556 @@
+[33mcommit 1311044849f6c841cfd60fe751373a86971b7c74[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Tue May 16 16:56:09 2023 +0900
+
+    Add: 프로필 변경 페이지 추가, 사이드바 컨텐츠 변경
+
+[33mcommit 4af167d104a93c1b254cb6a0c5fb804afbf174fc[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Tue May 16 12:49:38 2023 +0900
+
+    Adjust topbars
+
+[33mcommit a1d5b9a70c5c7d5e64604f1acbd70c5790000e8e[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Tue May 16 11:51:48 2023 +0900
+
+    Add excludePlaces api
+
+[33mcommit 8a0aa7780dafabc72592022b4c750673d404d71e[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Tue May 16 11:47:45 2023 +0900
+
+    Refactor axios calls
+
+[33mcommit 9f7c97f19c593a106e70bc51b3b96d50cfa0b042[m
+Author: BEEPMan <34468922+BEEPMan@users.noreply.github.com>
+Date:   Tue May 16 03:53:24 2023 +0900
+
+    Add: 로그인/회원가입, 프로필 설절 페이지 추가, User type 추가
+
+[33mcommit 2a5f874bc01bda91b8e1fbde57fa54f457014dd8[m
+Merge: 5aaaae2 b089e4d
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Mon May 15 21:36:48 2023 +0900
+
+    Merge branch 'main' of https://github.com/GimPITang3/triptopping-frontend
+
+[33mcommit 5aaaae297cb8f899dcf9e5b243ba8accecaebb21[m
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Mon May 15 21:36:35 2023 +0900
+
+    Add: 여행 도시 선택 페이지 추가
+
+[33mcommit b089e4da9e2ef7822f83efb95edb8c12f0d613be[m
+Author: qilip <qilip@qilip.io>
+Date:   Mon May 15 19:34:21 2023 +0900
+
+    Style: Topbar 뒤로가기 설정
+
+[33mcommit 4d52b7290fd04dd7ae74ad3e5253608b20b32ca5[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Mon May 15 19:47:07 2023 +0900
+
+    add polyline
+
+[33mcommit dbc297436433bfa25ba3e149b713c2bdc0dbffa0[m
+Author: qilip <qilip@qilip.io>
+Date:   Mon May 15 17:28:08 2023 +0900
+
+    Style: budget, tag 사소하게 개선
+
+[33mcommit 19c9a447a0fc37706e3c7bf5adbf238b2b478213[m
+Author: qilip <qilip@qilip.io>
+Date:   Sun May 14 00:21:14 2023 +0900
+
+    Change: 약간 개선
+
+[33mcommit 6df05ef53061c14292c9b677c05fc9d3121b4658[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 18:39:05 2023 +0900
+
+    Fix profile empty file
+
+[33mcommit e906764c12354adc33f0f63cac9773d046f8a788[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 18:20:36 2023 +0900
+
+    Fix tag axios -> api
+
+[33mcommit 0f3ffcc54f5ce4112afd8d79f9936be1705c692c[m
+Merge: e04f433 48d12d8
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Sat May 13 18:17:42 2023 +0900
+
+    Merge branch 'main' of https://github.com/GimPITang3/triptopping-frontend
+
+[33mcommit e04f433efbadad2400f40c4daa6ecf4edaa632bf[m
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Sat May 13 18:17:33 2023 +0900
+
+    Add: 지도 이동 기능 추가, profile 페이지 생성
+
+[33mcommit 48d12d84ba7db1be83bf27f9fb9d9f18c365b389[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 18:17:19 2023 +0900
+
+    Fix: 구글 api key 활성화 (빌드실패)
+
+[33mcommit cfe3e4d34df8a4bd2e1f6c4973bbf65801b4894c[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 18:11:47 2023 +0900
+
+    Fix: 구글 맵 클릭 이벤트 처리
+
+[33mcommit 74c606b336f6357a17567ce2b35f010850da3be9[m
+Merge: 5c2d0f9 2f897ec
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sat May 13 18:03:40 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit 5c2d0f98c5e6a6cc6d12b2fd13fd4a83a2cc1c9d[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sat May 13 18:03:23 2023 +0900
+
+    Fix: string type error fix
+
+[33mcommit 2f897ec7b1c2aea5c9951d5f0e0b206a798927b0[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 17:56:20 2023 +0900
+
+    Add: 삭제 기능 구현
+
+[33mcommit 9e7eb8e935399669daee5209c04fb91a85bf459d[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 17:19:13 2023 +0900
+
+    Add: 조금 수정
+
+[33mcommit b29c4cbf7e62640f3fe41a80f97f203f511a2b0e[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 13 16:24:12 2023 +0900
+
+    Change: 지도겹치기
+
+[33mcommit 9e9ce1e9c00b75602e4591c63a2fbcdc82ed3797[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sat May 13 16:12:06 2023 +0900
+
+    polyline decode, add marker, change center when move itinerary
+
+[33mcommit 51618397c3426ae2e8049177e6f33fb0fce5eb40[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sat May 13 15:37:36 2023 +0900
+
+    일정 확인 css 없이
+
+[33mcommit a5e1939e5cb7d84f439c600fba01644bf5daefd3[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Sat May 13 15:26:24 2023 +0900
+
+    Implement go back button
+
+[33mcommit a595de469d3744694c03c82089059fe0b7b6a968[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Fri May 12 13:39:11 2023 +0900
+
+    class -> className
+
+[33mcommit b35396ab6ad35fcf33381d975803f6ba13608812[m
+Merge: 4612c39 a77c98c
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Fri May 12 13:38:09 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit 4612c395562e4282b53486ed869af8cea9931930[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Fri May 12 13:38:02 2023 +0900
+
+    axios instance naming change
+
+[33mcommit a77c98c9d9644f5a875aa440285716b9c28be2be[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 11 19:16:34 2023 +0900
+
+    Change: 여행 계획 모두 보기 버튼 수정
+
+[33mcommit 386f2f328cbbc8096e1c0ec7cdf35783376d2f7c[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 11 18:31:30 2023 +0900
+
+    Fix: 메인에서 플랜 상세페이지 404 해결
+
+[33mcommit ac0087aade97dfa82c6a37650c0272b30d7c13c9[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 11 18:23:10 2023 +0900
+
+    Add: detail page
+
+[33mcommit a37b5fec8665356faa220e0e2e404bbdb18c57e9[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 11 17:43:35 2023 +0900
+
+    Fix Conflict
+
+[33mcommit 005416ff59b694c6b7843d4e3ff1fb992c1e899f[m
+Merge: 9cc7372 b4249f0
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Thu May 11 18:51:12 2023 +0900
+
+    Fix: 여행 계획 목록 버튼 수정
+
+[33mcommit 9cc737260d22e931d697b7fef78992a482a60303[m
+Author: Kwangbin Hyun <bio8641@naver.com>
+Date:   Thu May 11 18:49:44 2023 +0900
+
+    Fix: 여행 계획 목록 버튼 수정
+
+[33mcommit b4249f0bd05d70118bb81aea87aad98db5e39a3d[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 11 17:15:02 2023 +0900
+
+    생성, 실제 데이터 가져오는 기능 추가
+
+[33mcommit 3934834694f5f7685b1c161b943f0d849b4ae1e0[m
+Merge: ecb6e16 919e291
+Author: 현광빈 <bio8641@naver.com>
+Date:   Mon May 8 20:58:08 2023 +0900
+
+    Merge branch 'main' of https://github.com/GimPITang3/triptopping-frontend
+
+[33mcommit ecb6e168d6c6962d041c3891e23d80c6875a6340[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Mon May 8 20:57:57 2023 +0900
+
+    Add: 여행 목록 api 연결 및 삭제 기능
+
+[33mcommit 919e29125fdf7fcc850cb790c27ad65157c3f00c[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Mon May 8 19:15:13 2023 +0900
+
+    장소 추가 선택 기능 추가
+
+[33mcommit 05409b3d004d2826a27dc1ff18c0c6582360f220[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Mon May 8 17:43:34 2023 +0900
+
+    change local baseurl
+
+[33mcommit 84391068ce415b51aed5e8b6809cf7bfb5f5c59e[m
+Author: jinhyeong.ju <jujh97@hanmail.net>
+Date:   Mon May 8 02:01:17 2023 +0900
+
+    build error fix
+
+[33mcommit 9e3cb8bd4b9e818a2a6d16e7b55d0409db738d28[m
+Author: BEEPMan <34468922+BEEPMan@users.noreply.github.com>
+Date:   Mon May 8 01:07:32 2023 +0900
+
+    Add: 여행 계획 목록 api 연동
+
+[33mcommit 8fa41e68b985c8633292bf563d6bab30e66119ba[m
+Author: BEEPMan <34468922+BEEPMan@users.noreply.github.com>
+Date:   Sun May 7 22:22:49 2023 +0900
+
+    CI Test
+
+[33mcommit 63042362bfd9d38c06d1fad5bca87ae4048c0174[m
+Author: BEEPMan <34468922+BEEPMan@users.noreply.github.com>
+Date:   Sun May 7 22:11:46 2023 +0900
+
+    Add: axios 통신 구성
+
+[33mcommit 025d8739354b073ac3ad5b128f36817e722c13d6[m
+Author: BEEPMan <34468922+BEEPMan@users.noreply.github.com>
+Date:   Sun May 7 19:17:24 2023 +0900
+
+    Add: 사이드바 및 plan page에서 일정 드래그 기능 추가
+
+[33mcommit 20abfef603d990568155057c54976dbbcd9230f2[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sun May 7 03:09:07 2023 +0900
+
+    period 만 있을 때 문구 수정
+
+[33mcommit 733d796e0ae0850145281c2b32cdc2fa29566750[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sun May 7 03:06:46 2023 +0900
+
+    일정 추가 삭제
+
+[33mcommit e8ed9e5ad7b2962fbfaa2ca4eb410ee25e9f3825[m
+Author: qilip <qilip@qilip.io>
+Date:   Sun May 7 02:06:02 2023 +0900
+
+    Change: Next 빌드 설정 변경
+
+[33mcommit aa5a85ba4825d993970f974398e5020e02972a3c[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sun May 7 01:56:21 2023 +0900
+
+    fix plan type error
+
+[33mcommit a77a822ffda61299303157bdb47bca63e4a00bad[m
+Author: qilip <qilip@qilip.io>
+Date:   Sun May 7 01:45:38 2023 +0900
+
+    Add: Axios baseURL 설정
+
+[33mcommit 013b2d57d4e1fcfe3b0f465042a4513ec282713f[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Sun May 7 01:32:49 2023 +0900
+
+    타입 변경, 생성시 넣은 데이터 확인 가능하게 변경
+
+[33mcommit 644a1919a34414eae27d271740457213c5152b52[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 6 23:31:03 2023 +0900
+
+    Change: 임시 primary color 변경
+
+[33mcommit 718fb90864737f7126f382a5751a6b343e64e6c2[m
+Author: qilip <qilip@qilip.io>
+Date:   Sat May 6 23:22:24 2023 +0900
+
+    Change: 하단 Navbar 변경
+
+[33mcommit 851bbc04c13cbb88590fcccb27c0a8900ec80e15[m
+Merge: 35c3602 d5b8f71
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 20:10:45 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit 35c3602a1b0b362b5397ab8351258054019d1a46[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 20:07:18 2023 +0900
+
+    add modal tab
+
+[33mcommit d5b8f711f47228d53a1ea6ceb7b62a8f35825049[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Thu May 4 19:58:13 2023 +0900
+
+    Add: tag 삭제 기능
+
+[33mcommit cd97e0fb8e12d65d6b01dbf873fb3c219b76fecd[m
+Merge: 8cd8520 4113e76
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 19:17:14 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit 8cd8520981ccb82d5e6de72ed2242f5f78336595[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 19:17:07 2023 +0900
+
+    편집 위치 변경, label id 변경
+
+[33mcommit 7fdd7acc1ec17d3b8855d93c54faf253bd093973[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 4 19:00:37 2023 +0900
+
+    Style: Plan 미리보기 페이지 거리 스타일링
+
+[33mcommit 1548bc92ebcd053df0a16fc549e008c63557b997[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 18:36:29 2023 +0900
+
+    plan 타입에 맞게 변경
+
+[33mcommit 4113e7665f7f8ed847dad7f50a6d070fc375e8c9[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu May 4 18:15:24 2023 +0900
+
+    Style: date 선택 페이지 스타일링
+
+[33mcommit 89a6682f0fd75687c92342a7ba829789e5e161d9[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu May 4 16:58:18 2023 +0900
+
+    context handle type change
+
+[33mcommit 6ec295eacbd72595a82e79c9582636a5128ef7f2[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Wed May 3 13:05:36 2023 +0900
+
+    local state -> context, 자잘한 자잘한 수정
+
+[33mcommit b186650e3d39134344a85cca4bddc7bba84b0794[m
+Merge: 5b5f370 446243f
+Author: 현광빈 <bio8641@naver.com>
+Date:   Tue May 2 20:59:58 2023 +0900
+
+    Merge branch 'main' of https://github.com/GimPITang3/triptopping-frontend
+
+[33mcommit 5b5f37090984ba71e54c97474b6ad666b26d1939[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Tue May 2 20:59:33 2023 +0900
+
+    plan new UI 수정
+
+[33mcommit 446243f48ed4fbe27891ac237aae9b3d0755f2ff[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 20:32:31 2023 +0900
+
+    error fix
+
+[33mcommit 84f3def8cbea12fd788c38ba0d3224476d837479[m
+Merge: e94fbd1 db4c32f
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 20:32:06 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit e94fbd161b531c6483349f0537a86df136847250[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 20:31:59 2023 +0900
+
+    plan default value
+
+[33mcommit db4c32f4deb1519d70ebd7a88a63972598ccfbfe[m
+Author: qilip <qilip@qilip.io>
+Date:   Tue May 2 20:28:06 2023 +0900
+
+    Style: name, num 스타일링
+
+[33mcommit 1c350f531082ce77f58f4ff0decb6c85e598f58d[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 20:08:11 2023 +0900
+
+    post plan
+
+[33mcommit fdeba387debb850b90d0f82a106c20efc69de85b[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 19:39:17 2023 +0900
+
+    에러 수정 및 경고 수정
+
+[33mcommit c7fad47fc27445d6c4838d711a8fcda93918bc30[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 19:30:26 2023 +0900
+
+    plan context tag
+
+[33mcommit 23546ce933f69c20bcf0141e3013dc5351253dbe[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Tue May 2 19:19:05 2023 +0900
+
+    add plan context
+
+[33mcommit 4a65afee902202d823ec7aac8bb37638b972de3d[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Mon May 1 20:53:39 2023 +0900
+
+    Add: 예산 설정 페이지
+
+[33mcommit 91af65db083e2f3bcd28fcf2d1fc53db3c1bb9c1[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Mon May 1 20:48:18 2023 +0900
+
+    계획 세부 내용 수정 UI
+
+[33mcommit 62e94a800d4d222689fc6a703aa9dd626a7f6474[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Sun Apr 30 17:57:35 2023 +0900
+
+    Add: 여행 계획 리스트
+
+[33mcommit 3f9ff1293529d8763d1953da90c58b2bc971b4bf[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Thu Apr 27 21:02:51 2023 +0900
+
+    Separate menu toggle component
+
+[33mcommit 43e69ca6d1e3a947062debb58ab7cd376dffa0ed[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Thu Apr 27 21:00:37 2023 +0900
+
+    Move components folder into src folder, separate topbar component
+
+[33mcommit 72bd04cde4e2961727cbb665222629cfb1e7d1dc[m
+Merge: bb1aa2c 3a61fcf
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 20:17:19 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit bb1aa2cb30e7137ce21b4dbff1d7b298630766a4[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 20:17:13 2023 +0900
+
+    plan 화면 넘어가는 기능 추가
+
+[33mcommit 3a61fcf53fc6cd491408ad615515398d322d4b3a[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Thu Apr 27 20:06:55 2023 +0900
+
+    소셜 로그인 버튼 구성
+
+[33mcommit 926f99ee651d91a14407f93753f8e624b1d812d5[m
+Merge: 7bae832 c7dc1b7
+Author: 현광빈 <bio8641@naver.com>
+Date:   Thu Apr 27 20:06:26 2023 +0900
+
+    Merge branch 'main' of https://github.com/GimPITang3/triptopping-frontend
+
+[33mcommit 7bae8323bd3b8e134a93462831d8dfb23344d5bc[m
+Author: 현광빈 <bio8641@naver.com>
+Date:   Thu Apr 27 20:05:11 2023 +0900
+
+    소셜 로그인 버튼 구성
+
+[33mcommit c7dc1b71a17617447090948f470df1e15740b03e[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:50:57 2023 +0900
+
+    뒤로가기 연결, 버튼 css 수정
+
+[33mcommit cedd2600c0ecf1008c075802984abf63449b93c0[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:44:22 2023 +0900
+
+    connect next button
+
+[33mcommit 271ee9812e628cbc3ed27dc73519aafbb34bb741[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:38:03 2023 +0900
+
+    theme rough
+
+[33mcommit 3cf286d58b7d57bb5492d6507711c4481b377f85[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:21:47 2023 +0900
+
+    remove unused interface
+
+[33mcommit 5668e3856445c7eddfc4ea719378635ea519833f[m
+Merge: 99e371e 4cac218
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:19:32 2023 +0900
+
+    Merge branch 'main' of github.com:GimPITang3/triptopping-frontend
+
+[33mcommit 99e371ea378d5b64ac7e4caec2f2972254465f08[m
+Author: jinhyeongju <jujh97@hanmail.net>
+Date:   Thu Apr 27 19:19:23 2023 +0900
+
+    add tailwind datepicker
+
+[33mcommit 4cac21856376aa4f574afc31e78c7916084ddedf[m
+Author: qilip <qilip@qilip.io>
+Date:   Thu Apr 27 18:55:19 2023 +0900
+
+    Chore: README 수정
+
+[33mcommit ab3ec2f0626e2f2857b5e17737464ab5ae6c3304[m
+Author: Jisu Sim <rlj1202@gmail.com>
+Date:   Mon Apr 17 20:59:14 2023 +0900
+
+    메인 페이지 수정 및 여행 계획 생성 화면 제작
+    
+    Co-authored-by: SangMin Shin <qilip@qilip.io>
+    Co-authored-by: BEEPMan <bio8641@naver.com>
+    Co-autho
