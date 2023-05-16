@@ -51,6 +51,7 @@ const Detail: FC = () => {
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
+  const [focusedIndex, setFocusedIndex] = useState(0);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -69,6 +70,7 @@ const Detail: FC = () => {
     //! magic number. please change.
     // console.log(height);
     const idx = Math.floor(height / 96);
+    setFocusedIndex(idx);
     if (idx > plan.itinerary[page].length - 1) {
       return;
     }
@@ -156,12 +158,33 @@ const Detail: FC = () => {
         </div>
       </LoadScript>
 
-      <div className="absolute top-0 left-0 flex flex-col w-full z-10 items-start pointer-events-none h-screen">
+      <div className="absolute top-0 left-0 flex flex-col w-full items-start pointer-events-none h-screen">
         <div className="backdrop-blur-sm bg-white/80 w-full pointer-events-auto">
           <Topbar />
         </div>
-        <div className="absolute top-12 w-full pointer-events-auto backdrop-blur-sm bg-white/80">
-          대충 설명이 들어가야 하는 부분
+        <div className="absolute top-12 w-full h-24 z-10 pointer-events-auto bg-white border-y-4 border-gray-100">
+          {focusedPlace && (
+            <div className="flex items-center pl-[21px] h-full">
+              <div className="rounded-full bg-[#3d4451] h-8 w-8 text-white text-center text-xl shrink-0">
+                {focusedIndex + 1}
+              </div>
+              <div className="overflow-hidden pl-3 pr-6">
+                <div className="text-2xl font-bold flex items-end">
+                  <div className="pr-3">
+                    {focusedPlace?.name || ''}
+                  </div>
+                  <Image
+                    src={focusedPlace?.icon || ''}
+                    alt="icon"
+                    width={24}
+                    height={24}
+                  />
+                </div>
+                <div className="text-sm truncate">{focusedPlace?.formatted_address || ''}</div>
+              </div>
+            </div>
+          )
+          }
         </div>
         <div className="pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide">
           <ul
@@ -176,15 +199,27 @@ const Detail: FC = () => {
               .map((itinerary, index) => (
                 <li
                   key={`it-${index}`}
-                  className="step step-neutral snap-always snap-start h-24"
+                  className="step step-neutral snap-always snap-start h-24 cursor-pointer"
+                  // 클릭시 해당 li가 top으로 스크롤
+                  onClick={(e) => {
+                    const target = e.currentTarget;
+                    const parent = target.parentElement as HTMLUListElement;
+                    const scroll = target.offsetTop - parent.offsetTop;
+                    parent.scrollTo({
+                      top: scroll,
+                      behavior: 'smooth',
+                    });
+                  }}
                 >
-                  <div>{itinerary.system && itinerary.system.details.name}</div>
+                  <div className="">
+                    {itinerary.system && itinerary.system.details.name}
+                  </div>
                 </li>
               ))}
             <li className="h-screen"></li>
           </ul>
         </div>
-        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none">
+        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
