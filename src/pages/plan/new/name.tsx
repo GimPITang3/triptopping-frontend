@@ -1,10 +1,10 @@
 import { PlanContext, UserContext } from '@/contexts';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FC, useContext } from 'react';
+import { ChangeEvent, FC, useContext, useEffect } from 'react';
 
 const Name: FC = () => {
   const router = useRouter();
-  const { plan, setPlan } = useContext(PlanContext);
+  const { plan, setPlan, clearPlan } = useContext(PlanContext);
   const { user, setUser } = useContext(UserContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -13,12 +13,21 @@ const Name: FC = () => {
 
   const handleClickNext = () => {
     if (plan.name === '') {
-      setPlan({ ...plan, name: (user.nickname ? user.nickname + '님의 ' : '') + '폭풍을 부르는 우당탕탕 여행기!' });
+      setPlan({
+        ...plan,
+        name:
+          (user.nickname ? user.nickname + '님의 ' : '') +
+          '폭풍을 부르는 우당탕탕 여행기!',
+      });
     }
     router.push('/plan/new/num');
   };
 
-  console.log(user);
+  useEffect(() => {
+    console.log(user);
+
+    clearPlan();
+  });
 
   return (
     <div className="flex flex-col min-h-screen p-8">
