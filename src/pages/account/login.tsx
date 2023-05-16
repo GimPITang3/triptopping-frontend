@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { GoogleLogin } from '@react-oauth/google';
 import { useGoogleLogin } from '@react-oauth/google';
+import { loginWithGoogle } from '@/services/authService'
 import Head from 'next/head';
 import Topbar from '@/components/Topbar';
 
