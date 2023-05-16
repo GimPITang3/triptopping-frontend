@@ -26,12 +26,12 @@ import { getPlan } from '@/services/plansService';
 
 import { TopbarContainer } from '@/components/TopbarContainer';
 import MenuToggle from '@/components/Topbar/MenuToggle';
+import ModifyPlanModal from '@/components/ModifyPlanModal';
 
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
-import ModifyPlanModal from '@/components/ModifyPlanModal';
 
 interface SearchResult {
   position: {
