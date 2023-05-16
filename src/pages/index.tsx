@@ -12,6 +12,7 @@ import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
 import { getPlans } from '@/services/plansService';
+import { NextPage } from 'next';
 
 interface ItineraryListProps {
   planId: string;
@@ -88,7 +89,7 @@ const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
   );
 };
 
-const Home = () => {
+const Home: NextPage = () => {
   const router = useRouter();
   const [planList, setPlanList] = useState<Plan[]>([]);
   const { user, setUser } = useContext(UserContext);

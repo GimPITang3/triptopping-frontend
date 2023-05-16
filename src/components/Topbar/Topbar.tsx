@@ -1,11 +1,13 @@
-import Link from 'next/link';
 import { FC } from 'react';
+import Link from 'next/link';
+
+import { TopbarContainer } from '../TopbarContainer';
 import MenuToggle from './MenuToggle';
 
 const Topbar: FC = () => {
   return (
-    <div className="mx-auto px-4">
-      <div className="relative flex items-center justify-between h-12">
+    <TopbarContainer>
+      <div className="relative flex items-center justify-between h-full">
         <Link href="/">
           <div className="flex-shrink-0 flex items-center font-bold text-xl">
             TripTopping
@@ -13,7 +15,7 @@ const Topbar: FC = () => {
         </Link>
         <MenuToggle />
       </div>
-    </div>
+    </TopbarContainer>
   );
 };
 

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { FC, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
 import { deletePlan, getPlans } from '@/services/plansService';
+import Head from 'next/head';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -119,6 +120,10 @@ const PlanPage: NextPage = ({}) => {
 
   return (
     <>
+      <Head>
+        <title>{`일정 목록`}</title>
+      </Head>
+
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">

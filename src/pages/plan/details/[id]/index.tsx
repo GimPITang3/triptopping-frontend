@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
 import { getPlanDetails } from '@/services/plansService';
+import { TopbarContainer } from '@/components/TopbarContainer';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -21,9 +22,9 @@ const Topbar: FC = () => {
   };
 
   return (
-    <div className="mx-auto px-4 w-full">
-      <div className="relative flex items-center justify-between h-12">
-        <div className="flex-shrink-0 flex items-center font-bold text-xl">
+    <TopbarContainer>
+      <div className="relative flex items-center justify-between h-full">
+        <div className="flex-shrink-0 flex items-center font-bold text-xl gap-x-2">
           <button onClick={onBackClick}>
             <Image
               src={arrowLeftCircle}
@@ -35,7 +36,7 @@ const Topbar: FC = () => {
           <div>{plan.name}</div>
         </div>
       </div>
-    </div>
+    </TopbarContainer>
   );
 };
 

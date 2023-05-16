@@ -1,16 +1,8 @@
-import { PlanContext } from '@/contexts';
-import { ItineraryDaily, Plan, ScheduleSlot } from '@/types';
-import {
-  GoogleMap,
-  LoadScript,
-  Marker,
-  StandaloneSearchBox,
-} from '@react-google-maps/api';
-import { DateTime } from 'luxon';
 import { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import {
   ChangeEvent,
   useCallback,
@@ -18,6 +10,14 @@ import {
   useEffect,
   useState,
 } from 'react';
+
+import { DateTime } from 'luxon';
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  StandaloneSearchBox,
+} from '@react-google-maps/api';
 import {
   DragDropContext,
   Draggable,
@@ -25,13 +25,20 @@ import {
   Droppable,
 } from 'react-beautiful-dnd';
 import Datepicker from 'react-tailwindcss-datepicker';
+
+import { PlanContext } from '@/contexts';
+import { ItineraryDaily, Plan, ScheduleSlot } from '@/types';
+
+import { getPlan } from '@/services/plansService';
+
+import { TopbarContainer } from '@/components/TopbarContainer';
+import MenuToggle from '@/components/Topbar/MenuToggle';
+
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import dash from '../../../../public/dash.svg';
-import hamburger from '../../../../public/hamburger.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
-import { getPlan } from '@/services/plansService';
 
 interface SearchResult {
   position: {
@@ -628,15 +635,19 @@ const PlanPage: NextPage = ({}) => {
 
   return (
     <div className="min-h-screen">
-      <div className="flex justify-between">
-        <Link href="/plan/list">
-          <Image src={arrowLeftCircle} alt="back" width={32} height={32} />
-        </Link>
-        <button>
-          <Image src={hamburger} alt="menu" width={32} height={32} />
-        </button>
-      </div>
-      <div>
+      <Head>
+        <title>{`${plan.name}`}</title>
+      </Head>
+
+      <TopbarContainer>
+        <div className="flex flex-row h-full items-center justify-between">
+          <Link href="/plan/list">
+            <Image src={arrowLeftCircle} alt="back" width={32} height={32} />
+          </Link>
+          <MenuToggle />
+        </div>
+      </TopbarContainer>
+      <div className="px-4 my-4 space-y-2">
         <div className="flex items-end">
           <div className="text-2xl font-bold">{plan.name}</div>
         </div>
