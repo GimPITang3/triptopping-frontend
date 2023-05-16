@@ -29,3 +29,12 @@ export const createPlan = async (plan: Plan): Promise<Plan> => {
 
   return resp.data;
 };
+
+export const excludePlaces = async (
+  id: string,
+  placeIds: string[],
+): Promise<void> => {
+  await client.post(`/plans/${id}/excludes`, {
+    placeIds: placeIds,
+  });
+};
