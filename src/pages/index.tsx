@@ -1,18 +1,42 @@
-import Topbar from '@/components/Topbar';
-import { Plan, User } from '@/types';
-import { UserContext } from '@/contexts';
-import { DateTime } from 'luxon';
-import { Inter } from 'next/font/google';
+import { FC, useEffect, useState, useContext } from 'react';
+import { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, PropsWithChildren, useEffect, useState, useContext } from 'react';
+import { DateTime } from 'luxon';
+
+import { Plan } from '@/types';
+import { UserContext } from '@/contexts';
+import { getPlans } from '@/services/plansService';
+
+import Topbar from '@/components/Topbar';
+import CommunityCard from '@/components/CommunityCard';
+
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
-import younha from '../../public/younha.png';
-import { getPlans } from '@/services/plansService';
-import { NextPage } from 'next';
+
+const dummyArticles: {
+  title: string;
+  description: string;
+  coverImage?: string | StaticImageData;
+}[] = [
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image3.jpg',
+  },
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image1.jpeg',
+  },
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image2.jpeg',
+  },
+];
 
 interface ItineraryListProps {
   planId: string;
@@ -20,12 +44,6 @@ interface ItineraryListProps {
   date: Date | undefined;
   period: number;
 }
-
-const inter = Inter({ subsets: ['latin'] });
-
-const TestComponent: FC<PropsWithChildren> = ({ children }) => {
-  return <></>;
-};
 
 const ItineraryList: FC<ItineraryListProps> = ({
   planId,
@@ -67,25 +85,6 @@ const ItineraryList: FC<ItineraryListProps> = ({
         </div>
       </div>
     </Link>
-  );
-};
-
-const CommunityCard: FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <div className="card shrink-0 w-72 bg-base-100 shadow-xl">
-      <figure>
-        <Image src={younha} alt="Shoes" />
-      </figure>
-      <div className="card-body">
-        <h2 className="card-name">지리는 여행</h2>
-        <div className="badge badge-secondary">NEW</div>
-        <p>그녀의 쌀국수 여행기!</p>
-        <div className="card-actions justify-end">
-          <div className="badge badge-outline">food</div>
-          <div className="badge badge-outline">1st</div>
-        </div>
-      </div>
-    </div>
   );
 };
 
@@ -191,13 +190,14 @@ const Home: NextPage = () => {
           <div className="p-4 my-4">
             <div className="font-bold pb-4 text-xl">커뮤니티</div>
             <div className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14 scrollbar-hide">
-              <CommunityCard />
-              <CommunityCard />
-              <CommunityCard />
-              <CommunityCard />
-              <CommunityCard />
-              <CommunityCard />
-              <CommunityCard />
+              {dummyArticles.map((article, i) => (
+                <CommunityCard
+                  key={i}
+                  title={article.title}
+                  description={article.description}
+                  coverImage={article.coverImage}
+                />
+              ))}
               <CommunityCard />
             </div>
           </div>
