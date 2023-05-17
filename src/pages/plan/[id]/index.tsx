@@ -166,7 +166,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   );
 };
 
-const PlanPage: NextPage = ({ }) => {
+const PlanPage: NextPage = ({}) => {
   const router = useRouter();
   const { id } = router.query;
   const { plan, setPlan } = useContext(PlanContext);
@@ -176,6 +176,7 @@ const PlanPage: NextPage = ({ }) => {
   const [searchBox, setSearchBox] =
     useState<google.maps.places.SearchBox | null>(null);
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
 
@@ -275,9 +276,11 @@ const PlanPage: NextPage = ({ }) => {
   };
 
   const handleUpdateRecommend = async () => {
+    setLoading(true);
     const data = await updatePlan(plan.planId, {
       itinerary: plan.itinerary,
     });
+    setLoading(false);
     console.log('updated plan', data);
     setPlan(data);
   };
@@ -515,16 +518,32 @@ const PlanPage: NextPage = ({ }) => {
       <GoogleMapModal day={selectDay} />
       <div className="h-32"></div>
       <div className="sticky bottom-20 flex space-x-4 px-4 justify-center">
-        <button className="btn btn-accent w-40 shadow-lg shadow-accent" onClick={handleUpdateRecommend}>
-          저장 & 추천 갱신
+        <button
+          className={
+            'btn btn-accent w-40 shadow-lg shadow-accent' +
+            (loading ? ' loading' : '')
+          }
+          onClick={handleUpdateRecommend}
+        >
+          {loading ? '' : '저장 & 추천 갱신'}
         </button>
         <button
           className="btn btn-primary w-40 shadow-lg shadow-primary"
           onClick={() => router.push(`/plan/details/${plan.planId}`)}
         >
           최종 계획 확인
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            className=""
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
           </svg>
         </button>
       </div>
