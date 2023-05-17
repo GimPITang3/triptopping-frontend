@@ -1,20 +1,17 @@
 import { PlanContext } from '@/contexts';
-import { useRouter } from 'next/router';
-import {
-  FC,
-  ChangeEvent,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
 import {
   GoogleMap,
   LoadScript,
-  Marker,
-  StandaloneSearchBox,
+  StandaloneSearchBox
 } from '@react-google-maps/api';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import {
+  FC,
+  useCallback,
+  useContext,
+  useState
+} from 'react';
 
 interface SearchResult {
   position: {
@@ -79,7 +76,7 @@ const Num: FC = () => {
 
   const containerStyle = {
     width: '100%',
-    height: '400px',
+    height: '300px',
   };
 
   const center = {
@@ -143,39 +140,35 @@ const Num: FC = () => {
             libraries={['places']}
           >
             <div className="h-full">
-              <StandaloneSearchBox
-                onLoad={onSearchBoxLoad}
-                onPlacesChanged={onPlacesChanged}
-              >
-                <input
-                  type="text"
-                  onChange={(e) => console.log(e.target.value)}
-                  placeholder="Search for a place"
-                  style={{
-                    boxSizing: `border-box`,
-                    border: `1px solid transparent`,
-                    width: `240px`,
-                    height: `32px`,
-                    padding: `0 12px`,
-                    borderRadius: `3px`,
-                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                    fontSize: `14px`,
-                    outline: `none`,
-                    textOverflow: `ellipses`,
+              <div className="mask mask-circle pointer-events-none">
+                <GoogleMap
+                  mapContainerStyle={containerStyle}
+                  zoom={10}
+                  onLoad={onLoad}
+                  onClick={onClickGeocode}
+                  onUnmount={onUnmount}
+                  options={{
+                    disableDefaultUI: true,
                   }}
-                />
-              </StandaloneSearchBox>
-              <GoogleMap
-                mapContainerStyle={containerStyle}
-                zoom={10}
-                onLoad={onLoad}
-                onClick={onClickGeocode}
-                onUnmount={onUnmount}
-              ></GoogleMap>
+                ></GoogleMap>
+              </div>
+              <div className="mt-8 flex justify-center">
+                <StandaloneSearchBox
+                  onLoad={onSearchBoxLoad}
+                  onPlacesChanged={onPlacesChanged}
+                >
+                  <input
+                    type="text"
+                    onChange={(e) => console.log(e.target.value)}
+                    placeholder="도쿄"
+                    className="input input-primary input-bordered border-2 w-[400px]"
+                  />
+                </StandaloneSearchBox>
+              </div>
             </div>
           </LoadScript>
         </div>
-        <div className="flex text-xl my-4 justify-center">
+        <div className="flex text-xl justify-center">
           {countryName + ' ' + cityName} (으)로 여행갈래요.
         </div>
       </div>
@@ -187,7 +180,10 @@ const Num: FC = () => {
           뒤로가기
         </button>
         <button
-          className="flex-1 btn btn-primary"
+          className={
+            "flex-1 btn btn-primary"
+            + (countryName && cityName ? '' : ' btn-disabled')
+          }
           onClick={() => router.push('/plan/new/budget')}
         >
           다음
