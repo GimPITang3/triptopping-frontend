@@ -175,9 +175,6 @@ const PlanPage: NextPage = ({}) => {
   const [selectDay, setSelectDay] = useState<number>(-1);
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [searchBox, setSearchBox] =
-    useState<google.maps.places.SearchBox | null>(null);
-  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
@@ -190,45 +187,9 @@ const PlanPage: NextPage = ({}) => {
     setMap(null);
   }, []);
 
-  const onSearchBoxLoad = useCallback((ref: google.maps.places.SearchBox) => {
-    setSearchBox(ref);
-  }, []);
-
-  const onPlacesChanged = useCallback(() => {
-    if (!searchBox) return;
-
-    const places = searchBox.getPlaces();
-
-    if (!places || places.length === 0) {
-      return;
-    }
-
-    const place = places[0];
-    if (!(place.geometry && place.geometry.location && place.name)) {
-      return;
-    }
-    setSearchResult({
-      position: {
-        lat: place.geometry.location.lat() || 0,
-        lng: place.geometry.location.lng() || 0,
-      },
-      name: place.name,
-    });
-
-    if (map) {
-      map.panTo(place.geometry.location);
-      map.setZoom(15);
-    }
-  }, [searchBox, map]);
-
   const containerStyle = {
     width: '100%',
     height: '400px',
-  };
-
-  const center = {
-    lat: 37.7749,
-    lng: -122.4194,
   };
 
   const onClickDeleteItinerary = async (day: number, index: number) => {
