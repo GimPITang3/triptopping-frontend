@@ -426,14 +426,17 @@ const PlanPage: NextPage = ({}) => {
                                     </div>
                                     <div
                                       className={
-                                        "card-body rounded-lg shadow-md bg-[#fafcff] "
-                                        +
-                                        (itinerary?.manual ? "shadow-cyan-300" : "shadow-pink-300")
+                                        'card-body rounded-lg shadow-md bg-[#fafcff] ' +
+                                        (itinerary?.manual
+                                          ? 'shadow-cyan-300'
+                                          : 'shadow-pink-300')
                                       }
                                     >
                                       <h2 className="card-title">
-                                        {flattenScheduleSlot(itinerary)?.details
-                                          .name || '테스트'}
+                                        <p className="flex-1 line-clamp-1">
+                                          {flattenScheduleSlot(itinerary)
+                                            ?.details.name || '테스트'}
+                                        </p>
                                         <Image
                                           src={pencilSquare}
                                           alt="edit"
