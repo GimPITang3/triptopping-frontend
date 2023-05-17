@@ -290,7 +290,7 @@ const PlanPage: NextPage = ({}) => {
         ...prev.itinerary[day][index].system,
       };
       delete prev.itinerary[day][index].system;
-      return prev;
+      return { ...prev };
     });
   };
 
@@ -435,7 +435,7 @@ const PlanPage: NextPage = ({}) => {
                                           </div>
                                         </div>
                                       </div>
-                                      <div className="relative top-4">100m</div>
+                                      <div className="relative top-4 h-[24px]"></div>
                                     </div>
                                     <div
                                       className={
@@ -457,9 +457,9 @@ const PlanPage: NextPage = ({}) => {
                                         >
                                           <Image
                                             src={check}
-                                            alt="edit"
-                                            width={14}
-                                            height={14}
+                                            alt="check"
+                                            width={20}
+                                            height={20}
                                           />
                                         </button>
                                         <button
