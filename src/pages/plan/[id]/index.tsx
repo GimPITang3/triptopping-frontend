@@ -29,12 +29,11 @@ import { TopbarContainer } from '@/components/TopbarContainer';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
+import { PlaceData } from '@googlemaps/google-maps-services-js';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
-import pencilSquare from '../../../../public/pencilsquare.svg';
+import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
-import check from '../../../../public/check.svg';
-import { PlaceData } from '@googlemaps/google-maps-services-js';
 
 interface SearchResult {
   position: {
@@ -167,7 +166,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   );
 };
 
-const PlanPage: NextPage = ({}) => {
+const PlanPage: NextPage = ({ }) => {
   const router = useRouter();
   const { id } = router.query;
   const { plan, setPlan } = useContext(PlanContext);
@@ -304,7 +303,6 @@ const PlanPage: NextPage = ({}) => {
       <Head>
         <title>{`${plan.name}`}</title>
       </Head>
-      <button onClick={handleUpdateRecommend}>update</button>
       <TopbarContainer>
         <div className="flex flex-row h-full items-center justify-between">
           <Link href="/plan/list">
@@ -314,46 +312,40 @@ const PlanPage: NextPage = ({}) => {
         </div>
       </TopbarContainer>
       <div className="px-4 my-4 space-y-4">
-        <header className="space-y-2">
-          <div className="flex items-end">
-            <div className="text-2xl font-bold">{plan.name}</div>
+        <header className="flex justify-between items-end">
+          <div className="space-y-2">
+            <div className="flex items-end">
+              <div className="text-2xl font-bold">{plan.name}</div>
+            </div>
+            <div>
+              {plan.startDate ? (
+                <div>
+                  {DateTime.fromJSDate(new Date(plan.startDate)).toFormat(
+                    'yyyy년 MM월 dd일',
+                  )}{' '}
+                  ~{' '}
+                  {DateTime.fromJSDate(new Date(plan.startDate))
+                    .plus({ days: plan.period })
+                    .toFormat('yyyy년 MM월 dd일')}
+                </div>
+              ) : (
+                <div>
+                  {plan.period - 1}박{plan.period}일
+                </div>
+              )}
+            </div>
+            <div className="space-x-2">
+              {plan.tags.map((tag: string, idx: number) => (
+                <div key={idx} className="badge">
+                  {tag}
+                </div>
+              ))}
+            </div>
           </div>
-          <div>
-            {plan.startDate ? (
-              <div>
-                {DateTime.fromJSDate(new Date(plan.startDate)).toFormat(
-                  'yyyy년 MM월 dd일',
-                )}{' '}
-                ~{' '}
-                {DateTime.fromJSDate(new Date(plan.startDate))
-                  .plus({ days: plan.period })
-                  .toFormat('yyyy년 MM월 dd일')}
-              </div>
-            ) : (
-              <div>
-                {plan.period - 1}박{plan.period}일
-              </div>
-            )}
-          </div>
-          <div className="space-x-2">
-            {plan.tags.map((tag: string, idx: number) => (
-              <div key={idx} className="badge">
-                {tag}
-              </div>
-            ))}
-          </div>
-        </header>
-        <div className="flex flex-row justify-between">
           <label htmlFor="modify-name-modal" className="btn btn-secondary">
             편집
           </label>
-          <button
-            className="btn btn-primary"
-            onClick={() => router.push(`/plan/details/${plan.planId}`)}
-          >
-            경로 보기
-          </button>
-        </div>
+        </header>
       </div>
       <div className="divider"></div>
       {/* <LoadScript
@@ -521,7 +513,21 @@ const PlanPage: NextPage = ({}) => {
       </DragDropContext>
       <ModifyPlanModal />
       <GoogleMapModal day={selectDay} />
-      <div className="h-24"></div>
+      <div className="h-32"></div>
+      <div className="sticky bottom-20 flex space-x-4 px-4 justify-center">
+        <button className="btn btn-accent w-40 shadow-lg shadow-accent" onClick={handleUpdateRecommend}>
+          저장 & 추천 갱신
+        </button>
+        <button
+          className="btn btn-primary w-40 shadow-lg shadow-primary"
+          onClick={() => router.push(`/plan/details/${plan.planId}`)}
+        >
+          최종 계획 확인
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+          </svg>
+        </button>
+      </div>
       <BtmNavbar user={user} currentPath={2} />
     </div>
   );
