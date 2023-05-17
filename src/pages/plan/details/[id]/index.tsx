@@ -226,7 +226,13 @@ const Detail: FC = () => {
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
-              onClick={() => setPage(index)}
+              onClick={() => {
+                setPage(index);
+                setFocusedPlace(
+                  flattenScheduleSlot(plan.itinerary[index][0]).details,
+                );
+                setFocusedIndex(0);
+              }}
               className={'tab tab-lg' + (index === page ? ' tab-active' : '')}
             >
               Day {index + 1}

@@ -33,6 +33,7 @@ import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
+import check from '../../../../public/check.svg';
 
 interface SearchResult {
   position: {
@@ -281,6 +282,18 @@ const PlanPage: NextPage = ({}) => {
     setPlan(data);
   };
 
+  const FixSchedule = (day: number, index: number) => {
+    console.log(day, index);
+    setPlan((prev) => {
+      prev.itinerary[day][index].manual = {
+        ...prev.itinerary[day][index].manual,
+        ...prev.itinerary[day][index].system,
+      };
+      delete prev.itinerary[day][index].system;
+      return prev;
+    });
+  };
+
   if (!plan.planId) {
     return <div></div>;
   }
@@ -437,12 +450,18 @@ const PlanPage: NextPage = ({}) => {
                                           {flattenScheduleSlot(itinerary)
                                             ?.details.name || '테스트'}
                                         </p>
-                                        <Image
-                                          src={pencilSquare}
-                                          alt="edit"
-                                          width={14}
-                                          height={14}
-                                        />
+                                        <button
+                                          onClick={() =>
+                                            FixSchedule(dayIdx, idx)
+                                          }
+                                        >
+                                          <Image
+                                            src={check}
+                                            alt="edit"
+                                            width={14}
+                                            height={14}
+                                          />
+                                        </button>
                                         <button
                                           onClick={() =>
                                             onClickDeleteItinerary(dayIdx, idx)
@@ -482,7 +501,7 @@ const PlanPage: NextPage = ({}) => {
       </DragDropContext>
       <ModifyPlanModal />
       <GoogleMapModal day={selectDay} />
-
+      <div className="h-24"></div>
       <BtmNavbar user={user} currentPath={2} />
     </div>
   );
