@@ -112,12 +112,8 @@ const Detail: FC = () => {
   }
 
   const itineraryDaily = plan.itinerary[page];
-  const GetIcon = (index: number) => {
-    if (index > 0) {
-      return undefined;
-    } else {
-      return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
-    }
+  const GetIcon = () => {
+    return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
   };
 
   return (
@@ -137,6 +133,7 @@ const Detail: FC = () => {
             {itineraryDaily
               .filter((itinerary) => itinerary.type === 'place')
               .map((itinerary, index) => (
+                (itineraryDaily.length - 1 === index || index === 0) ? (
                 <Marker
                   key={`it-${index}`}
                   position={
@@ -146,13 +143,21 @@ const Detail: FC = () => {
                       lng: 0,
                     }
                   }
-                  icon={GetIcon(index)}
-                  label={
-                    itineraryDaily.length - 1 === index || index === 0
-                      ? undefined
-                      : (index + 1).toString()
-                  }
+                  icon={GetIcon()}
                 />
+                ) : (
+                <Marker
+                  key={`it-${index}`}
+                  position={
+                    flattenScheduleSlot(itinerary).details.geometry
+                      ?.location || {
+                      lat: 0,
+                      lng: 0,
+                    }
+                  }
+                  label={(index + 1).toString()}
+                />
+                )
               ))}
 
             <Polyline
