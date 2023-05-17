@@ -28,7 +28,7 @@ import MenuToggle from '@/components/Topbar/MenuToggle';
 import { TopbarContainer } from '@/components/TopbarContainer';
 
 import BtmNavbar from '@/components/BtmNavbar';
-import { flattenScheduleSlot } from '@/utils';
+import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
@@ -307,11 +307,11 @@ const PlanPage: NextPage = ({}) => {
           <div>
             {plan.startDate ? (
               <div>
-                {DateTime.fromJSDate(plan.startDate).toFormat(
+                {DateTime.fromJSDate(new Date(plan.startDate)).toFormat(
                   'yyyy년 MM월 dd일',
                 )}{' '}
                 ~{' '}
-                {DateTime.fromJSDate(plan.startDate)
+                {DateTime.fromJSDate(new Date(plan.startDate))
                   .plus({ days: plan.period })
                   .toFormat('yyyy년 MM월 dd일')}
               </div>
