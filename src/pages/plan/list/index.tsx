@@ -1,14 +1,16 @@
+import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
+import { UserContext } from '@/contexts';
+import { deletePlan, getPlans } from '@/services/plansService';
 import { Plan } from '@/types';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
-import { deletePlan, getPlans } from '@/services/plansService';
-import Head from 'next/head';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -118,6 +120,8 @@ const PlanPage: NextPage = ({}) => {
     SetPlanList();
   }, []);
 
+  const { user, setUser } = useContext(UserContext);
+
   return (
     <>
       <Head>
@@ -198,6 +202,9 @@ const PlanPage: NextPage = ({}) => {
             </div>
           </div>
         </div>
+
+        <BtmNavbar user={user} currentPath={2} />
+
         <div className="drawer-side">
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
           <ul className="menu p-4 w-80 bg-base-100 text-base-content">

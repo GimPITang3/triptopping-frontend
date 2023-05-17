@@ -1,12 +1,11 @@
-import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
-import { useGoogleLogin } from '@react-oauth/google';
-import { loginWithGoogle } from '@/services/authService'
-import Head from 'next/head';
+import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
+import { UserContext } from '@/contexts';
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useContext, useState } from 'react';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -18,6 +17,7 @@ import Topbar from '@/components/Topbar';
 
 const LoginPage: NextPage = ({}) => {
   const router = useRouter();
+  const { user, setUser } = useContext(UserContext);
   const [isLogin, setIsLogin] = useState(true);
   return (
     <div className="min-h-screen">
@@ -68,6 +68,8 @@ const LoginPage: NextPage = ({}) => {
           </div>
         </div>
       </div>
+
+      <BtmNavbar user={user} currentPath={5} />
     </div>
   );
 };

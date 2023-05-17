@@ -1,17 +1,16 @@
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCallback, useContext, useEffect, useState } from 'react';
 
-import { DateTime } from 'luxon';
 import {
   GoogleMap,
   LoadScript,
-  Marker,
-  StandaloneSearchBox,
+  StandaloneSearchBox
 } from '@react-google-maps/api';
+import { DateTime } from 'luxon';
 import {
   DragDropContext,
   Draggable,
@@ -19,20 +18,21 @@ import {
   Droppable,
 } from 'react-beautiful-dnd';
 
-import { PlanContext } from '@/contexts';
-import { ItineraryDaily, Place, Plan, ScheduleSlot } from '@/types';
+import { PlanContext, UserContext } from '@/contexts';
+import { ItineraryDaily, Place, ScheduleSlot } from '@/types';
 
 import { excludePlaces, getPlan, updatePlan } from '@/services/plansService';
 
-import { TopbarContainer } from '@/components/TopbarContainer';
-import MenuToggle from '@/components/Topbar/MenuToggle';
 import ModifyPlanModal from '@/components/ModifyPlanModal';
+import MenuToggle from '@/components/Topbar/MenuToggle';
+import { TopbarContainer } from '@/components/TopbarContainer';
 
+import BtmNavbar from '@/components/BtmNavbar';
+import { flattenScheduleSlot } from '@/utils';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
-import { flattenScheduleSlot } from '@/utils';
 
 interface SearchResult {
   position: {
@@ -175,6 +175,8 @@ const PlanPage: NextPage = ({}) => {
   const [searchBox, setSearchBox] =
     useState<google.maps.places.SearchBox | null>(null);
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+
+  const { user, setUser } = useContext(UserContext);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     map.setCenter(center);
@@ -473,6 +475,8 @@ const PlanPage: NextPage = ({}) => {
       </DragDropContext>
       <ModifyPlanModal />
       <GoogleMapModal day={selectDay} />
+
+      <BtmNavbar user={user} currentPath={2} />
     </div>
   );
 };

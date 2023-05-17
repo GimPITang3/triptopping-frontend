@@ -1,11 +1,10 @@
-import { useRouter } from 'next/router';
+import BtmNavbar from '@/components/BtmNavbar';
+import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
 import { NextPage } from 'next';
-import { useContext, useState, ChangeEvent } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import Topbar from '@/components/Topbar';
-import younha from '../../../../public/younha.png';
+import { useRouter } from 'next/router';
+import { ChangeEvent, useContext, useState } from 'react';
 
 const AccountPage: NextPage = ({}) => {
   const router = useRouter();
@@ -100,6 +99,8 @@ const AccountPage: NextPage = ({}) => {
           </div>
         </div>
       </div>
+
+      <BtmNavbar user={user} currentPath={5} />
     </div>
   );
 };

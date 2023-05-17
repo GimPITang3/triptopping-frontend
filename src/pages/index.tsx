@@ -204,7 +204,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <BtmNavbar user={user} />
+        <BtmNavbar user={user} currentPath={1} />
 
         <div className="drawer-side">
           <label htmlFor="my-drawer-4" className="drawer-overlay"></label>

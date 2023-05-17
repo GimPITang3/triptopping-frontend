@@ -1,11 +1,10 @@
-import { UserContext } from '@/contexts';
-import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useContext, useState, ChangeEvent } from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { GoogleLogin } from '@react-oauth/google';
-import Head from 'next/head';
+import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
+import { UserContext } from '@/contexts';
+import { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ChangeEvent, useContext, useState } from 'react';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -79,6 +78,8 @@ const SignUpPage: NextPage = ({}) => {
           </div>
         </div>
       </div>
+
+      <BtmNavbar user={user} currentPath={5} />
     </div>
   );
 };
