@@ -34,6 +34,7 @@ import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
 import check from '../../../../public/check.svg';
+import { PlaceData } from '@googlemaps/google-maps-services-js';
 
 interface SearchResult {
   position: {
@@ -416,71 +417,90 @@ const PlanPage: NextPage = ({}) => {
                             draggableId={`itinerary${dayIdx}-${idx}`}
                             index={idx}
                           >
-                            {(provided) => (
-                              <li
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                ref={provided.innerRef}
-                              >
-                                <div className="py-1" key={`itinerary-${idx}`}>
-                                  <div className="flex items-center space-x-4 h-[124px]">
-                                    <div className="flex flex-col h-full">
-                                      <div className="h-6"></div>
-                                      <div className="grow mx-auto flex items-center justify-center">
-                                        <div className="avatar placeholder">
-                                          <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
-                                            <span className="text-l">
-                                              {idx + 1}
-                                            </span>
+                            {(provided) => {
+                              const place = flattenScheduleSlot(itinerary)
+                                ?.details as Partial<PlaceData>;
+                              return (
+                                <li
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  ref={provided.innerRef}
+                                >
+                                  <div
+                                    className="py-1"
+                                    key={`itinerary-${idx}`}
+                                  >
+                                    <div className="flex items-center space-x-4 h-[124px]">
+                                      <div className="flex flex-col h-full">
+                                        <div className="h-6"></div>
+                                        <div className="grow mx-auto flex items-center justify-center">
+                                          <div className="avatar placeholder">
+                                            <div className="bg-neutral-focus text-neutral-content rounded-full w-6">
+                                              <span className="text-l">
+                                                {idx + 1}
+                                              </span>
+                                            </div>
                                           </div>
                                         </div>
+                                        <div className="relative top-4 h-[24px]"></div>
                                       </div>
-                                      <div className="relative top-4 h-[24px]"></div>
-                                    </div>
-                                    <div
-                                      className={
-                                        'card-body rounded-lg shadow-md bg-[#fafcff] ' +
-                                        (itinerary?.manual
-                                          ? 'shadow-cyan-300'
-                                          : 'shadow-pink-300')
-                                      }
-                                    >
-                                      <h2 className="card-title">
-                                        <p className="flex-1 line-clamp-1">
-                                          {flattenScheduleSlot(itinerary)
-                                            ?.details.name || '테스트'}
-                                        </p>
-                                        <button
-                                          onClick={() =>
-                                            FixSchedule(dayIdx, idx)
-                                          }
+                                      <div
+                                        className={
+                                          'card-body rounded-lg shadow-md bg-[#fafcff] ' +
+                                          (itinerary?.manual
+                                            ? 'shadow-cyan-300'
+                                            : 'shadow-pink-300')
+                                        }
+                                      >
+                                        <h2 className="card-title">
+                                          <p className="flex-1 line-clamp-1">
+                                            {place.name || '테스트'}
+                                          </p>
+                                          <button
+                                            onClick={() =>
+                                              FixSchedule(dayIdx, idx)
+                                            }
+                                          >
+                                            <Image
+                                              src={check}
+                                              alt="check"
+                                              width={20}
+                                              height={20}
+                                            />
+                                          </button>
+                                          <button
+                                            onClick={() =>
+                                              onClickDeleteItinerary(
+                                                dayIdx,
+                                                idx,
+                                              )
+                                            }
+                                          >
+                                            <Image
+                                              src={trash}
+                                              alt="delete"
+                                              width={14}
+                                              height={14}
+                                            />
+                                          </button>
+                                        </h2>
+                                        <a
+                                          className="line-clamp-1"
+                                          target="_blank"
+                                          href={GetGoogleMapUrl(
+                                            place.geometry?.location.lat || 0,
+                                            place.geometry?.location.lng || 0,
+                                            place.place_id || '',
+                                          )}
                                         >
-                                          <Image
-                                            src={check}
-                                            alt="check"
-                                            width={20}
-                                            height={20}
-                                          />
-                                        </button>
-                                        <button
-                                          onClick={() =>
-                                            onClickDeleteItinerary(dayIdx, idx)
-                                          }
-                                        >
-                                          <Image
-                                            src={trash}
-                                            alt="delete"
-                                            width={14}
-                                            height={14}
-                                          />
-                                        </button>
-                                      </h2>
-                                      <p>place details</p>
+                                          {place.formatted_address}
+                                        </a>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </li>
-                            )}
+                                </li>
+                              );
+                            }}
                           </Draggable>
                         ))}
                       {provided.placeholder}
