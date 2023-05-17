@@ -90,7 +90,6 @@ const Detail: FC = () => {
     if (id) {
       getPlanDetails(`${id}`).then((plan) => {
         setPlan(plan);
-        console.log(flattenScheduleSlot(plan.itinerary[0][0]).details);
         setFocusedPlace(
           flattenScheduleSlot(plan.itinerary[0][0]).details || null,
         );
@@ -98,15 +97,21 @@ const Detail: FC = () => {
     }
   }, [id, setPlan]);
 
+  useEffect(() => {
+    if (map && focusedPlace !== null) {
+      const center = {
+        ...{ lat: 0, lng: 0 },
+        ...focusedPlace?.geometry?.location,
+      };
+      map.panTo(center);
+    }
+  }, [map, focusedPlace]);
+
   if (!plan.planId) {
     return <div></div>;
   }
 
   const itineraryDaily = plan.itinerary[page];
-  const center = focusedPlace?.geometry?.location || {
-    lat: 0,
-    lng: 0,
-  };
 
   return (
     <div className="relative min-h-screen">
@@ -118,7 +123,6 @@ const Detail: FC = () => {
           <GoogleMap
             options={{ disableDefaultUI: true }}
             mapContainerStyle={containerStyle}
-            center={center}
             zoom={15}
             onLoad={onLoad}
             onUnmount={onUnmount}
