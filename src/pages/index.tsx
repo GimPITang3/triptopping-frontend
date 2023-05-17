@@ -165,7 +165,7 @@ const Home: NextPage = () => {
                   </svg>
                 </button>
               </div>
-              <div className="flow-root">
+              <div className="flow-root h-52">
                 <ul
                   role="list"
                   className="divide-y divide-gray-200 dark:divide-gray-700"
