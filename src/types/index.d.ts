@@ -1,4 +1,7 @@
-import { PlaceData } from '@googlemaps/google-maps-services-js';
+import {
+  PlaceData,
+  DirectionsRoute,
+} from '@googlemaps/google-maps-services-js';
 
 export interface Place {
   [key: string]: any;
@@ -60,6 +63,9 @@ export interface Plan {
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
+  excludes?: string[];
+  loc?: LatLng;
+  routes?: DirectionsRoute[][];
 }
 
 export interface User {

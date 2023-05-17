@@ -66,12 +66,14 @@ const Num: FC = () => {
     if (!(place.geometry && place.geometry.location && place.name)) {
       return;
     }
+    const loc = {
+      lat: place.geometry.location.lat() || 0,
+      lng: place.geometry.location.lng() || 0,
+    };
     setSearchResult({
-      position: {
-        lat: place.geometry.location.lat() || 0,
-        lng: place.geometry.location.lng() || 0,
-      },
+      position: loc,
     });
+    setPlan((prev) => ({ ...prev, loc }));
     geocode({ location: place.geometry.location });
   }, [searchBox, map]);
 
@@ -90,7 +92,7 @@ const Num: FC = () => {
   };
 
   const onClickGeocode = (e: google.maps.MapMouseEvent) => {
-    if(!e.latLng) return;
+    if (!e.latLng) return;
     setSearchResult({
       position: {
         lat: e.latLng.lat() || 0,
