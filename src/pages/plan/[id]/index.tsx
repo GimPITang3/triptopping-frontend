@@ -8,6 +8,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import {
   GoogleMap,
   LoadScript,
+  Marker,
   StandaloneSearchBox,
 } from '@react-google-maps/api';
 import { DateTime } from 'luxon';
@@ -181,7 +182,6 @@ const PlanPage: NextPage = ({}) => {
   const { user, setUser } = useContext(UserContext);
 
   const onLoad = useCallback((map: google.maps.Map) => {
-    map.setCenter(center);
     setMap(map);
   }, []);
 
@@ -351,47 +351,44 @@ const PlanPage: NextPage = ({}) => {
         </header>
       </div>
       <div className="divider"></div>
-      {/* <LoadScript
+      <LoadScript
         googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
       >
         <div className="h-full">
-          <StandaloneSearchBox
-            onLoad={onSearchBoxLoad}
-            onPlacesChanged={onPlacesChanged}
-          >
-            <input
-              type="text"
-              placeholder="Search for a place"
-              style={{
-                boxSizing: `border-box`,
-                border: `1px solid transparent`,
-                width: `240px`,
-                height: `32px`,
-                padding: `0 12px`,
-                borderRadius: `3px`,
-                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                fontSize: `14px`,
-                outline: `none`,
-                textOverflow: `ellipses`,
-              }}
-            />
-          </StandaloneSearchBox>
           <GoogleMap
+            options={{ disableDefaultUI: true }}
             mapContainerStyle={containerStyle}
-            zoom={10}
+            center={
+              flattenScheduleSlot(plan.itinerary[0][0]).details.geometry
+                ?.location || {
+                lat: 0,
+                lng: 0,
+              }
+            }
+            zoom={12}
             onLoad={onLoad}
             onUnmount={onUnmount}
           >
-            {searchResult && (
-              <Marker
-                position={searchResult.position}
-                title={searchResult.name}
-              />
-            )}
+            {plan.itinerary
+              .flatMap((schedule) => schedule)
+              .map((schedule, idx) => {
+                return (
+                  <Marker
+                    key={`place-${idx}`}
+                    position={
+                      flattenScheduleSlot(schedule).details.geometry
+                        ?.location || {
+                        lat: 0,
+                        lng: 0,
+                      }
+                    }
+                  ></Marker>
+                );
+              })}
           </GoogleMap>
         </div>
-      </LoadScript> */}
+      </LoadScript>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className="space-y-2 p-4">
           {plan.itinerary.map(
@@ -420,6 +417,14 @@ const PlanPage: NextPage = ({}) => {
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
                                   ref={provided.innerRef}
+                                  onClick={() =>
+                                    map?.panTo(
+                                      place.geometry?.location || {
+                                        lat: 0,
+                                        lng: 0,
+                                      },
+                                    )
+                                  }
                                 >
                                   <div
                                     className="py-1"
