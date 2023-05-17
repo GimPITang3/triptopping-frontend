@@ -89,7 +89,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
 
   const containerStyle = {
     width: '100%',
-    height: '400px',
+    height: '300px',
   };
 
   const center = {
@@ -116,8 +116,8 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
     <div>
       <input type="checkbox" id="modal-google-map" className="modal-toggle" />
       <label htmlFor="modal-google-map" className="modal cursor-pointer">
-        <label className="modal-box relative max-w-3xl" htmlFor="">
-          <div className="text-xl font-bold">추가할 장소를 선택해주세요</div>
+        <label className="modal-box relative max-w-2xl" htmlFor="">
+          <div className="text-xl font-bold mb-2">추가할 장소를 선택해주세요</div>
           <LoadScript
             googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
             libraries={['places']}
@@ -129,19 +129,8 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
               >
                 <input
                   type="text"
-                  placeholder="Search for a place"
-                  style={{
-                    boxSizing: `border-box`,
-                    border: `1px solid transparent`,
-                    width: `240px`,
-                    height: `32px`,
-                    padding: `0 12px`,
-                    borderRadius: `3px`,
-                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                    fontSize: `14px`,
-                    outline: `none`,
-                    textOverflow: `ellipses`,
-                  }}
+                  placeholder="검색어를 입력해주세요"
+                  className="input input-primary input-bordered w-full mb-2"
                 />
               </StandaloneSearchBox>
               <GoogleMap
@@ -149,19 +138,22 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
                 zoom={10}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
+                options={{ disableDefaultUI: true }}
               ></GoogleMap>
             </div>
           </LoadScript>
-          <label className="btn btn-ghost" htmlFor="modal-google-map">
-            취소
-          </label>
-          <label
-            className="btn"
-            htmlFor="modal-google-map"
-            onClick={onClickAdd}
-          >
-            추가
-          </label>
+          <div className="mt-4 space-x-2 flex justify-end">
+            <label className="btn btn-ghost w-24" htmlFor="modal-google-map">
+              취소
+            </label>
+            <label
+              className="btn btn-primary w-24"
+              htmlFor="modal-google-map"
+              onClick={onClickAdd}
+            >
+              추가
+            </label>
+          </div>
         </label>
       </label>
     </div>
@@ -439,8 +431,8 @@ const PlanPage: NextPage = ({}) => {
                                                   : x
                                               }
                                               alt="check"
-                                              width={20}
-                                              height={20}
+                                              width={28}
+                                              height={28}
                                             />
                                           </button>
                                           <button
@@ -454,8 +446,8 @@ const PlanPage: NextPage = ({}) => {
                                             <Image
                                               src={trash}
                                               alt="delete"
-                                              width={14}
-                                              height={14}
+                                              width={20}
+                                              height={20}
                                             />
                                           </button>
                                         </h2>

@@ -49,9 +49,9 @@ const Tag: FC = () => {
       <div className="font-bold text-3xl mb-8">{plan.name}</div>
       <div className="flex-grow">
         <div className="text-xl my-4">여행 태그를 입력해주세요.</div>
-        <div className="space-x-2 space-y-2 py-8 min-h-[160px]">
+        <div className="py-8 min-h-[160px]">
           {plan.tags.map((tag, index) => (
-            <div key={`tag-${index}`} className="badge badge-lg badge-outline">
+            <div key={`tag-${index}`} className="badge badge-lg badge-outline mb-2 mr-2">
               {'#' + tag}
               <svg
                 onClick={() => delTag(tag)}
