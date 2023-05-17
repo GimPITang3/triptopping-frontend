@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
-import { flattenScheduleSlot } from '@/utils';
+import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -186,9 +186,17 @@ const Detail: FC = () => {
                     height={24}
                   />
                 </div>
-                <div className="text-sm truncate">
+                <a
+                  className="text-sm truncate"
+                  href={GetGoogleMapUrl(
+                    focusedPlace?.geometry?.location.lat,
+                    focusedPlace?.geometry?.location.lng,
+                    focusedPlace.place_id,
+                  )}
+                  target="_blank"
+                >
                   {focusedPlace?.formatted_address || ''}
-                </div>
+                </a>
               </div>
             </div>
           )}
