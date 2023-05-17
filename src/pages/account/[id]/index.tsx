@@ -48,7 +48,7 @@ const AccountPage: NextPage = ({}) => {
 
       <div className="flex justify-center">
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <form className="space-y-6" action="#">
+          <div className="space-y-6">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               프로필 변경
             </h5>
@@ -86,8 +86,8 @@ const AccountPage: NextPage = ({}) => {
                   onChange={handleIntroduceChange}
                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="자기소개를 입력하세요."
+                  defaultValue={user.introduce}
                 >
-                  {user.introduce}
                 </textarea>
             </div>
             <button
@@ -97,7 +97,7 @@ const AccountPage: NextPage = ({}) => {
             >
               저장
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

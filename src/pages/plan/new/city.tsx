@@ -116,23 +116,28 @@ const Num: FC = () => {
         marker.setPosition(results[0].geometry.location);
         marker.setMap(map);
         console.log(results);
-        for (let i = 0; i < results[0].address_components.length; i++) {
-          for (
-            let j = 0;
-            j < results[0].address_components[i].types.length;
-            j++
-          ) {
-            if (results[0].address_components[i].types[j] == 'country') {
-              setCountryName(results[0].address_components[i].long_name);
-            }
-            if (
-              results[0].address_components[i].types[j] ==
-              'administrative_area_level_1'
-            ) {
-              setCityName(results[0].address_components[i].long_name);
-            }
-          }
-        }
+        const result = results.find(item => item.types[0] == 'plus_code');
+        const country = result?.address_components.find(item => item.types[0] == 'country')?.long_name;
+        const city = result?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
+        setCountryName(country ? country : '');
+        setCityName(city ? city : '');
+        // for (let i = 0; i < results[0].address_components.length; i++) {
+        //   for (
+        //     let j = 0;
+        //     j < results[0].address_components[i].types.length;
+        //     j++
+        //   ) {
+        //     if (results[0].address_components[i].types[j] == 'country') {
+        //       setCountryName(results[0].address_components[i].long_name);
+        //     }
+        //     if (
+        //       results[0].address_components[i].types[j] ==
+        //       'administrative_area_level_1'
+        //     ) {
+        //       setCityName(results[0].address_components[i].long_name);
+        //     }
+        //   }
+        // }
         return results;
       })
       .catch((e) => {

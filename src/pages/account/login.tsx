@@ -29,7 +29,7 @@ const LoginPage: NextPage = ({}) => {
 
       <div className="flex justify-center">
         <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-          <form className="space-y-6" action="#">
+          <div className="space-y-6">
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               {isLogin ? '로그인' : '회원가입'}
             </h5>
@@ -65,7 +65,7 @@ const LoginPage: NextPage = ({}) => {
                 {isLogin ? '로그인' : '회원가입'}
               </a>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
