@@ -35,6 +35,7 @@ import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
+import x from '../../../../public/x.svg';
 
 interface SearchResult {
   position: {
@@ -285,14 +286,22 @@ const PlanPage: NextPage = ({}) => {
     setPlan(data);
   };
 
-  const FixSchedule = (day: number, index: number) => {
-    console.log(day, index);
+  const ToggleSchedule = (day: number, index: number) => {
     setPlan((prev) => {
-      prev.itinerary[day][index].manual = {
-        ...prev.itinerary[day][index].manual,
-        ...prev.itinerary[day][index].system,
-      };
-      delete prev.itinerary[day][index].system;
+      const schedule = prev.itinerary[day][index];
+      if (!schedule.manual || Object.keys(schedule.manual).length === 0) {
+        schedule.manual = {
+          ...schedule.manual,
+          ...schedule.system,
+        };
+        delete schedule.system;
+      } else {
+        schedule.system = {
+          ...schedule.system,
+          ...schedule.manual,
+        };
+        delete schedule.manual;
+      }
       return { ...prev };
     });
   };
@@ -458,11 +467,16 @@ const PlanPage: NextPage = ({}) => {
                                           </p>
                                           <button
                                             onClick={() =>
-                                              FixSchedule(dayIdx, idx)
+                                              ToggleSchedule(dayIdx, idx)
                                             }
                                           >
                                             <Image
-                                              src={check}
+                                              src={
+                                                !plan.itinerary[dayIdx][idx]
+                                                  .manual
+                                                  ? check
+                                                  : x
+                                              }
                                               alt="check"
                                               width={20}
                                               height={20}
