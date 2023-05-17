@@ -112,6 +112,13 @@ const Detail: FC = () => {
   }
 
   const itineraryDaily = plan.itinerary[page];
+  const GetIcon = (index: number) => {
+    if (index > 0) {
+      return undefined;
+    } else {
+      return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
+    }
+  };
 
   return (
     <div className="relative min-h-screen">
@@ -139,14 +146,20 @@ const Detail: FC = () => {
                       lng: 0,
                     }
                   }
-                ></Marker>
+                  icon={GetIcon(index)}
+                  label={
+                    itineraryDaily.length - 1 === index || index === 0
+                      ? undefined
+                      : (index + 1).toString()
+                  }
+                />
               ))}
 
             <Polyline
               options={{
-                strokeColor: '#FF0000',
+                strokeColor: '#b41412',
                 strokeOpacity: 0.8,
-                strokeWeight: 2,
+                strokeWeight: 3,
                 clickable: false,
                 draggable: false,
                 editable: false,
