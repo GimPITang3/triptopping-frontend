@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import {
   GoogleMap,
   LoadScript,
-  StandaloneSearchBox
+  StandaloneSearchBox,
 } from '@react-google-maps/api';
 import { DateTime } from 'luxon';
 import {
@@ -262,7 +262,7 @@ const PlanPage: NextPage = ({}) => {
     const item = plan.itinerary[sourceDay][sourceIdx];
     // change system to manual
     if (sourceDay !== destinationDay) {
-      item.manual = { ...item.system };
+      item.manual = { ...item.manual, ...item.system };
       item.system = {};
     }
 
@@ -426,10 +426,8 @@ const PlanPage: NextPage = ({}) => {
                                     </div>
                                     <div className="card-body shadow-lg bg-[#fafcff]">
                                       <h2 className="card-title">
-                                        {
-                                          flattenScheduleSlot(itinerary).details
-                                            .name
-                                        }
+                                        {flattenScheduleSlot(itinerary)?.details
+                                          .name || '테스트'}
                                         <Image
                                           src={pencilSquare}
                                           alt="edit"
