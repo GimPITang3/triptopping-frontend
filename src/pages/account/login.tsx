@@ -62,7 +62,7 @@ const LoginPage: NextPage = ({}) => {
                 }}
                 className="text-blue-700 hover:underline dark:text-blue-500"
               >
-                {isLogin ? '로그인' : '회원가입'}
+                {isLogin ? '회원가입' : '로그인'}
               </a>
             </div>
           </div>

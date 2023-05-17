@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
+import Sidebar from '@/components/Sidebar';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -205,17 +206,7 @@ const PlanPage: NextPage = ({}) => {
 
         <BtmNavbar user={user} currentPath={2} />
 
-        <div className="drawer-side">
-          <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-80 bg-base-100 text-base-content">
-            <li>
-              <a>Sidebar Item 1</a>
-            </li>
-            <li>
-              <a>Sidebar Item 2</a>
-            </li>
-          </ul>
-        </div>
+        <Sidebar user={user} />
       </div>
     </>
   );
