@@ -13,6 +13,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
+import { flattenScheduleSlot } from '@/utils';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -81,8 +82,7 @@ const Detail: FC = () => {
       ) {
         return prev;
       }
-      // console.log(plan.itinerary[page][idx].system?.details.name);
-      return plan.itinerary[page][idx].system?.details || null;
+      return flattenScheduleSlot(plan.itinerary[page][idx]).details || null;
     });
   };
 
@@ -90,8 +90,10 @@ const Detail: FC = () => {
     if (id) {
       getPlanDetails(`${id}`).then((plan) => {
         setPlan(plan);
-        console.log(plan.itinerary[0][0].system?.details);
-        setFocusedPlace(plan.itinerary[0][0].system?.details || null);
+        console.log(flattenScheduleSlot(plan.itinerary[0][0]).details);
+        setFocusedPlace(
+          flattenScheduleSlot(plan.itinerary[0][0]).details || null,
+        );
       });
     }
   }, [id, setPlan]);
@@ -127,7 +129,8 @@ const Detail: FC = () => {
                 <Marker
                   key={`it-${index}`}
                   position={
-                    itinerary.system?.details.geometry?.location || {
+                    flattenScheduleSlot(itinerary).details.geometry
+                      ?.location || {
                       lat: 0,
                       lng: 0,
                     }
@@ -146,7 +149,8 @@ const Detail: FC = () => {
                 visible: true,
                 path: itineraryDaily.slice(0, -1).map(
                   (itinerary) =>
-                    itinerary.system?.details.geometry?.location || {
+                    flattenScheduleSlot(itinerary).details.geometry
+                      ?.location || {
                       lat: 0,
                       lng: 0,
                     },
@@ -170,9 +174,7 @@ const Detail: FC = () => {
               </div>
               <div className="overflow-hidden pl-3 pr-6">
                 <div className="text-2xl font-bold flex items-end">
-                  <div className="pr-3">
-                    {focusedPlace?.name || ''}
-                  </div>
+                  <div className="pr-3">{focusedPlace?.name || ''}</div>
                   <Image
                     src={focusedPlace?.icon || ''}
                     alt="icon"
@@ -180,11 +182,12 @@ const Detail: FC = () => {
                     height={24}
                   />
                 </div>
-                <div className="text-sm truncate">{focusedPlace?.formatted_address || ''}</div>
+                <div className="text-sm truncate">
+                  {focusedPlace?.formatted_address || ''}
+                </div>
               </div>
             </div>
-          )
-          }
+          )}
         </div>
         <div className="pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide">
           <ul
@@ -212,7 +215,7 @@ const Detail: FC = () => {
                   }}
                 >
                   <div className="">
-                    {itinerary.system && itinerary.system.details.name}
+                    {flattenScheduleSlot(itinerary).details.name}
                   </div>
                 </li>
               ))}

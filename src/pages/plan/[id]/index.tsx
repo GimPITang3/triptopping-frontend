@@ -20,9 +20,9 @@ import {
 } from 'react-beautiful-dnd';
 
 import { PlanContext } from '@/contexts';
-import { ItineraryDaily, ScheduleSlot } from '@/types';
+import { ItineraryDaily, Place, Plan, ScheduleSlot } from '@/types';
 
-import { getPlan } from '@/services/plansService';
+import { excludePlaces, getPlan, updatePlan } from '@/services/plansService';
 
 import { TopbarContainer } from '@/components/TopbarContainer';
 import MenuToggle from '@/components/Topbar/MenuToggle';
@@ -32,6 +32,7 @@ import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import pencilSquare from '../../../../public/pencilsquare.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
+import { flattenScheduleSlot } from '@/utils';
 
 interface SearchResult {
   position: {
@@ -41,19 +42,13 @@ interface SearchResult {
   name: string;
 }
 
-const GetItineraryValue = (itinerary: ScheduleSlot, key: string) => {
-  return (
-    (itinerary.manual && itinerary.manual[key]) ||
-    (itinerary.system && itinerary.system[key])
-  );
-};
-
 const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   const { plan, setPlan } = useContext(PlanContext);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [searchBox, setSearchBox] =
     useState<google.maps.places.SearchBox | null>(null);
-  const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
+  const [searchResult, setSearchResult] =
+    useState<google.maps.places.PlaceResult | null>(null);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     map.setCenter(center);
@@ -81,13 +76,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
     if (!(place.geometry && place.geometry.location && place.name)) {
       return;
     }
-    setSearchResult({
-      position: {
-        lat: place.geometry.location.lat() || 0,
-        lng: place.geometry.location.lng() || 0,
-      },
-      name: place.name,
-    });
+    setSearchResult(place);
 
     if (map) {
       map.panTo(place.geometry.location);
@@ -157,14 +146,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
                 zoom={10}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
-              >
-                {searchResult && (
-                  <Marker
-                    position={searchResult.position}
-                    title={searchResult.name}
-                  />
-                )}
-              </GoogleMap>
+              ></GoogleMap>
             </div>
           </LoadScript>
           <label className="btn btn-ghost" htmlFor="modal-google-map">
@@ -244,18 +226,24 @@ const PlanPage: NextPage = ({}) => {
     lng: -122.4194,
   };
 
-  const onClickDeleteItinerary = (day: number, index: number) => {
+  const onClickDeleteItinerary = async (day: number, index: number) => {
+    const excludePlaceIds = plan.itinerary[day]
+      .splice(index, 1)
+      .map(
+        (item) => (flattenScheduleSlot(item) as Place).details?.place_id || '',
+      );
+    await excludePlaces(id as string, excludePlaceIds);
     setPlan((prev) => {
-      prev.itinerary[day].splice(index, 1);
+      prev.excludes = Array.isArray(prev.excludes)
+        ? prev.excludes.concat(excludePlaceIds)
+        : excludePlaceIds;
       return { ...prev };
     });
   };
 
   useEffect(() => {
     if (id === undefined) return;
-
     getPlan(`${id}`).then((plan) => {
-      console.log(plan);
       setPlan(plan);
     });
   }, [id, setPlan]);
@@ -270,12 +258,25 @@ const PlanPage: NextPage = ({}) => {
     const destIdx = result.destination.index;
 
     const item = plan.itinerary[sourceDay][sourceIdx];
+    // change system to manual
+    if (sourceDay !== destinationDay) {
+      item.manual = { ...item.system };
+      item.system = {};
+    }
 
     setPlan((prev) => {
       prev.itinerary[sourceDay].splice(sourceIdx, 1);
       prev.itinerary[destinationDay].splice(destIdx, 0, item);
       return { ...prev };
     });
+  };
+
+  const handleUpdateRecommend = async () => {
+    const data = await updatePlan(plan.planId, {
+      itinerary: plan.itinerary,
+    });
+    console.log('updated plan', data);
+    setPlan(data);
   };
 
   if (!plan.planId) {
@@ -287,7 +288,7 @@ const PlanPage: NextPage = ({}) => {
       <Head>
         <title>{`${plan.name}`}</title>
       </Head>
-
+      <button onClick={handleUpdateRecommend}>update</button>
       <TopbarContainer>
         <div className="flex flex-row h-full items-center justify-between">
           <Link href="/plan/list">
@@ -339,7 +340,7 @@ const PlanPage: NextPage = ({}) => {
         </div>
       </div>
       <div className="divider"></div>
-      <LoadScript
+      {/* <LoadScript
         googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
       >
@@ -379,7 +380,7 @@ const PlanPage: NextPage = ({}) => {
             )}
           </GoogleMap>
         </div>
-      </LoadScript>
+      </LoadScript> */}
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className="space-y-2 p-4">
           {plan.itinerary.map(
@@ -424,10 +425,8 @@ const PlanPage: NextPage = ({}) => {
                                     <div className="card-body shadow-lg bg-[#fafcff]">
                                       <h2 className="card-title">
                                         {
-                                          GetItineraryValue(
-                                            itinerary,
-                                            'details',
-                                          ).name
+                                          flattenScheduleSlot(itinerary).details
+                                            .name
                                         }
                                         <Image
                                           src={pencilSquare}
