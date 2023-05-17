@@ -130,7 +130,7 @@ const PlanPage: NextPage = ({}) => {
 
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
+        <div className="drawer-content scrollbar-hide">
           <input type="checkbox" id="del-modal" className="modal-toggle" />
           <div className="modal">
             <div className="modal-box">
@@ -156,7 +156,7 @@ const PlanPage: NextPage = ({}) => {
           <Topbar />
 
           <div>
-            <div className="p-4 pt-8">
+            <div className="p-4 pt-8 mb-16">
               <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
                   <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
