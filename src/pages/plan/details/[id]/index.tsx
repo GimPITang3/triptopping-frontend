@@ -61,6 +61,7 @@ const Detail: FC = () => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(0);
+  const [folded, setFolded] = useState(false);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -227,13 +228,18 @@ const Detail: FC = () => {
             </div>
           )}
         </div>
-        <div className="pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide">
+        <div
+          className={
+            "pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
+            +
+            (folded ? ' pr-4' : '')
+          }>
           <ul
             key={`day-${page}`}
             onScroll={(e) => {
               handleScroll(e.currentTarget.scrollTop);
             }}
-            className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4 pr-2"
+            className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
           >
             {itineraryDaily
               .filter((itinerary) => itinerary.type === 'place')
@@ -253,13 +259,14 @@ const Detail: FC = () => {
                   }}
                 >
                   <div className="">
-                    {flattenScheduleSlot(itinerary).details.name}
+                    {folded ? flattenScheduleSlot(itinerary).details.name : ''}
                   </div>
                 </li>
               ))}
             <li className="h-screen"></li>
           </ul>
         </div>
+
         <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
           {plan.itinerary.map((_value, index) => (
             <button
@@ -277,6 +284,27 @@ const Detail: FC = () => {
             </button>
           ))}
         </div>
+      </div>
+      <div className="fixed bottom-14 bg-white m-4 z-30">
+        <button
+          className="btn btn-outline btn-sm ring-8 ring-white/50"
+          onClick={() => {
+            setFolded(!folded);
+          }}
+        >
+          {folded ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-4 w-4" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+              <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-4 w-4" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
+              <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+            </svg>
+          )
+          }
+        </button>
       </div>
     </div>
   );
