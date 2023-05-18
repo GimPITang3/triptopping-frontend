@@ -2,18 +2,11 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { loginWithGoogle } from '@/services/authService';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useContext, useState } from 'react';
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   context.params;
-
-//   return {
-//     props: {},
-//   };
-// };
 
 const LoginPage: NextPage = ({}) => {
   const router = useRouter();
@@ -46,6 +39,7 @@ const LoginPage: NextPage = ({}) => {
             <button
               type="button"
               onClick={() => {
+                loginWithGoogle();
                 router.push('/account/signup');
               }}
               className="btn"
