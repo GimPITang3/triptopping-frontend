@@ -50,7 +50,7 @@ const LoginPage: NextPage = ({}) => {
               }}
               className="btn"
             >
-              임시로 만든 회원가입 버튼
+              회원가입
             </button>
             <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
               {isLogin
