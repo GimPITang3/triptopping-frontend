@@ -1,24 +1,75 @@
-import BtmNavbar from '@/components/BtmNavbar';
-import Topbar from '@/components/Topbar';
-import { UserContext } from '@/contexts';
-import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+import { useCallback, useContext, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useContext, useState } from 'react';
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   context.params;
+import { useGoogleLogin } from '@react-oauth/google';
 
-//   return {
-//     props: {},
-//   };
-// };
+import { UserContext } from '@/contexts';
+
+import BtmNavbar from '@/components/BtmNavbar';
+import Topbar from '@/components/Topbar';
+import { signinWithGoogle, signupWithGoogle } from '@/services/authService';
 
 const LoginPage: NextPage = ({}) => {
   const router = useRouter();
+
   const { user, setUser } = useContext(UserContext);
+
   const [isLogin, setIsLogin] = useState(true);
+  const [nickname, setNickname] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+
+  const signin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      signinWithGoogle(tokenResponse.code).then((resp) => {
+        // TODO: save access token somewhere
+        setUser(resp.user);
+        router.push('/');
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onNonOAuthError: (error) => {
+      console.log(error);
+    },
+    flow: 'auth-code',
+  });
+
+  const signup = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      signupWithGoogle({
+        code: tokenResponse.code,
+        email: email,
+        nickname: nickname,
+        introduce: '',
+      }).then((resp) => {
+        // TODO: save access token somewhere
+        setUser(resp.user);
+        router.push('/');
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onNonOAuthError: (error) => {
+      console.log(error);
+    },
+    flow: 'auth-code',
+  });
+
+  const onSignin = useCallback(() => {
+    signin();
+  }, [signin]);
+
+  const onSignup = useCallback(() => {
+    if (nickname.trim().length === 0) return;
+    if (email.trim().length === 0) return;
+
+    signup();
+  }, [signup, nickname, email]);
+
   return (
     <div className="min-h-screen">
       <Head>
@@ -33,25 +84,33 @@ const LoginPage: NextPage = ({}) => {
             <h5 className="text-xl font-medium text-gray-900 dark:text-white">
               {isLogin ? '로그인' : '회원가입'}
             </h5>
-            <GoogleOAuthProvider clientId="1028097431026-mmb0irmfn0jd7b47nsqpkgisdqoibbh2.apps.googleusercontent.com">
-              <GoogleLogin
-                onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse);
-                }}
-                onError={() => {
-                  console.log('Login Failed');
-                }}
-              />
-            </GoogleOAuthProvider>
             <button
-              type="button"
-              onClick={() => {
-                router.push('/account/signup');
-              }}
-              className="btn"
+              className="btn btn-primary w-full"
+              onClick={isLogin ? onSignin : onSignup}
             >
-              임시로 만든 회원가입 버튼
+              Continue with Google
             </button>
+            {!isLogin && (
+              <div>
+                <label className="label">
+                  <span className="label-text">닉네임을 입력해 주세요</span>
+                </label>
+                <input
+                  placeholder="your-nickname"
+                  className="input input-primary w-full"
+                  onChange={(e) => setNickname(e.target.value)}
+                ></input>
+                <label className="label">
+                  <span className="label-text">이메일을 입력해 주세요</span>
+                </label>
+                <input
+                  placeholder="youremail@gmail.com"
+                  className="input input-primary w-full"
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                ></input>
+              </div>
+            )}
             <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
               {isLogin
                 ? '아직 회원이 아니신가요? '
@@ -60,7 +119,7 @@ const LoginPage: NextPage = ({}) => {
                 onClick={() => {
                   setIsLogin(!isLogin);
                 }}
-                className="text-blue-700 hover:underline dark:text-blue-500"
+                className="text-blue-700 hover:underline cursor-pointer dark:text-blue-500"
               >
                 {isLogin ? '회원가입' : '로그인'}
               </a>

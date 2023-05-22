@@ -71,5 +71,6 @@ export interface Plan {
 export interface User {
   userId: string;
   nickname: string;
+  email: string;
   introduce: string;
 }
