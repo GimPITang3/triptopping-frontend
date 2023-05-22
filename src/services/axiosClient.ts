@@ -5,4 +5,18 @@ const client = axios.create({
   timeout: 30000,
 });
 
+client.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem('accessToken');
+    config.headers.Authorization = accessToken
+      ? `Bearer ${accessToken}`
+      : undefined;
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
 export default client;
