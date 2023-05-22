@@ -74,3 +74,8 @@ export interface User {
   email: string;
   introduce: string;
 }
+
+export interface Article {
+  title: string;
+  content: string;
+}
