@@ -14,7 +14,7 @@ import { signinWithGoogle, signupWithGoogle } from '@/services/authService';
 const LoginPage: NextPage = ({}) => {
   const router = useRouter();
 
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, setAccessToken } = useContext(UserContext);
 
   const [isLogin, setIsLogin] = useState(true);
   const [nickname, setNickname] = useState<string>('');
@@ -23,8 +23,8 @@ const LoginPage: NextPage = ({}) => {
   const signin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       signinWithGoogle(tokenResponse.code).then((resp) => {
-        // TODO: save access token somewhere
         setUser(resp.user);
+        setAccessToken(resp.accessToken);
         router.push('/');
       });
     },
@@ -45,8 +45,8 @@ const LoginPage: NextPage = ({}) => {
         nickname: nickname,
         introduce: '',
       }).then((resp) => {
-        // TODO: save access token somewhere
         setUser(resp.user);
+        setAccessToken(resp.accessToken);
         router.push('/');
       });
     },

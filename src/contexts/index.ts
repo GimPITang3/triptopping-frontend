@@ -27,6 +27,8 @@ export const PlanContext = createContext<{
 export const UserContext = createContext<{
   user: User;
   setUser: Dispatch<SetStateAction<User>>;
+  accessToken: string | undefined;
+  setAccessToken: Dispatch<SetStateAction<string | undefined>>;
 }>({
   user: {
     userId: '',
@@ -35,4 +37,6 @@ export const UserContext = createContext<{
     introduce: '',
   },
   setUser: () => {},
+  accessToken: '',
+  setAccessToken: () => {},
 });
