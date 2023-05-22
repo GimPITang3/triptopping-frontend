@@ -304,7 +304,7 @@ const PlanPage: NextPage = ({}) => {
             <div className="space-x-2">
               {plan.tags.map((tag: string, idx: number) => (
                 <div key={idx} className="badge">
-                  {tag}
+                  {'#' + tag}
                 </div>
               ))}
             </div>

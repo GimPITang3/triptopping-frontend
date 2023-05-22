@@ -205,7 +205,7 @@ const Detail: FC = () => {
               </div>
               <div className="overflow-hidden pl-3 pr-6">
                 <div className="text-2xl font-bold flex items-end">
-                  <div className="pr-3">{focusedPlace?.name || ''}</div>
+                  <div className="pr-3 line-clamp-1">{focusedPlace?.name || ''}</div>
                   <Image
                     src={focusedPlace?.icon || ''}
                     alt="icon"
@@ -214,7 +214,7 @@ const Detail: FC = () => {
                   />
                 </div>
                 <a
-                  className="text-sm truncate"
+                  className="text-sm line-clamp-1"
                   href={GetGoogleMapUrl(
                     focusedPlace?.geometry?.location.lat,
                     focusedPlace?.geometry?.location.lng,
@@ -278,7 +278,7 @@ const Detail: FC = () => {
                 );
                 setFocusedIndex(0);
               }}
-              className={'tab tab-lg' + (index === page ? ' tab-active' : '')}
+              className={'tab tab-lg flex-shrink-0' + (index === page ? ' tab-active' : '')}
             >
               Day {index + 1}
             </button>
