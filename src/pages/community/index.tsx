@@ -1,53 +1,46 @@
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
+import CommunityCard from '@/components/CommunityCard';
 import { UserContext } from '@/contexts';
 import { deletePlan } from '@/services/plansService';
 import { Plan } from '@/types';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
+import Image, { StaticImageData } from 'next/image';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   context.params;
-
-//   return {
-//     props: {},
-//   };
-// };
-
-interface ArticleProps {
+const dummyArticles: {
+  title: string;
+  description: string;
+  coverImage?: string | StaticImageData;
+}[] = [
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image3.jpg',
+  },
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image1.jpeg',
+  },
+  {
+    title: '지수의 군산 콩국수 여행기',
+    description: '콩국수 맛있겠다',
+    coverImage: '/imgs/image2.jpeg',
+  },
+];
+interface Article {
   articleId: string;
   title: string;
-  content: string;
+  description: string;
+  coverImage?: string | StaticImageData;
   author: string;
-  createdAt: Date;
 }
-
-const Article: FC<ArticleProps> = ({
-  articleId,
-  title,
-  content,
-  author,
-  createdAt,
-}) => {
-  const router = useRouter();
-
-  const createdDate = DateTime.fromISO(new Date(createdAt).toISOString());
-  let dateString = createdDate.toFormat('MM.dd');
-
-  return (
-    <tr className="hover">
-      <th>{articleId}</th>
-      <td><Link href={'/community/' + articleId}>{title}</Link></td>
-      <td>{author}</td>
-      <td>{dateString}</td>
-    </tr>
-  );
-};
 
 const CommunityPage: NextPage = ({}) => {
   const router = useRouter();
@@ -80,7 +73,7 @@ const CommunityPage: NextPage = ({}) => {
 
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">
+        <div className="drawer-content scrollbar-hide">
 
           <Topbar />
 
@@ -93,26 +86,24 @@ const CommunityPage: NextPage = ({}) => {
                   </h5>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="table w-full">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>작성일자</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <Article
-                        articleId={'1'}
-                        title={'!+!+!+내가 공연할 차례군!+!+!+'}
-                        content={'ㅈㄱㄴ'}
-                        author={'ㅇㅇ'}
-                        createdAt={new Date()}
+                <div className="flex items-center justify-center">
+                  <div className="grid grid-cols-2 gap-4">
+                    {dummyArticles.map((article, i) => (
+                      <CommunityCard
+                        key={i}
+                        title={article.title}
+                        description={article.description}
+                        coverImage={article.coverImage}
                       />
-                    </tbody>
-                  </table>
+                    ))}
+                    <CommunityCard />
+                  </div>
+                </div>
+
+                <div className="flex py-6 justify-center btn-group">
+                  <button className="btn">«</button>
+                  <button className="btn">Page 22</button>
+                  <button className="btn">»</button>
                 </div>
               </div>
             </div>
