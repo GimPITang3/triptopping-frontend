@@ -1,41 +1,57 @@
-import { User } from '@/types';
-import { useRouter } from 'next/router';
+import { FC, useCallback, useContext } from 'react';
 import Link from 'next/link';
-import { FC } from 'react';
 
-const Sidebar: FC<{
-  user: User
-}> = ({
-  user
-}) => {
-  const router = useRouter();
+import { UserContext } from '@/contexts';
+
+const Sidebar: FC = () => {
+  const { user, setUser, setAccessToken } = useContext(UserContext);
+
+  const onLogout = useCallback(() => {
+    setUser(() => undefined);
+    setAccessToken(() => undefined);
+  }, [setUser, setAccessToken]);
 
   return (
     <div className="drawer-side">
       <label htmlFor="my-drawer-4" className="drawer-overlay"></label>
       <ul className="menu p-4 w-80 bg-base-100 text-base-content">
-        {user.userId ?
-          (<div className="flex flex-col">
-          <div className="avatar placeholder flex justify-center">
-            <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
-              <span className="text-3xl">{user.nickname.slice(0,1)}</span>
+        {user?.userId ? (
+          <div className="flex flex-col">
+            <div className="avatar placeholder flex justify-center">
+              <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
+                <span className="text-3xl">{user.nickname.slice(0, 1)}</span>
+              </div>
             </div>
+            <h2 className="card-title justify-center my-4">{user.nickname}</h2>
+            <div className="flex flex-row justify-end gap-x-2">
+              <Link
+                href={'/account/' + user.userId}
+                className="flex justify-end btn btn-primary"
+              >
+                프로필 편집
+              </Link>
+              <button className="btn btn-error" onClick={onLogout}>
+                로그아웃
+              </button>
+            </div>
+            <div className="divider"></div>
+            <li>
+              <Link href="/plan/list">내 여행 계획</Link>
+            </li>
+            <li>
+              <Link href="/">내 작성 글</Link>
+            </li>
           </div>
-          <h2 className="card-title justify-center my-4">{user.nickname}</h2>
-          <Link href={'/account/' + user.userId} className="flex justify-end">프로필 편집</Link>
-          </div>) : 
-          (<div><Link href={'/account/login'} className="mx-4">로그인 해주세요.</Link></div>)
-        }
-        <div className="divider"></div>
-        <li>
-          <Link href="/plan/list">내 여행 계획</Link>
-        </li>
-        <li>
-          <a>내 작성 글</a>
-        </li>
+        ) : (
+          <div>
+            <Link href={'/account/login'} className="btn btn-primary">
+              로그인
+            </Link>
+          </div>
+        )}
       </ul>
     </div>
   );
-}
+};
 
 export default Sidebar;

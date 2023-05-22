@@ -203,12 +203,10 @@ const PlanPage: NextPage = ({}) => {
             </div>
           </div>
 
-          <BtmNavbar user={user} currentPath={2} />
-
+          <BtmNavbar currentPath={2} />
         </div>
 
-
-        <Sidebar user={user} />
+        <Sidebar />
       </div>
     </>
   );

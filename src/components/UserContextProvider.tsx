@@ -3,12 +3,7 @@ import { User } from '@/types';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
 
 const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const [user, setUser] = useState<User>({
-    userId: '',
-    nickname: '',
-    email: '',
-    introduce: '',
-  });
+  const [user, setUser] = useState<User>();
   const [accessToken, setAccessToken] = useState<string>();
 
   useEffect(() => {

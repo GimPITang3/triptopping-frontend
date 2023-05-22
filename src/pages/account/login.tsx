@@ -128,7 +128,7 @@ const LoginPage: NextPage = ({}) => {
         </div>
       </div>
 
-      <BtmNavbar user={user} currentPath={5} />
+      <BtmNavbar currentPath={5} />
     </div>
   );
 };

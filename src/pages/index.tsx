@@ -165,7 +165,7 @@ const Home: NextPage = () => {
                   </svg>
                 </button>
               </div>
-              <div className="flow-root h-52">
+              <div className="flow-root">
                 <ul
                   role="list"
                   className="divide-y divide-gray-200 dark:divide-gray-700"
@@ -205,9 +205,9 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <BtmNavbar user={user} currentPath={1} />
+        <BtmNavbar currentPath={1} />
 
-        <Sidebar user={user} />
+        <Sidebar />
       </div>
     </>
   );

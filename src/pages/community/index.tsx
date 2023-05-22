@@ -74,7 +74,6 @@ const CommunityPage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
-
           <Topbar />
 
           <div>
@@ -110,9 +109,9 @@ const CommunityPage: NextPage = ({}) => {
           </div>
         </div>
 
-        <BtmNavbar user={user} currentPath={4} />
+        <BtmNavbar currentPath={4} />
 
-        <Sidebar user={user} />
+        <Sidebar />
       </div>
     </>
   );

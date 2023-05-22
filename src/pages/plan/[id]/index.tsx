@@ -117,7 +117,9 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
       <input type="checkbox" id="modal-google-map" className="modal-toggle" />
       <label htmlFor="modal-google-map" className="modal cursor-pointer">
         <label className="modal-box relative max-w-2xl" htmlFor="">
-          <div className="text-xl font-bold mb-2">추가할 장소를 선택해주세요</div>
+          <div className="text-xl font-bold mb-2">
+            추가할 장소를 선택해주세요
+          </div>
           <LoadScript
             googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
             libraries={['places']}
@@ -519,7 +521,7 @@ const PlanPage: NextPage = ({}) => {
           </svg>
         </button>
       </div>
-      <BtmNavbar user={user} currentPath={2} />
+      <BtmNavbar currentPath={2} />
     </div>
   );
 };
