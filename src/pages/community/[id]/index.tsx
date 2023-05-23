@@ -72,6 +72,36 @@ const ArticlePage: NextPage = ({}) => {
                       글은 1번째 글{' '}
                     </p>
                   </div>
+                  
+                  <div className="divider"></div>
+                  <p className="mb-2">댓글 3개</p>
+                  <div className="overflow-x-auto text-sm mb-12">
+                    <table className="table w-full">
+                      <tbody>
+                        <tr>
+                          <td className="font-bold">아무개</td>
+                          <td>아무 댓글</td>
+                          <td>05-21</td>
+                        </tr>
+                        <tr>
+                          <td className="font-bold">아무개</td>
+                          <td>아무 댓글</td>
+                          <td>05-21</td>
+                        </tr>
+                        <tr>
+                          <td className="font-bold">아무개</td>
+                          <td>아무 댓글</td>
+                          <td>05-21</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex justify-end">
+                    <button type="button" className="btn mr-2">▲</button>
+                    <button type="button" className="btn mr-2">▼</button>
+                    <button type="button" onClick={() => router.back()}  className="btn mr-2">목록</button>
+                  </div>
+                  <div className="divider mb-16"></div>
                 </div>
               </div>
             </div>

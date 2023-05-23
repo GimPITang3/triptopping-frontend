@@ -76,7 +76,7 @@ const CommunityPage: NextPage = ({}) => {
         <div className="drawer-content scrollbar-hide">
           <Topbar />
 
-          <div>
+          <div className="mb-16">
             <div className="p-4 pt-8">
               <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex items-center justify-between mb-4">
