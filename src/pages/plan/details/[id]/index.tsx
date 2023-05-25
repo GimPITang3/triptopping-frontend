@@ -39,7 +39,14 @@ const Topbar: FC = () => {
         </div>
         <div className="flex-shrink-0 flex items-center font-bold text-xl gap-x-2">
           <Link href="/">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-6 w-6" viewBox="0 0 16 16">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="h-6 w-6"
+              viewBox="0 0 16 16"
+            >
               <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
             </svg>
           </Link>
@@ -141,33 +148,33 @@ const Detail: FC = () => {
           >
             {itineraryDaily
               .filter((itinerary) => itinerary.type === 'place')
-              .map((itinerary, index) => (
-                (itineraryDaily.length - 1 === index || index === 0) ? (
-                <Marker
-                  key={`it-${index}`}
-                  position={
-                    flattenScheduleSlot(itinerary).details.geometry
-                      ?.location || {
-                      lat: 0,
-                      lng: 0,
+              .map((itinerary, index) =>
+                itineraryDaily.length - 1 === index || index === 0 ? (
+                  <Marker
+                    key={`it-${index}`}
+                    position={
+                      flattenScheduleSlot(itinerary).details.geometry
+                        ?.location || {
+                        lat: 0,
+                        lng: 0,
+                      }
                     }
-                  }
-                  icon={GetIcon()}
-                />
+                    icon={GetIcon()}
+                  />
                 ) : (
-                <Marker
-                  key={`it-${index}`}
-                  position={
-                    flattenScheduleSlot(itinerary).details.geometry
-                      ?.location || {
-                      lat: 0,
-                      lng: 0,
+                  <Marker
+                    key={`it-${index}`}
+                    position={
+                      flattenScheduleSlot(itinerary).details.geometry
+                        ?.location || {
+                        lat: 0,
+                        lng: 0,
+                      }
                     }
-                  }
-                  label={(index + 1).toString()}
-                />
-                )
-              ))}
+                    label={(index + 1).toString()}
+                  />
+                ),
+              )}
 
             <Polyline
               options={{
@@ -205,7 +212,9 @@ const Detail: FC = () => {
               </div>
               <div className="overflow-hidden pl-3 pr-6">
                 <div className="text-2xl font-bold flex items-end">
-                  <div className="pr-3 line-clamp-1">{focusedPlace?.name || ''}</div>
+                  <div className="pr-3 line-clamp-1">
+                    {focusedPlace?.name || ''}
+                  </div>
                   <Image
                     src={focusedPlace?.icon || ''}
                     alt="icon"
@@ -230,10 +239,10 @@ const Detail: FC = () => {
         </div>
         <div
           className={
-            "pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out"
-            +
+            'pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out' +
             (folded ? ' pr-4' : '')
-          }>
+          }
+        >
           <ul
             key={`day-${page}`}
             onScroll={(e) => {
@@ -278,7 +287,10 @@ const Detail: FC = () => {
                 );
                 setFocusedIndex(0);
               }}
-              className={'tab tab-lg flex-shrink-0' + (index === page ? ' tab-active' : '')}
+              className={
+                'tab tab-lg flex-shrink-0' +
+                (index === page ? ' tab-active' : '')
+              }
             >
               Day {index + 1}
             </button>
@@ -293,17 +305,42 @@ const Detail: FC = () => {
           }}
         >
           {folded ? (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-4 w-4" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
-              <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="h-4 w-4"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+              />
+              <path
+                fillRule="evenodd"
+                d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+              />
             </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-4 w-4" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z" />
-              <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="h-4 w-4"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"
+              />
+              <path
+                fillRule="evenodd"
+                d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"
+              />
             </svg>
-          )
-          }
+          )}
         </button>
       </div>
     </div>

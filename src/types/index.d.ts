@@ -3,6 +3,10 @@ import {
   DirectionsRoute,
 } from '@googlemaps/google-maps-services-js';
 
+export interface TranslatedPlaceData extends PlaceData {
+  translated_name: string;
+}
+
 export interface Place {
   [key: string]: any;
   type: 'place';
@@ -13,7 +17,7 @@ export interface Place {
   duration?: number;
   cost?: number;
 
-  details?: Partial<PlaceData>;
+  details?: Partial<TranslatedPlaceData>;
 }
 
 export interface Transport {

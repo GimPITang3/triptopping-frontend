@@ -20,7 +20,12 @@ import {
 } from 'react-beautiful-dnd';
 
 import { PlanContext, UserContext } from '@/contexts';
-import { ItineraryDaily, Place, ScheduleSlot } from '@/types';
+import {
+  ItineraryDaily,
+  Place,
+  ScheduleSlot,
+  TranslatedPlaceData,
+} from '@/types';
 
 import { excludePlaces, getPlan, updatePlan } from '@/services/plansService';
 
@@ -265,6 +270,8 @@ const PlanPage: NextPage = ({}) => {
     return <div></div>;
   }
 
+  console.log(plan);
+
   return (
     <div className="min-h-screen">
       <Head>
@@ -375,7 +382,7 @@ const PlanPage: NextPage = ({}) => {
                           >
                             {(provided) => {
                               const place = flattenScheduleSlot(itinerary)
-                                ?.details as Partial<PlaceData>;
+                                ?.details as Partial<TranslatedPlaceData>;
                               return (
                                 <li
                                   {...provided.draggableProps}
@@ -418,7 +425,9 @@ const PlanPage: NextPage = ({}) => {
                                       >
                                         <h2 className="card-title">
                                           <p className="flex-1 line-clamp-1">
-                                            {place.name || '테스트'}
+                                            {place.translated_name ||
+                                              place.name ||
+                                              '테스트'}
                                           </p>
                                           <button
                                             onClick={() =>
@@ -515,7 +524,7 @@ const PlanPage: NextPage = ({}) => {
             viewBox="0 0 16 16"
           >
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
             />
           </svg>
