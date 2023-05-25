@@ -213,7 +213,7 @@ const Detail: FC = () => {
               <div className="overflow-hidden pl-3 pr-6">
                 <div className="text-2xl font-bold flex items-end">
                   <div className="pr-3 line-clamp-1">
-                    {focusedPlace?.name || ''}
+                    {focusedPlace?.translated_name || focusedPlace?.name || ''}
                   </div>
                   <Image
                     src={focusedPlace?.icon || ''}
