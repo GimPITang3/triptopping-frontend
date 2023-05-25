@@ -20,3 +20,7 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+### License
+
+<a href="https://www.flaticon.com/free-icons/dm" title="dm icons">Dm icons created by IYAHICON - Flaticon</a>

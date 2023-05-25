@@ -8,15 +8,7 @@ const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     const rawUser = localStorage.getItem('user');
-    console.log(rawUser);
-    if(rawUser == "undefined")
-    {
-      const user = undefined;
-    }
-    else
-    {
-      const user = rawUser ? (JSON.parse(rawUser) as User) : undefined;
-    }
+    const user = rawUser ? (JSON.parse(rawUser) as User) : undefined;
 
     user && setUser(user);
 

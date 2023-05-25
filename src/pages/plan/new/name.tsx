@@ -17,7 +17,7 @@ const Name: FC = () => {
       setPlan({
         ...plan,
         name:
-          (user.nickname ? user.nickname + '님의 ' : '') +
+          (user?.nickname ? user?.nickname + '님의 ' : '') +
           '폭풍을 부르는 우당탕탕 여행기!',
       });
     }
