@@ -17,7 +17,9 @@ const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(user));
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
     } else {
