@@ -8,7 +8,7 @@ import { FC, useContext, useEffect, useState } from 'react';
 
 import { UserContext } from '@/contexts';
 import { getPlans } from '@/services/plansService';
-import { Plan } from '@/types';
+import { Article, Plan, User } from '@/types';
 
 import CommunityCard from '@/components/CommunityCard';
 import Topbar from '@/components/Topbar';
@@ -18,24 +18,44 @@ import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import Sidebar from '@/components/Sidebar';
 
-const dummyArticles: {
-  title: string;
-  description: string;
+const dummyUser: User = {
+  email: '',
+  introduce: '',
+  nickname: '홍길동',
+  userId: '',
+};
+
+const dummyArticles: (Article & {
   coverImage?: string | StaticImageData;
-}[] = [
+})[] = [
   {
+    articleId: '',
+    author: dummyUser,
+    comments: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
+    content: '콩국수 맛있겠다',
     coverImage: '/imgs/image3.jpg',
   },
   {
+    articleId: '',
+    author: dummyUser,
+    comments: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
+    content: '콩국수 맛있겠다',
     coverImage: '/imgs/image1.jpeg',
   },
   {
+    articleId: '',
+    author: dummyUser,
+    comments: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
     title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
+    content: '콩국수 맛있겠다',
     coverImage: '/imgs/image2.jpeg',
   },
 ];
@@ -195,12 +215,10 @@ const Home: NextPage = () => {
               {dummyArticles.map((article, i) => (
                 <CommunityCard
                   key={i}
-                  title={article.title}
-                  description={article.description}
+                  article={article}
                   coverImage={article.coverImage}
                 />
               ))}
-              <CommunityCard />
             </div>
           </div>
         </div>

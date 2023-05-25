@@ -80,6 +80,11 @@ export interface User {
 }
 
 export interface Article {
+  articleId: string;
   title: string;
+  author: User;
   content: string;
+  comments: any[];
+  createdAt: string;
+  updatedAt: string;
 }

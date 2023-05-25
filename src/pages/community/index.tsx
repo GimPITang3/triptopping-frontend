@@ -1,17 +1,18 @@
+import { useCallback, useContext, useEffect, useState } from 'react';
+import { NextPage } from 'next';
+import { StaticImageData } from 'next/image';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
+import { UserContext } from '@/contexts';
+import { deletePlan } from '@/services/plansService';
+import { Article, Plan } from '@/types';
+
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import CommunityCard from '@/components/CommunityCard';
-import { UserContext } from '@/contexts';
-import { deletePlan } from '@/services/plansService';
-import { Plan } from '@/types';
-import { DateTime } from 'luxon';
-import { NextPage } from 'next';
-import Image, { StaticImageData } from 'next/image';
-import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { FC, useContext, useEffect, useState } from 'react';
+import { getArticles } from '@/services/articlesService';
 
 const dummyArticles: {
   title: string;
@@ -34,19 +35,18 @@ const dummyArticles: {
     coverImage: '/imgs/image2.jpeg',
   },
 ];
-interface Article {
-  articleId: string;
-  title: string;
-  description: string;
-  coverImage?: string | StaticImageData;
-  author: string;
-}
 
 const CommunityPage: NextPage = ({}) => {
   const router = useRouter();
+
   const { user, setUser } = useContext(UserContext);
   const [planList, setPlanList] = useState<Plan[]>([]);
   const [delId, setDelId] = useState('');
+
+  const [curPage, setCurPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const perPage = 4;
 
   const handleDelId = (id: string) => {
     setDelId(id);
@@ -57,13 +57,27 @@ const CommunityPage: NextPage = ({}) => {
     deletePlan(delId);
   };
 
+  const onPrevPage = useCallback(() => {
+    setCurPage((page) => {
+      return Math.max(page - 1, 1);
+    });
+  }, [setCurPage]);
+
+  const onNextPage = useCallback(() => {
+    setCurPage((page) => {
+      return Math.min(page + 1, Math.ceil(totalArticles / perPage));
+    });
+  }, [setCurPage, totalArticles]);
+
   useEffect(() => {
-    // const SetPlanList = async () => {
-    //   const plans = await getPlans();
-    //   setPlanList(plans);
-    // };
-    // SetPlanList();
-  }, []);
+    getArticles({
+      skip: (curPage - 1) * perPage,
+      limit: perPage,
+    }).then((result) => {
+      setArticles(result.items);
+      setTotalArticles(result.total);
+    });
+  }, [curPage]);
 
   return (
     <>
@@ -87,22 +101,23 @@ const CommunityPage: NextPage = ({}) => {
 
                 <div className="flex items-center justify-center">
                   <div className="grid grid-cols-2 gap-4">
-                    {dummyArticles.map((article, i) => (
+                    {articles.map((article) => (
                       <CommunityCard
-                        key={i}
-                        title={article.title}
-                        description={article.description}
-                        coverImage={article.coverImage}
+                        article={article}
+                        key={article.articleId}
                       />
                     ))}
-                    <CommunityCard />
                   </div>
                 </div>
 
                 <div className="flex py-6 justify-center btn-group">
-                  <button className="btn">«</button>
-                  <button className="btn">Page 22</button>
-                  <button className="btn">»</button>
+                  <button className="btn" onClick={onPrevPage}>
+                    «
+                  </button>
+                  <button className="btn">Page {curPage}</button>
+                  <button className="btn" onClick={onNextPage}>
+                    »
+                  </button>
                 </div>
               </div>
             </div>
