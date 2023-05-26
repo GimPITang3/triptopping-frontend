@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
+import { TravelMode } from '@googlemaps/google-maps-services-js';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -57,7 +58,11 @@ const Topbar: FC = () => {
 };
 
 const decodePolyline = (encoded: string) => {
-  return decode(encoded, 5);
+  const decodedPaths = decode(encoded, 5);
+  return decodedPaths.map((path) => ({
+    lat: path[0],
+    lng: path[1],
+  }));
 };
 
 const Detail: FC = () => {
@@ -123,7 +128,7 @@ const Detail: FC = () => {
     }
   }, [map, focusedPlace]);
 
-  if (!plan.planId) {
+  if (!plan.routes?.length) {
     return <div></div>;
   }
 
@@ -131,7 +136,6 @@ const Detail: FC = () => {
   const GetIcon = () => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
   };
-
   return (
     <div className="relative min-h-screen">
       <LoadScript
@@ -175,27 +179,26 @@ const Detail: FC = () => {
                   />
                 ),
               )}
-
-            <Polyline
-              options={{
-                strokeColor: '#b41412',
-                strokeOpacity: 0.8,
-                strokeWeight: 3,
-                clickable: false,
-                draggable: false,
-                editable: false,
-                visible: true,
-                path: itineraryDaily.slice(0, -1).map(
-                  (itinerary) =>
-                    flattenScheduleSlot(itinerary).details.geometry
-                      ?.location || {
-                      lat: 0,
-                      lng: 0,
-                    },
-                ),
-                zIndex: 1,
-              }}
-            />
+            {plan?.routes[page]
+              .flatMap((route) => route.legs.flatMap((leg) => leg.steps))
+              .map((step, idx) => {
+                return (
+                  <Polyline
+                    key={`poly-${idx}`}
+                    options={{
+                      strokeColor: '#1d4ed8',
+                      strokeOpacity: 0.8,
+                      strokeWeight: 4,
+                      clickable: false,
+                      draggable: false,
+                      editable: false,
+                      visible: true,
+                      path: decodePolyline(step.polyline.points),
+                      zIndex: 1,
+                    }}
+                  />
+                );
+              })}
           </GoogleMap>
         </div>
       </LoadScript>
