@@ -39,7 +39,13 @@ const Sidebar: FC = () => {
               <Link href="/plan/list">내 여행 계획</Link>
             </li>
             <li>
-              <Link href="/">내 작성 글</Link>
+              <Link href="/community/list/articles">내 작성 글</Link>
+            </li>
+            <li>
+              <Link href="/community/list/comments">내 작성 댓글</Link>
+            </li>
+            <li>
+              <Link href="/community/list/likes">내 관심 글</Link>
             </li>
           </div>
         ) : (

@@ -2,7 +2,6 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
-import { Plan } from '@/types';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { DateTime } from 'luxon';
@@ -13,14 +12,14 @@ import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { PlanContext } from '@/contexts';
 import { getPlanDetails } from '@/services/plansService';
 import { Place } from '@/types';
-import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
-import { decode } from '@googlemaps/polyline-codec';
+import { flattenScheduleSlot } from '@/utils';
 import {
   GoogleMap,
   LoadScript,
   Marker,
   Polyline,
 } from '@react-google-maps/api';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const dummyArticle: {
   title: string;
@@ -32,7 +31,7 @@ const dummyArticle: {
   title: '지수의 군산 콩국수 여행기',
   author: '심지수',
   description: '콩국수 맛있겠다',
-  planId: 'b1u6mh3lebkzenjww9sbiqzk',
+  planId: 'q0k1d9ewam8du3y23ve5m59u',
   coverImage: '/imgs/image3.jpg',
 };
 
@@ -117,7 +116,6 @@ const ArticlePage: NextPage = ({}) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const [folded, setFolded] = useState(false);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -129,26 +127,7 @@ const ArticlePage: NextPage = ({}) => {
 
   const containerStyle = {
     width: '100%',
-    height: '100vh',
-  };
-
-  const handleScroll = (height: number) => {
-    //! magic number. please change.
-    // console.log(height);
-    const idx = Math.floor(height / 96);
-    setFocusedIndex(idx);
-    if (idx > plan.itinerary[page].length - 1) {
-      return;
-    }
-    setFocusedPlace((prev) => {
-      if (
-        plan.itinerary[page][idx].type !== 'place' ||
-        prev === plan.itinerary[page][idx]
-      ) {
-        return prev;
-      }
-      return flattenScheduleSlot(plan.itinerary[page][idx]).details || null;
-    });
+    height: '400px',
   };
 
   useEffect(() => {
@@ -190,6 +169,10 @@ const ArticlePage: NextPage = ({}) => {
     dummyComments = dummyComments.filter((item) => item.commentId !== delId);
     console.log(dummyComments);
   };
+
+  const handleCopy = () => {
+    
+  }
 
   const { id } = router.query;
 
@@ -248,90 +231,142 @@ const ArticlePage: NextPage = ({}) => {
                     <Link href="/community" className="text-sm">삭제</Link>
                   </div>
                   <div className="divider mb-4"></div>
-                  <div className="mb-8">
-                    <LoadScript
-                      googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
-                      libraries={['places']}
-                    >
-                      <div className="h-full">
-                        <GoogleMap
-                          options={{ disableDefaultUI: true }}
-                          mapContainerStyle={containerStyle}
-                          zoom={15}
-                          onLoad={onLoad}
-                          onUnmount={onUnmount}
-                        >
-                          {itineraryDaily
-                            .filter((itinerary) => itinerary.type === 'place')
-                            .map((itinerary, index) =>
-                              itineraryDaily.length - 1 === index || index === 0 ? (
-                                <Marker
-                                  key={`it-${index}`}
-                                  position={
-                                    flattenScheduleSlot(itinerary).details.geometry
-                                      ?.location || {
-                                      lat: 0,
-                                      lng: 0,
-                                    }
-                                  }
-                                  icon={GetIcon()}
-                                />
-                              ) : (
-                                <Marker
-                                  key={`it-${index}`}
-                                  position={
-                                    flattenScheduleSlot(itinerary).details.geometry
-                                      ?.location || {
-                                      lat: 0,
-                                      lng: 0,
-                                    }
-                                  }
-                                  label={(index + 1).toString()}
-                                />
-                              ),
-                            )}
-
-                          <Polyline
-                            options={{
-                              strokeColor: '#b41412',
-                              strokeOpacity: 0.8,
-                              strokeWeight: 3,
-                              clickable: false,
-                              draggable: false,
-                              editable: false,
-                              visible: true,
-                              path: itineraryDaily.slice(0, -1).map(
-                                (itinerary) =>
+                  <LoadScript
+                    googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
+                    libraries={['places']}
+                  >
+                    <div className="h-full">
+                      <GoogleMap
+                        options={{ disableDefaultUI: true }}
+                        mapContainerStyle={containerStyle}
+                        zoom={12}
+                        onLoad={onLoad}
+                        onUnmount={onUnmount}
+                      >
+                        {itineraryDaily
+                          .filter((itinerary) => itinerary.type === 'place')
+                          .map((itinerary, index) =>
+                            itineraryDaily.length - 1 === index || index === 0 ? (
+                              <Marker
+                                key={`it-${index}`}
+                                position={
                                   flattenScheduleSlot(itinerary).details.geometry
                                     ?.location || {
                                     lat: 0,
                                     lng: 0,
-                                  },
-                              ),
-                              zIndex: 1,
-                            }}
-                          />
-                        </GoogleMap>
-                      </div>
-                    </LoadScript>
+                                  }
+                                }
+                                icon={GetIcon()}
+                              />
+                            ) : (
+                              <Marker
+                                key={`it-${index}`}
+                                position={
+                                  flattenScheduleSlot(itinerary).details.geometry
+                                    ?.location || {
+                                    lat: 0,
+                                    lng: 0,
+                                  }
+                                }
+                                label={(index + 1).toString()}
+                              />
+                            ),
+                          )}
 
-                    <p>
-                      이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                      1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                      글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                      글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                      1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                      글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                      글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                      1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                      글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                      글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                      1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                      글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                      글은 1번째 글{' '}
-                    </p>
+                        <Polyline
+                          options={{
+                            strokeColor: '#b41412',
+                            strokeOpacity: 0.8,
+                            strokeWeight: 3,
+                            clickable: false,
+                            draggable: false,
+                            editable: false,
+                            visible: true,
+                            path: itineraryDaily.slice(0, -1).map(
+                              (itinerary) =>
+                                flattenScheduleSlot(itinerary).details.geometry
+                                  ?.location || {
+                                  lat: 0,
+                                  lng: 0,
+                                },
+                            ),
+                            zIndex: 1,
+                          }}
+                        />
+                      </GoogleMap>
+                    </div>
+                  </LoadScript>
+                  <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
+                    {plan.itinerary.map((_value, index) => (
+                      <button
+                        key={`page-${index}`}
+                        onClick={() => {
+                          setPage(index);
+                          setFocusedPlace(
+                            flattenScheduleSlot(plan.itinerary[index][0]).details,
+                          );
+                          setFocusedIndex(0);
+                        }}
+                        className={
+                          'tab tab-lg flex-shrink-0' +
+                          (index === page ? ' tab-active' : '')
+                        }
+                      >
+                        Day {index + 1}
+                      </button>
+                    ))}
                   </div>
-                  <div className="flex flex-row">
+                  <div className="bg-white/80 h-64 overflow-y-auto">
+                    <ul
+                      key={`day-${page}`}
+                      className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
+                    >
+                      {itineraryDaily
+                        .filter((itinerary) => itinerary.type === 'place')
+                        .map((itinerary, index) => (
+                          <li
+                            key={`it-${index}`}
+                            className="step step-neutral snap-always snap-start h-24 cursor-pointer"
+                            onClick={(e) => {
+                              setFocusedPlace(
+                                flattenScheduleSlot(plan.itinerary[page][index]).details,
+                              );
+                              setFocusedIndex(index);
+                            }}
+                          >
+                            <div className="">
+                              {flattenScheduleSlot(itinerary).details.name}
+                            </div>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                  <button className="btn btn-primary grow">내 여행계획에 추가하기</button>
+
+                  <p className="mt-8">
+                    이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
+                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
+                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
+                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
+                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
+                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
+                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
+                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
+                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
+                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
+                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
+                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
+                    글은 1번째 글{' '}
+                  </p>
+                  <div className="flex flex-row mt-8">
+                    <CopyToClipboard text={ window.location.href }>
+                      <label onClick={handleCopy}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                        </svg>
+                      </label>
+                    </CopyToClipboard>
+                    <p className="text-sm">&nbsp;|&nbsp;</p>
                     <label className="swap">
                       <input type="checkbox" />
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="swap-on w-6 h-6">

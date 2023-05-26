@@ -83,6 +83,9 @@ const CommunityPage: NextPage = ({}) => {
                   <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
                     자유게시판
                   </h5>
+                  <div className="flex justify-end">
+                    <button onClick={() => router.push('/community/new')} className="btn btn-primary">글 작성</button>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-center">

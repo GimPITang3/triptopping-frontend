@@ -33,11 +33,18 @@ const NewArticlePage: NextPage = ({}) => {
             <div className="p-4 pt-8">
               <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
                 <div className="flex flex-col mb-4">
+                  <select className="select select-bordered w-full max-w-xs">
+                    <option disabled selected>여행 계획을 선택하세요.</option>
+                    <option>여행 계획 1</option>
+                    <option>여행 계획 2</option>
+                  </select>
+                  <div className="divider"></div>
                   <input type="text" placeholder="제목을 입력하세요." className="mb-4 input input-bordered w-full max-w-xs" />
                   <textarea className="textarea textarea-bordered h-64" placeholder="내용을 입력하세요."></textarea>
                 </div>
-                <div className="flex justify-end">
-                  <button className="btn btn-primary">등록</button>
+                <div className="flex justify-between">
+                  <button onClick={() => router.back()} className="btn">취소</button>
+                  <button onClick={() => router.push('/community')} className="btn btn-primary">등록</button>
                 </div>
               </div>
             </div>
