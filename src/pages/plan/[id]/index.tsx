@@ -35,7 +35,6 @@ import { TopbarContainer } from '@/components/TopbarContainer';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
-import { PlaceData } from '@googlemaps/google-maps-services-js';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
@@ -108,7 +107,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
     }
     setPlan((prev) => {
       const newPlan = { ...prev };
-      newPlan.itinerary[day].push({
+      newPlan.itinerary[day].splice(newPlan.itinerary[day].length - 1, 0, {
         type: 'place',
         system: {},
         manual: { details: searchResult },
@@ -379,6 +378,7 @@ const PlanPage: NextPage = ({}) => {
                             key={`itinerary${dayIdx}-${idx}`}
                             draggableId={`itinerary${dayIdx}-${idx}`}
                             index={idx}
+                            isDragDisabled={idx === 0 || idx === itineraryDaily.length - 1}
                           >
                             {(provided) => {
                               const place = flattenScheduleSlot(itinerary)
@@ -418,9 +418,18 @@ const PlanPage: NextPage = ({}) => {
                                       <div
                                         className={
                                           'card-body rounded-lg shadow-md bg-[#fafcff] ' +
-                                          (itinerary?.manual
-                                            ? 'shadow-cyan-300'
-                                            : 'shadow-pink-300')
+                                          (
+                                            // itinerary idx가 처음 또는 마지막이면 회색
+                                            // itinerary에 manual이 있으면 시안, 없으면 핑크
+                                            idx === 0 ||
+                                              idx === itineraryDaily.length - 1
+                                              ? 'shadow-gray-500'
+                                              : (
+                                                itinerary?.manual
+                                                  ? 'shadow-cyan-300'
+                                                  : 'shadow-pink-300'
+                                              )
+                                          )
                                         }
                                       >
                                         <h2 className="card-title">
