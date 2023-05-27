@@ -18,6 +18,21 @@ import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import Sidebar from '@/components/Sidebar';
 
+const dummyPlan: Plan = {
+  planId: "asdf",
+  name: "string",
+  author: [],
+  numberOfMembers: 2,
+  members: [],
+  period: 5,
+  budget: 5,
+  tags: [],
+  loc: {lat: 4, lng: 5},
+  itinerary: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 const dummyUser: User = {
   email: '',
   introduce: '',
@@ -30,31 +45,34 @@ const dummyArticles: (Article & {
 })[] = [
   {
     articleId: '',
+    title: '지수의 군산 콩국수 여행기',
     author: dummyUser,
+    plan: dummyPlan,
     comments: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    title: '지수의 군산 콩국수 여행기',
     content: '콩국수 맛있겠다',
     coverImage: '/imgs/image3.jpg',
   },
   {
     articleId: '',
+    title: '지수의 군산 콩국수 여행기',
     author: dummyUser,
+    plan: dummyPlan,
     comments: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    title: '지수의 군산 콩국수 여행기',
     content: '콩국수 맛있겠다',
     coverImage: '/imgs/image1.jpeg',
   },
   {
     articleId: '',
+    title: '지수의 군산 콩국수 여행기',
     author: dummyUser,
+    plan: dummyPlan,
     comments: [],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    title: '지수의 군산 콩국수 여행기',
     content: '콩국수 맛있겠다',
     coverImage: '/imgs/image2.jpeg',
   },

@@ -8,7 +8,6 @@ import Image, { StaticImageData } from 'next/image';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import { PlanContext } from '@/contexts';
-import { getPlanDetails } from '@/services/plansService';
 import { Place } from '@/types';
 import { flattenScheduleSlot } from '@/utils';
 import {
@@ -19,7 +18,7 @@ import {
 } from '@react-google-maps/api';
 
 import { UserContext } from '@/contexts';
-import { Article, Comment } from '@/types';
+import { User, Article, Comment } from '@/types';
 import { getArticle } from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
@@ -31,31 +30,24 @@ interface CommentProp {
   name: string;
   content: string;
   createdAt: Date;
+  isSameUser: boolean;
   onClickDelComment: Function;
 }
 
-const Comment: FC<CommentProp> = ({
+const Comments: FC<CommentProp> = ({
   id,
   name,
   content,
   createdAt,
+  isSameUser,
   onClickDelComment,
 }) => {
-  const router = useRouter();
-
-  let dateString = (() => {
-      const commentedDate = DateTime.fromISO(new Date(createdAt).toISOString());
-      return (
-        commentedDate.toFormat('MM.dd')
-      );
-    })();
-
   return (
     <div>
       <div className="flex flex-row mb-2">
         <p className="font-bold">{name}</p>
-        <p className="grow text-sm text-gray-400 ml-2">| {dateString}</p>
-        <label
+        <p className="grow text-sm text-gray-400 ml-2">| {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat('MM.dd')}</p>
+        {isSameUser ? (<label
           onClick={(e) => {
                 e.stopPropagation();
                 onClickDelComment(id);
@@ -64,7 +56,7 @@ const Comment: FC<CommentProp> = ({
           className="btn btn-square btn-xs"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-        </label>
+        </label>) : ('')}
       </div>
       <p>{content}</p>
       <div className="divider"></div>
@@ -82,7 +74,6 @@ const ArticlePage: NextPage = ({}) => {
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
-  const [focusedIndex, setFocusedIndex] = useState(0);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -142,15 +133,15 @@ const ArticlePage: NextPage = ({}) => {
     if(id<0) return;
     setDelId(id);
   };
-  
-  if(!article)
-  {
-    return <div></div>;
-  }
 
   const delComment = () => {
     // TODO
   };
+
+  if(!plan.planId)
+  {
+    return <div></div>;
+  }
 
   return (
     <>
@@ -211,11 +202,11 @@ const ArticlePage: NextPage = ({}) => {
                     <p>{article?.content}</p>
                   </div>
 
-                  <div className="flex flex-row justify-end">
+                  {article?.author.userId===user?.userId ? (<div className="flex flex-row justify-end">
                     <Link href="/community/new" className="text-sm">수정</Link>
                     <p className="text-sm">&nbsp;|&nbsp;</p>
                     <Link href="/community" className="text-sm">삭제</Link>
-                  </div>
+                  </div>) : ('')}
                   <div className="divider mb-4"></div>
                   <LoadScript
                     googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
@@ -291,7 +282,6 @@ const ArticlePage: NextPage = ({}) => {
                           setFocusedPlace(
                             flattenScheduleSlot(plan.itinerary[index][0]).details,
                           );
-                          setFocusedIndex(0);
                         }}
                         className={
                           'tab tab-lg flex-shrink-0' +
@@ -317,7 +307,6 @@ const ArticlePage: NextPage = ({}) => {
                               setFocusedPlace(
                                 flattenScheduleSlot(plan.itinerary[page][index]).details,
                               );
-                              setFocusedIndex(index);
                             }}
                           >
                             <div className="">
@@ -371,11 +360,12 @@ const ArticlePage: NextPage = ({}) => {
                       <ul>
                         {article?.comments.map((comment, i) => (
                           <li key={`comment-${i}`}>
-                            <Comment
+                            <Comments
                               id={i}
-                              name={comment.name}
+                              name={comment.commentedUser.nickname}
                               content={comment.content}
                               createdAt={comment.createdAt}
+                              isSameUser={comment.commentedUser.userId===user?.userId}
                               onClickDelComment={handleDelId}
                             />
                           </li>
