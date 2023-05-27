@@ -83,8 +83,15 @@ export interface Article {
   articleId: string;
   title: string;
   author: User;
+  plan: Plan;
   content: string;
-  comments: any[];
+  comments: Comment[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface Comment {
+  name: string;
+  content: string;
+  createdAt: Date;
 }
