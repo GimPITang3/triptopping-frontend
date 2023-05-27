@@ -35,7 +35,6 @@ import { TopbarContainer } from '@/components/TopbarContainer';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
-import { PlaceData } from '@googlemaps/google-maps-services-js';
 import arrowLeftCircle from '../../../../public/arrowleftcircle.svg';
 import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
@@ -108,7 +107,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
     }
     setPlan((prev) => {
       const newPlan = { ...prev };
-      newPlan.itinerary[day].push({
+      newPlan.itinerary[day].splice(newPlan.itinerary[day].length - 1, 0, {
         type: 'place',
         system: {},
         manual: { details: searchResult },
@@ -379,6 +378,7 @@ const PlanPage: NextPage = ({}) => {
                             key={`itinerary${dayIdx}-${idx}`}
                             draggableId={`itinerary${dayIdx}-${idx}`}
                             index={idx}
+                            isDragDisabled={idx === 0 || idx === itineraryDaily.length - 1}
                           >
                             {(provided) => {
                               const place = flattenScheduleSlot(itinerary)
@@ -418,9 +418,18 @@ const PlanPage: NextPage = ({}) => {
                                       <div
                                         className={
                                           'card-body rounded-lg shadow-md bg-[#fafcff] ' +
-                                          (itinerary?.manual
-                                            ? 'shadow-cyan-300'
-                                            : 'shadow-pink-300')
+                                          (
+                                            // itinerary idx가 처음 또는 마지막이면 회색
+                                            // itinerary에 manual이 있으면 시안, 없으면 핑크
+                                            idx === 0 ||
+                                              idx === itineraryDaily.length - 1
+                                              ? 'shadow-gray-500'
+                                              : (
+                                                itinerary?.manual
+                                                  ? 'shadow-cyan-300'
+                                                  : 'shadow-pink-300'
+                                              )
+                                          )
                                         }
                                       >
                                         <h2 className="card-title">
@@ -485,13 +494,30 @@ const PlanPage: NextPage = ({}) => {
                     </ul>
                   )}
                 </Droppable>
-                <label
-                  className="btn btn-ghost flex justify-center shadow-lg mt-2"
-                  onClick={() => setSelectDay(dayIdx)}
-                  htmlFor="modal-google-map"
-                >
-                  <Image src={plus} alt="plus" width={32} height={32} />
-                </label>
+                <div className="flex space-x-4 mr-4">
+                  {/* 새 사용자 일정 추가 */}
+                  <label
+                    className="btn btn-ghost flex justify-center shadow-lg mt-2 w-1/2"
+                    onClick={() => setSelectDay(dayIdx)}
+                    htmlFor="modal-google-map"
+                  >
+                    <Image src={plus} alt="plus" width={32} height={32} />
+                    직접 일정 추가
+                  </label>
+                  {/* 새 AI 추천 일정 추가 */}
+                  <label
+                    className="btn btn-ghost flex justify-center shadow-lg mt-2 w-1/2 underline decoration-sky-500/80 decoration-2 underline-offset-0 decoration-wavy shadow-sky-500/50"
+                    onClick={() => setSelectDay(dayIdx)}
+                    htmlFor="modal-google-map"
+                  >
+                    <div className="text-sky-600">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="mr-2 w-5 h-5" viewBox="0 0 16 16">
+                        <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.734 1.734 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.734 1.734 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.734 1.734 0 0 0 3.407 2.31l.387-1.162zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L10.863.1z" />
+                      </svg>
+                    </div>
+                    추천 일정 추가
+                  </label>
+                </div>
               </div>
             ),
           )}
