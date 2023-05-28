@@ -19,12 +19,7 @@ import {
 
 import { UserContext } from '@/contexts';
 import { User, Article, Comment } from '@/types';
-import {
-  getArticle,
-  createComment,
-  deleteComment,
-  incLikes,
-} from '@/services/articlesService';
+import { getArticle, createComment, deleteComment, incLikes, deleteArticle } from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
@@ -51,39 +46,17 @@ const Comments: FC<CommentProp> = ({
     <div>
       <div className="flex flex-row mb-2">
         <p className="font-bold">{name}</p>
-        <p className="grow text-sm text-gray-400 ml-2">
-          |{' '}
-          {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat(
-            'MM.dd',
-          )}
-        </p>
-        {isSameUser ? (
-          <label
-            onClick={(e) => {
-              e.stopPropagation();
-              onClickDelComment(id);
-            }}
-            htmlFor="del-modal"
-            className="btn btn-square btn-xs"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </label>
-        ) : (
-          ''
-        )}
+        <p className="grow text-sm text-gray-400 ml-2">| {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat('MM.dd')}</p>
+        {isSameUser ? (<label
+          onClick={(e) => {
+                e.stopPropagation();
+                onClickDelComment(id);
+              }}
+          htmlFor="del-comment-modal"
+          className="btn btn-square btn-xs"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </label>) : ('')}
       </div>
       <p>{content}</p>
       <div className="divider"></div>
@@ -190,6 +163,13 @@ const ArticlePage: NextPage = ({}) => {
     setDelId(id);
   };
 
+  const delArticle = () => {
+    if (typeof id !== 'string') return;
+    deleteArticle(id).then(() => {
+      router.push('/community');
+    })
+  }
+
   const delComment = () => {
     if (typeof id !== 'string') return;
     deleteComment(id, delId).then((article) => {
@@ -208,7 +188,7 @@ const ArticlePage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
-          <input type="checkbox" id="del-modal" className="modal-toggle" />
+          <input type="checkbox" id="del-comment-modal" className="modal-toggle" />
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">댓글이 삭제돼요</h3>
@@ -216,12 +196,34 @@ const ArticlePage: NextPage = ({}) => {
               <div className="modal-action">
                 <label
                   onClick={delComment}
-                  htmlFor="del-modal"
+                  htmlFor="del-comment-modal"
                   className="btn btn-primary"
                 >
                   예
                 </label>
-                <label htmlFor="del-modal" className="btn">
+                <label htmlFor="del-comment-modal" className="btn">
+                  아니오
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <input type="checkbox" id="del-article-modal" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">글이 삭제돼요</h3>
+              <p className="py-4">
+                글을 삭제하시겠습니까?
+              </p>
+              <div className="modal-action">
+                <label
+                  onClick={delArticle}
+                  htmlFor="del-article-modal"
+                  className="btn btn-primary"
+                >
+                  예
+                </label>
+                <label htmlFor="del-article-modal" className="btn">
                   아니오
                 </label>
               </div>
@@ -256,19 +258,11 @@ const ArticlePage: NextPage = ({}) => {
                     </p>
                   </div>
 
-                  {article?.author?.userId === user?.userId ? (
-                    <div className="flex flex-row justify-end">
-                      <Link href="/community/new" className="text-sm">
-                        수정
-                      </Link>
-                      <p className="text-sm">&nbsp;|&nbsp;</p>
-                      <Link href="/community" className="text-sm">
-                        삭제
-                      </Link>
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                  {article?.author?.userId===user?.userId ? (<div className="flex flex-row justify-end">
+                    <Link href={`/community/${id}/edit`} className="text-sm">수정</Link>
+                    <p className="text-sm">&nbsp;|&nbsp;</p>
+                    <label htmlFor="del-article-modal" className="text-sm">삭제</label>
+                  </div>) : ('')}
                   <div className="divider mb-4"></div>
                   {article?.plan ? (
                     <div>

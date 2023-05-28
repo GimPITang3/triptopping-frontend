@@ -2,19 +2,50 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
 import { deletePlan, getPlans } from '@/services/plansService';
-import { Plan } from '@/types';
+import { getArticles } from '@/services/articlesService';
+import { Plan, Article } from '@/types';
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useState, useCallback } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
 import Sidebar from '@/components/Sidebar';
 
 const MyCommentsPage: NextPage = ({}) => {
   const router = useRouter();
+
+  const { user } = useContext(UserContext);
+
+  const [curPage, setCurPage] = useState(1);
+  const [totalArticles, setTotalArticles] = useState(0);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const perPage = 10;
+
+  const onPrevPage = useCallback(() => {
+    setCurPage((page) => {
+      return Math.max(page - 1, 1);
+    });
+  }, [setCurPage]);
+
+  const onNextPage = useCallback(() => {
+    setCurPage((page) => {
+      return Math.min(page + 1, Math.ceil(totalArticles / perPage));
+    });
+  }, [setCurPage, totalArticles]);
+
+  useEffect(() => {
+    getArticles({
+      skip: (curPage - 1) * perPage,
+      limit: perPage,
+    }).then((result) => {
+      setArticles([...result.items.filter((item)=>item.comments.find((comment)=>comment.author.userId===user?.userId))]);
+      setTotalArticles(articles.length);
+    });
+  }, [user, curPage]);
+
 
   return (
     <>
@@ -42,41 +73,36 @@ const MyCommentsPage: NextPage = ({}) => {
                     role="list"
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
-                    <li className="py-3 sm:py-1">
-                      <a
-                        onClick={() => router.push('/community/1')}
-                        className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                              {'아무 댓글'}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                              {'지수의 군산 콩국수 여행기'}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
-                    <li className="py-3 sm:py-1">
-                      <a
-                        onClick={() => router.push('/community/1')}
-                        className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                              {'아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글 아무 댓글'}
-                            </p>
-                            <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                              {'지수의 군산 콩국수 여행기'}
-                            </p>
-                          </div>
-                        </div>
-                      </a>
-                    </li>
+                    {articles.map(
+                      ({ title, articleId }, index) => {
+                        return (
+                          <li key={`plan-${index}`} className="py-3 sm:py-1">
+                            <a
+                              onClick={() => router.push(`/community/${articleId}`)}
+                              className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                            >
+                              <div className="flex items-center space-x-4">
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                    {title}
+                                  </p>
+                                </div>
+                              </div>
+                            </a>
+                          </li>
+                        );
+                      },
+                    )}
                   </ul>
+                </div>
+                <div className="flex py-6 justify-center btn-group">
+                  <button className="btn" onClick={onPrevPage}>
+                    «
+                  </button>
+                  <button className="btn">Page {curPage}</button>
+                  <button className="btn" onClick={onNextPage}>
+                    »
+                  </button>
                 </div>
               </div>
             </div>
