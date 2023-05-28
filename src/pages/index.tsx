@@ -8,7 +8,8 @@ import { FC, useContext, useEffect, useState } from 'react';
 
 import { UserContext } from '@/contexts';
 import { Article, Plan } from '@/types';
-import { getPlans } from '@/services/plansService';
+
+import { getPlansOfUser } from '@/services/plansService';
 import { getArticles } from '@/services/articlesService';
 
 import CommunityCard from '@/components/CommunityCard';
@@ -77,10 +78,12 @@ const Home: NextPage = () => {
   const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
-    getPlans().then((plans) => {
-      setPlanList(plans.slice(0, 3));
+    if (!user) return;
+
+    getPlansOfUser(user.userId, { limit: 3, skip: 0 }).then((plans) => {
+      setPlanList(plans.items);
     });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     getArticles({ limit: 3, skip: 0 }).then((articles) => {
