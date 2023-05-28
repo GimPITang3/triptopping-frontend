@@ -19,14 +19,14 @@ import {
 
 import { UserContext } from '@/contexts';
 import { User, Article, Comment } from '@/types';
-import { getArticle, createComment } from '@/services/articlesService';
+import { getArticle, createComment, deleteComment, incLikes } from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 
 interface CommentProp {
-  id: number;
+  id: string;
   name: string;
   content: string;
   createdAt: Date;
@@ -69,13 +69,14 @@ const ArticlePage: NextPage = ({}) => {
 
   const { user, setUser } = useContext(UserContext);
   const [article, setArticle] = useState<Article>();
-  const [delId, setDelId] = useState(-1);
+  const [delId, setDelId] = useState('');
   const { plan, setPlan } = useContext(PlanContext);
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [comment, setComment] = useState('');
+  const [likes, setLikes] = useState(0);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -105,7 +106,11 @@ const ArticlePage: NextPage = ({}) => {
     getArticle(`${id}`).then((article) => {
       setArticle(article);
       setComments(article.comments);
-      console.log(article);
+      setLikes(article.likes);
+      if (article.plan) {
+        setPlan(article.plan);
+      }
+      console.log(article.plan);
     });
   }, [id]);
 
@@ -113,6 +118,7 @@ const ArticlePage: NextPage = ({}) => {
     if (article?.plan) {
       setPlan(article.plan);
       console.log(plan);
+      console.log(itineraryDaily);
       setFocusedPlace(
         flattenScheduleSlot(plan.itinerary[0][0]).details || null,
       );
@@ -135,7 +141,6 @@ const ArticlePage: NextPage = ({}) => {
       content: comment,
     }).then((res) => {
       getArticle(`${id}`).then((article) => {
-        setArticle(article);
         setComments(article.comments);
         setComment('');
       });
@@ -147,13 +152,24 @@ const ArticlePage: NextPage = ({}) => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
   };
 
-  const handleDelId = (id: number) => {
-    if(id<0) return;
+  const toggleLikes = () => {
+    if (typeof id !== 'string') return;
+    incLikes(id).then((article) => {
+      setLikes(article.likes);
+    });
+  }
+
+  const handleDelId = (id: string) => {
     setDelId(id);
   };
 
   const delComment = () => {
-    // TODO
+    if (typeof id !== 'string') return;
+    deleteComment(id, delId).then((article) => {
+      setComments(article.comments);
+      setDelId('');
+      console.log(comments);
+    })
   };
 
   return (
@@ -303,7 +319,7 @@ const ArticlePage: NextPage = ({}) => {
                         </button>
                       ))}
                     </div>
-                    <div className="bg-white/80 h-64 overflow-y-auto">
+                    <div className="rounded-md shadow-inner bg-white/80 h-64 overflow-y-auto">
                       <ul
                         key={`day-${page}`}
                         className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
@@ -327,7 +343,7 @@ const ArticlePage: NextPage = ({}) => {
                           ))}
                       </ul>
                     </div>
-                    <button className="btn btn-primary grow">내 여행계획에 추가하기</button>
+                    <button className="btn btn-primary w-full mb-4">내 여행계획에 추가하기</button>
                   </div>) : ('')}
 
                   <div>
@@ -342,7 +358,7 @@ const ArticlePage: NextPage = ({}) => {
                       </label>
                     </CopyToClipboard>
                     <p className="text-sm">&nbsp;|&nbsp;</p>
-                    <label className="swap">
+                    <label onClick={()=>toggleLikes()} className="swap">
                       <input type="checkbox" />
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="swap-on w-6 h-6">
                         <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
@@ -351,7 +367,7 @@ const ArticlePage: NextPage = ({}) => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                       </svg>
                     </label>
-                    <p>{article?.likes}</p>
+                    <p>{likes}</p>
                   </div>
                   <div className="divider"></div>
                   <p className="mb-4">댓글 {article?.comments.length}개</p>
@@ -361,7 +377,7 @@ const ArticlePage: NextPage = ({}) => {
                         {comments.map((comment, i) => (
                           <li key={`comment-${i}`}>
                             <Comments
-                              id={i}
+                              id={comment.commentId}
                               name={comment.author.nickname}
                               content={comment.content}
                               createdAt={comment.createdAt}

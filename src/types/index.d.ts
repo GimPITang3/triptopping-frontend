@@ -93,6 +93,7 @@ export interface Article {
 }
 
 export interface Comment {
+  commentId: string;
   author: User;
   content: string;
   createdAt: Date;
