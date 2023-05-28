@@ -19,7 +19,7 @@ import {
 
 import { UserContext } from '@/contexts';
 import { User, Article, Comment } from '@/types';
-import { getArticle, getComments, createComment } from '@/services/articlesService';
+import { getArticle, createComment } from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
