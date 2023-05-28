@@ -68,7 +68,7 @@ const NewArticlePage: NextPage = ({}) => {
                     {planList.map(
                       ({ planId, name }, index) => {
                         return (
-                          <option value={planId}>{name}</option>
+                          <option key={index} value={planId}>{name}</option>
                         );
                       },
                     )}
