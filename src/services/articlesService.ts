@@ -1,19 +1,6 @@
 import client from './axiosClient';
 
-import { Article } from '@/types';
-
-interface PaginationOptionsDto {
-  skip: number;
-  limit: number;
-}
-
-interface PaginationResponseDto<T> {
-  items: T[];
-
-  skip: number;
-  limit: number;
-  total: number;
-}
+import { Article, PaginationOptionsDto, PaginationResponseDto } from '@/types';
 
 interface CreateArticleDto {
   title: string;

@@ -97,3 +97,16 @@ export interface Comment {
   content: string;
   createdAt: Date;
 }
+
+export interface PaginationOptionsDto {
+  skip: number;
+  limit: number;
+}
+
+export interface PaginationResponseDto<T> {
+  items: T[];
+
+  skip: number;
+  limit: number;
+  total: number;
+}
