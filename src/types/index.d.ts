@@ -87,6 +87,7 @@ export interface Article {
   content: string;
   likes: number;
   comments: Comment[];
+  likes: number;
   createdAt: string;
   updatedAt: string;
 }

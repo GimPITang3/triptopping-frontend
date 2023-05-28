@@ -1,82 +1,23 @@
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { UserContext } from '@/contexts';
+import { Article, Plan } from '@/types';
 import { getPlans } from '@/services/plansService';
-import { Article, Plan, User } from '@/types';
+import { getArticles } from '@/services/articlesService';
 
 import CommunityCard from '@/components/CommunityCard';
 import Topbar from '@/components/Topbar';
-
 import BtmNavbar from '@/components/BtmNavbar';
-import banner1 from '../../public/topbanner1.jpeg';
-import banner2 from '../../public/topbanner2.jpeg';
 import Sidebar from '@/components/Sidebar';
 
-const dummyPlan: Plan = {
-  planId: "asdf",
-  name: "string",
-  author: [],
-  numberOfMembers: 2,
-  members: [],
-  period: 5,
-  budget: 5,
-  tags: [],
-  loc: {lat: 4, lng: 5},
-  itinerary: [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const dummyUser: User = {
-  email: '',
-  introduce: '',
-  nickname: '홍길동',
-  userId: '',
-};
-
-const dummyArticles: (Article & {
-  coverImage?: string | StaticImageData;
-})[] = [
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image3.jpg',
-  },
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image1.jpeg',
-  },
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image2.jpeg',
-  },
-];
+import banner1 from '../../public/topbanner1.jpeg';
+import banner2 from '../../public/topbanner2.jpeg';
 
 interface ItineraryListProps {
   planId: string;
@@ -130,15 +71,21 @@ const ItineraryList: FC<ItineraryListProps> = ({
 
 const Home: NextPage = () => {
   const router = useRouter();
+
+  const { user } = useContext(UserContext);
   const [planList, setPlanList] = useState<Plan[]>([]);
-  const { user, setUser } = useContext(UserContext);
+  const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
-    const SetPlanList = async () => {
-      const plans = await getPlans();
+    getPlans().then((plans) => {
       setPlanList(plans.slice(0, 3));
-    };
-    SetPlanList();
+    });
+  }, []);
+
+  useEffect(() => {
+    getArticles({ limit: 3, skip: 0 }).then((articles) => {
+      setArticles(articles.items);
+    });
   }, []);
 
   return (
@@ -178,63 +125,72 @@ const Home: NextPage = () => {
           </div>
 
           <div className="p-4 pt-8">
-            <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                  내 여행 계획
-                </h5>
-                <button
-                  className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center"
-                  onClick={() => router.push('/plan/list')}
-                >
-                  <div>모두 보기</div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-chevron-right"
-                    viewBox="0 0 16 16"
+            {user ? (
+              <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <div className="flex items-center justify-between mb-4">
+                  <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                    {`${user?.nickname}님의 여행 계획`}
+                  </h5>
+                  <button
+                    className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center"
+                    onClick={() => router.push('/plan/list')}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                    />
-                  </svg>
-                </button>
+                    <div>모두 보기</div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-chevron-right"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flow-root">
+                  <ul
+                    role="list"
+                    className="divide-y divide-gray-200 dark:divide-gray-700"
+                  >
+                    {planList.map(
+                      ({ planId, name, startDate, period }, index) => {
+                        return (
+                          <li key={`plan-${index}`} className="py-3 sm:py-1">
+                            <ItineraryList
+                              planId={planId}
+                              name={name}
+                              date={startDate}
+                              period={period}
+                            />
+                          </li>
+                        );
+                      },
+                    )}
+                  </ul>
+                </div>
               </div>
-              <div className="flow-root">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-200 dark:divide-gray-700"
-                >
-                  {planList.map(
-                    ({ planId, name, startDate, period }, index) => {
-                      return (
-                        <li key={`plan-${index}`} className="py-3 sm:py-1">
-                          <ItineraryList
-                            planId={planId}
-                            name={name}
-                            date={startDate}
-                            period={period}
-                          />
-                        </li>
-                      );
-                    },
-                  )}
-                </ul>
+            ) : (
+              <div>
+                <Link className="link link-primary" href="/account/login">
+                  로그인
+                </Link>{' '}
+                하세요
               </div>
-            </div>
+            )}
           </div>
 
           <div className="p-4 my-4">
             <div className="font-bold pb-4 text-xl">커뮤니티</div>
             <div className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14 scrollbar-hide">
-              {dummyArticles.map((article, i) => (
+              {articles.map((article, i) => (
                 <CommunityCard
                   key={i}
                   article={article}
-                  coverImage={article.coverImage}
+                  // coverImage={article.coverImage} // TODO:
                 />
               ))}
             </div>

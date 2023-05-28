@@ -16,8 +16,7 @@ const BudgetTab: FC<{
 
   return (
     <div>
-      <h3 className="text-lg font-bold">예산을 설정해주세요</h3>
-
+      <div className="text-lg font-bold my-4">변경할 예산을 설정해주세요</div>
       <div className="flex flex-col py-8 max-w-md mx-auto">
         <div className="form-control flex-shrink">
           <label className="input-group flex">
@@ -26,7 +25,7 @@ const BudgetTab: FC<{
               type="text"
               value={planBudget.toLocaleString()}
               onChange={changeEnteredBudget}
-              className="input input-bordered text-right grow"
+              className="input input-bordered text-right grow min-w-0"
             />
             <span>원</span>
           </label>

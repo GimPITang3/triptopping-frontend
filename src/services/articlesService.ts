@@ -30,6 +30,10 @@ interface CreateCommentDto {
   content: string;
 }
 
+interface UpdateCommentDto {
+  content: string;
+}
+
 export const getArticles = async (
   dto: PaginationOptionsDto,
 ): Promise<PaginationResponseDto<Article>> => {
@@ -64,14 +68,44 @@ export const deleteArticle = async (id: string) => {
   await client.delete(`/articles/${id}`);
 };
 
-export const getComments = async (id: string): Promise<Comment[]> => {
-  const resp = await client.get<Comment[]>(`/articles/${id}/comments`);
+export const createComment = async (
+  articleId: string,
+  dto: CreateCommentDto,
+): Promise<Article> => {
+  const resp = await client.post<Article>(
+    `/articles/${articleId}/comments`,
+    dto,
+  );
 
   return resp.data;
 };
 
-export const createComment = async (id: string, dto: CreateCommentDto) => {
-  const resp = await client.post<Comment>(`/articles/${id}/comments/`, dto);
+export const updateComment = async (
+  articleId: string,
+  commentId: string,
+  dto: UpdateCommentDto,
+): Promise<Article> => {
+  const resp = await client.patch<Article>(
+    `/articles/${articleId}/comments/${commentId}`,
+    dto,
+  );
 
   return resp.data;
-}
+};
+
+export const deleteComment = async (
+  articleId: string,
+  commentId: string,
+): Promise<Article> => {
+  const resp = await client.delete<Article>(
+    `/articles/${articleId}/comments/${commentId}`,
+  );
+
+  return resp.data;
+};
+
+export const incLikes = async (articleId: string): Promise<Article> => {
+  const resp = await client.post<Article>(`/articles/${articleId}/likes`);
+
+  return resp.data;
+};
