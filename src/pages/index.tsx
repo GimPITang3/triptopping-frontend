@@ -7,24 +7,26 @@ import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { UserContext } from '@/contexts';
+
+import { getArticles } from '@/services/articlesService';
+import { getPlansOfUser } from '@/services/plansService';
 import { Article, Plan } from '@/types';
 
-import { getPlansOfUser } from '@/services/plansService';
-import { getArticles } from '@/services/articlesService';
-
-import CommunityCard from '@/components/CommunityCard';
-import Topbar from '@/components/Topbar';
 import BtmNavbar from '@/components/BtmNavbar';
+import CommunityCard from '@/components/CommunityCard';
 import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
 
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
+import younha from '../../public/younha.png';
 
 interface ItineraryListProps {
   planId: string;
   name: string;
   date: Date | undefined;
   period: number;
+  numberOfMembers: number;
 }
 
 const ItineraryList: FC<ItineraryListProps> = ({
@@ -32,31 +34,32 @@ const ItineraryList: FC<ItineraryListProps> = ({
   name,
   date,
   period,
+  numberOfMembers,
 }) => {
   let dateString = date
     ? (() => {
-        const startDate = DateTime.fromISO(new Date(date).toISOString());
-        const endDate = startDate.plus({ days: period });
-        const diff = startDate.diff(DateTime.now(), ['days']).days;
-        const dDay = Math.ceil(diff);
+      const startDate = DateTime.fromISO(new Date(date).toISOString());
+      const endDate = startDate.plus({ days: period });
+      const diff = startDate.diff(DateTime.now(), ['days']).days;
+      const dDay = Math.ceil(diff);
 
-        return (
-          'D-' +
-          (dDay === 0 ? 'day' : dDay) +
-          ' | ' +
-          startDate.toFormat('MM.dd(EEE)') +
-          ' - ' +
-          endDate.toFormat('MM.dd(EEE)')
-        );
-      })()
+      return (
+        'D-' +
+        (dDay === 0 ? 'day' : dDay) +
+        ' | ' +
+        startDate.toFormat('MM.dd(EEE)') +
+        ' - ' +
+        endDate.toFormat('MM.dd(EEE)')
+      );
+    })()
     : period - 1 + '박' + period + '일';
 
   return (
     <Link
       href={'/plan/details/' + planId}
-      className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+      className="flex p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
-      <div className="flex items-center space-x-4">
+      <div className="grow flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
             {name}
@@ -64,6 +67,23 @@ const ItineraryList: FC<ItineraryListProps> = ({
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
             {dateString}
           </p>
+        </div>
+      </div>
+      <div>
+        <div className="avatar-group -space-x-6">
+          {
+            // numberOfMembers 만큼 반복
+            [...Array(numberOfMembers)].map((_, i) => (
+              <div className="avatar border-gray-100" key={i}>
+                <div className="w-12">
+                  <Image
+                    src={younha}
+                    alt=""
+                  />
+                </div>
+              </div>
+            ))
+          }
         </div>
       </div>
     </Link>
@@ -128,14 +148,16 @@ const Home: NextPage = () => {
           </div>
 
           <div className="p-4 pt-8">
-            {user ? (
-              <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <div className="flex items-center justify-between mb-4">
-                  <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                    {`${user?.nickname}님의 여행 계획`}
-                  </h5>
+            <div className="flex flex-col w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 min-h-[348px]">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
+                <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white sm:ms-2">
+                  {user ?
+                    `${user?.nickname}님의 여행 계획`
+                    : '여행 계획'}
+                </h5>
+                {user ? (
                   <button
-                    className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center"
+                    className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center my-2"
                     onClick={() => router.push('/plan/list')}
                   >
                     <div>모두 보기</div>
@@ -153,14 +175,16 @@ const Home: NextPage = () => {
                       />
                     </svg>
                   </button>
-                </div>
+                ) : ''}
+              </div>
+              {user ? (
                 <div className="flow-root">
                   <ul
                     role="list"
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
                     {planList.map(
-                      ({ planId, name, startDate, period }, index) => {
+                      ({ planId, name, startDate, period, numberOfMembers }, index) => {
                         return (
                           <li key={`plan-${index}`} className="py-3 sm:py-1">
                             <ItineraryList
@@ -168,6 +192,7 @@ const Home: NextPage = () => {
                               name={name}
                               date={startDate}
                               period={period}
+                              numberOfMembers={numberOfMembers}
                             />
                           </li>
                         );
@@ -175,15 +200,15 @@ const Home: NextPage = () => {
                     )}
                   </ul>
                 </div>
-              </div>
-            ) : (
-              <div>
-                <Link className="link link-primary" href="/account/login">
-                  로그인
-                </Link>{' '}
-                하세요
-              </div>
-            )}
+              ) : (
+                <div className="flex justify-center items-center grow">
+                  <button className="btn btn-primary"
+                    onClick={() => router.push('/account/login')}>
+                    로그인이 필요합니다
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="p-4 my-4">
@@ -193,7 +218,7 @@ const Home: NextPage = () => {
                 <CommunityCard
                   key={i}
                   article={article}
-                  // coverImage={article.coverImage} // TODO:
+                // coverImage={article.coverImage} // TODO:
                 />
               ))}
             </div>
