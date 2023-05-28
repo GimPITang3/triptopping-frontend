@@ -2,7 +2,7 @@ import { PlanContext } from '@/contexts';
 import { Plan } from '@/types';
 import { FC, PropsWithChildren, useCallback, useState } from 'react';
 
-const initPlan = (): Plan => ({
+export const initPlan = (): Plan => ({
   planId: '',
   name: '',
   numberOfMembers: 1,
