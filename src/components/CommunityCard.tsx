@@ -29,14 +29,13 @@ const CommunityCard: FC<{
           </h2>
           <div className="badge badge-secondary">NEW</div>
           <p className="line-clamp-2">
-            {article.content.slice(0, 10) ||
-              '그녀의 쌀국수 여행기! 쌀국수에는 여러가지 종류가 있는데 얼큰 쌀국수랑 일반 쌀국수랑 그리고 등등이 있는데 거기서 깊은 역사가 존재한다.'}
+            {article.content}
           </p>
           <div className="card-actions flex items-center justify-end">
             <div className="avatar placeholder">
               <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
                 <span className="text-lg">
-                  {article.author.nickname.slice(0, 1)}
+                  {article.author.nickname ? article.author.nickname.slice(0, 1) : ''}
                 </span>
               </div>
             </div>

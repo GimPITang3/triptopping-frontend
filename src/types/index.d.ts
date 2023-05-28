@@ -83,15 +83,16 @@ export interface Article {
   articleId: string;
   title: string;
   author: User;
-  plan: Plan;
+  plan?: Plan;
   content: string;
+  likes: number;
   comments: Comment[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Comment {
-  commentedUser: User;
+  author: User;
   content: string;
   createdAt: Date;
 }

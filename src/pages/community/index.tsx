@@ -76,6 +76,7 @@ const CommunityPage: NextPage = ({}) => {
     }).then((result) => {
       setArticles(result.items);
       setTotalArticles(result.total);
+      console.log(result.items);
     });
   }, [curPage]);
 

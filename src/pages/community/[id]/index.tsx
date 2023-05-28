@@ -19,7 +19,7 @@ import {
 
 import { UserContext } from '@/contexts';
 import { User, Article, Comment } from '@/types';
-import { getArticle } from '@/services/articlesService';
+import { getArticle, getComments, createComment } from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
@@ -74,6 +74,8 @@ const ArticlePage: NextPage = ({}) => {
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [comment, setComment] = useState('');
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -102,12 +104,15 @@ const ArticlePage: NextPage = ({}) => {
 
     getArticle(`${id}`).then((article) => {
       setArticle(article);
+      setComments(article.comments);
+      console.log(article);
     });
   }, [id]);
 
   useEffect(() => {
-    if (article) {
+    if (article?.plan) {
       setPlan(article.plan);
+      console.log(plan);
       setFocusedPlace(
         flattenScheduleSlot(plan.itinerary[0][0]).details || null,
       );
@@ -124,6 +129,19 @@ const ArticlePage: NextPage = ({}) => {
     }
   }, [map, focusedPlace]);
 
+  const onClickCreate = () => {
+    if (typeof id !== 'string') return;
+    createComment(id, {
+      content: comment,
+    }).then((res) => {
+      getArticle(`${id}`).then((article) => {
+        setArticle(article);
+        setComments(article.comments);
+        setComment('');
+      });
+    });
+  };
+
   const itineraryDaily = plan.itinerary[page];
   const GetIcon = () => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
@@ -137,11 +155,6 @@ const ArticlePage: NextPage = ({}) => {
   const delComment = () => {
     // TODO
   };
-
-  if(!plan.planId)
-  {
-    return <div></div>;
-  }
 
   return (
     <>
@@ -192,14 +205,10 @@ const ArticlePage: NextPage = ({}) => {
                       </div>
                     </div>
                     <p className="text-base ml-1">{article?.author.nickname}</p>
-                    <p className="text-sm text-gray-400 ml-2">
+                    <p className="text-sm text-gray-400 ml-2"> |&nbsp;
                       {article?.createdAt !== undefined &&
                         DateTime.fromISO(article.createdAt).toLocaleString()}
                     </p>
-                  </div>
-                  <div className="divider mb-4"></div>
-                  <div>
-                    <p>{article?.content}</p>
                   </div>
 
                   {article?.author.userId===user?.userId ? (<div className="flex flex-row justify-end">
@@ -208,133 +217,124 @@ const ArticlePage: NextPage = ({}) => {
                     <Link href="/community" className="text-sm">삭제</Link>
                   </div>) : ('')}
                   <div className="divider mb-4"></div>
-                  <LoadScript
+                  {article?.plan ? (
+                  <div>
+                    <LoadScript
                     googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
                     libraries={['places']}
                   >
-                    <div className="h-full">
-                      <GoogleMap
-                        options={{ disableDefaultUI: true }}
-                        mapContainerStyle={containerStyle}
-                        zoom={12}
-                        onLoad={onLoad}
-                        onUnmount={onUnmount}
+                      <div className="h-full">
+                        <GoogleMap
+                          options={{ disableDefaultUI: true }}
+                          mapContainerStyle={containerStyle}
+                          zoom={12}
+                          onLoad={onLoad}
+                          onUnmount={onUnmount}
+                        >
+                          {itineraryDaily
+                            .filter((itinerary) => itinerary.type === 'place')
+                            .map((itinerary, index) =>
+                              itineraryDaily.length - 1 === index || index === 0 ? (
+                                <Marker
+                                  key={`it-${index}`}
+                                  position={
+                                    flattenScheduleSlot(itinerary).details.geometry
+                                      ?.location || {
+                                      lat: 0,
+                                      lng: 0,
+                                    }
+                                  }
+                                  icon={GetIcon()}
+                                />
+                              ) : (
+                                <Marker
+                                  key={`it-${index}`}
+                                  position={
+                                    flattenScheduleSlot(itinerary).details.geometry
+                                      ?.location || {
+                                      lat: 0,
+                                      lng: 0,
+                                    }
+                                  }
+                                  label={(index + 1).toString()}
+                                />
+                              ),
+                            )}
+
+                          <Polyline
+                            options={{
+                              strokeColor: '#b41412',
+                              strokeOpacity: 0.8,
+                              strokeWeight: 3,
+                              clickable: false,
+                              draggable: false,
+                              editable: false,
+                              visible: true,
+                              path: itineraryDaily.slice(0, -1).map(
+                                (itinerary) =>
+                                  flattenScheduleSlot(itinerary).details.geometry
+                                    ?.location || {
+                                    lat: 0,
+                                    lng: 0,
+                                  },
+                              ),
+                              zIndex: 1,
+                            }}
+                          />
+                        </GoogleMap>
+                      </div>
+                    </LoadScript> 
+                    <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
+                      {plan.itinerary.map((_value, index) => (
+                        <button
+                          key={`page-${index}`}
+                          onClick={() => {
+                            setPage(index);
+                            setFocusedPlace(
+                              flattenScheduleSlot(plan.itinerary[index][0]).details,
+                            );
+                          }}
+                          className={
+                            'tab tab-lg flex-shrink-0' +
+                            (index === page ? ' tab-active' : '')
+                          }
+                        >
+                          Day {index + 1}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="bg-white/80 h-64 overflow-y-auto">
+                      <ul
+                        key={`day-${page}`}
+                        className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
                       >
                         {itineraryDaily
                           .filter((itinerary) => itinerary.type === 'place')
-                          .map((itinerary, index) =>
-                            itineraryDaily.length - 1 === index || index === 0 ? (
-                              <Marker
-                                key={`it-${index}`}
-                                position={
-                                  flattenScheduleSlot(itinerary).details.geometry
-                                    ?.location || {
-                                    lat: 0,
-                                    lng: 0,
-                                  }
-                                }
-                                icon={GetIcon()}
-                              />
-                            ) : (
-                              <Marker
-                                key={`it-${index}`}
-                                position={
-                                  flattenScheduleSlot(itinerary).details.geometry
-                                    ?.location || {
-                                    lat: 0,
-                                    lng: 0,
-                                  }
-                                }
-                                label={(index + 1).toString()}
-                              />
-                            ),
-                          )}
-
-                        <Polyline
-                          options={{
-                            strokeColor: '#b41412',
-                            strokeOpacity: 0.8,
-                            strokeWeight: 3,
-                            clickable: false,
-                            draggable: false,
-                            editable: false,
-                            visible: true,
-                            path: itineraryDaily.slice(0, -1).map(
-                              (itinerary) =>
-                                flattenScheduleSlot(itinerary).details.geometry
-                                  ?.location || {
-                                  lat: 0,
-                                  lng: 0,
-                                },
-                            ),
-                            zIndex: 1,
-                          }}
-                        />
-                      </GoogleMap>
+                          .map((itinerary, index) => (
+                            <li
+                              key={`it-${index}`}
+                              className="step step-neutral snap-always snap-start h-24 cursor-pointer"
+                              onClick={(e) => {
+                                setFocusedPlace(
+                                  flattenScheduleSlot(plan.itinerary[page][index]).details,
+                                );
+                              }}
+                            >
+                              <div className="">
+                                {flattenScheduleSlot(itinerary).details.name}
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
                     </div>
-                  </LoadScript>
-                  <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
-                    {plan.itinerary.map((_value, index) => (
-                      <button
-                        key={`page-${index}`}
-                        onClick={() => {
-                          setPage(index);
-                          setFocusedPlace(
-                            flattenScheduleSlot(plan.itinerary[index][0]).details,
-                          );
-                        }}
-                        className={
-                          'tab tab-lg flex-shrink-0' +
-                          (index === page ? ' tab-active' : '')
-                        }
-                      >
-                        Day {index + 1}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="bg-white/80 h-64 overflow-y-auto">
-                    <ul
-                      key={`day-${page}`}
-                      className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
-                    >
-                      {itineraryDaily
-                        .filter((itinerary) => itinerary.type === 'place')
-                        .map((itinerary, index) => (
-                          <li
-                            key={`it-${index}`}
-                            className="step step-neutral snap-always snap-start h-24 cursor-pointer"
-                            onClick={(e) => {
-                              setFocusedPlace(
-                                flattenScheduleSlot(plan.itinerary[page][index]).details,
-                              );
-                            }}
-                          >
-                            <div className="">
-                              {flattenScheduleSlot(itinerary).details.name}
-                            </div>
-                          </li>
-                        ))}
-                    </ul>
-                  </div>
-                  <button className="btn btn-primary grow">내 여행계획에 추가하기</button>
+                    <button className="btn btn-primary grow">내 여행계획에 추가하기</button>
+                  </div>) : ('')}
 
-                  <p className="mt-8">
-                    이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                    글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은
-                    1번째 글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째
-                    글 이 글은 1번째 글 이 글은 1번째 글 이 글은 1번째 글 이
-                    글은 1번째 글{' '}
-                  </p>
+                  <div>
+                    <p>{article?.content}</p>
+                  </div>
                   <div className="flex flex-row mt-8">
-                    <CopyToClipboard text={ window.location.href }>
+                    <CopyToClipboard text={ typeof window !== "undefined" ? window.location.href : ''}>
                       <label>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
@@ -351,29 +351,29 @@ const ArticlePage: NextPage = ({}) => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                       </svg>
                     </label>
-                    <p>150</p>
+                    <p>{article?.likes}</p>
                   </div>
                   <div className="divider"></div>
-                  <p className="mb-4">댓글 3개</p>
+                  <p className="mb-4">댓글 {article?.comments.length}개</p>
                   <div className="overflow-x-auto text-sm mb-12">
                     <div className="flex flex-col">
                       <ul>
-                        {article?.comments.map((comment, i) => (
+                        {comments.map((comment, i) => (
                           <li key={`comment-${i}`}>
                             <Comments
                               id={i}
-                              name={comment.commentedUser.nickname}
+                              name={comment.author.nickname}
                               content={comment.content}
                               createdAt={comment.createdAt}
-                              isSameUser={comment.commentedUser.userId===user?.userId}
+                              isSameUser={comment.author.userId===user?.userId}
                               onClickDelComment={handleDelId}
                             />
                           </li>
                         ))}
                       </ul>
                       <div className="flex flex-row items-end">
-                        <textarea className="grow textarea textarea-bordered" placeholder="댓글을 입력하세요."></textarea>
-                        <button className="btn btn-primary">등록</button>
+                        <textarea value={comment} onChange={(e)=>setComment(e.target.value)} className="grow textarea textarea-bordered" placeholder="댓글을 입력하세요."></textarea>
+                        <button onClick={()=>onClickCreate()} className="btn btn-primary">등록</button>
                       </div>
                     </div>
                   </div>

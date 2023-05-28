@@ -18,11 +18,16 @@ interface PaginationResponseDto<T> {
 interface CreateArticleDto {
   title: string;
   content: string;
+  planId: string;
 }
 
 interface UpdateArticleDto {
   title?: string;
   content?: string;
+}
+
+interface CreateCommentDto {
+  content: string;
 }
 
 export const getArticles = async (
@@ -58,3 +63,15 @@ export const updateArticle = async (id: string, dto: UpdateArticleDto) => {
 export const deleteArticle = async (id: string) => {
   await client.delete(`/articles/${id}`);
 };
+
+export const getComments = async (id: string): Promise<Comment[]> => {
+  const resp = await client.get<Comment[]>(`/articles/${id}/comments`);
+
+  return resp.data;
+};
+
+export const createComment = async (id: string, dto: CreateCommentDto) => {
+  const resp = await client.post<Comment>(`/articles/${id}/comments/`, dto);
+
+  return resp.data;
+}
