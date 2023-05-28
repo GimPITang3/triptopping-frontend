@@ -241,7 +241,6 @@ const PlanPage: NextPage = ({}) => {
       itinerary: plan.itinerary,
     });
     setLoading(false);
-    console.log('updated plan', data);
     setPlan(data);
   };
 
@@ -269,7 +268,6 @@ const PlanPage: NextPage = ({}) => {
     return <div></div>;
   }
 
-  console.log(plan);
 
   return (
     <div className="min-h-screen">
@@ -506,7 +504,7 @@ const PlanPage: NextPage = ({}) => {
                   </label>
                   {/* 새 AI 추천 일정 추가 */}
                   <label
-                    className="btn btn-ghost flex justify-center shadow-lg mt-2 w-1/2 underline decoration-sky-500/80 decoration-2 underline-offset-0 decoration-wavy shadow-sky-500/50"
+                    className="btn btn-ghost flex justify-center shadow-lg mt-2 w-1/2 underline decoration-sky-500/80 decoration-2 underline-offset-4 decoration-wavy shadow-sky-500/50"
                     onClick={() => setSelectDay(dayIdx)}
                     htmlFor="modal-google-map"
                   >

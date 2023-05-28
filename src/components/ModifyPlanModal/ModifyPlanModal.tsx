@@ -4,9 +4,9 @@ import { UpdatePlanDto, updatePlan } from '@/services/plansService';
 
 import { PlanContext } from '@/contexts';
 
+import BudgetTab from './BudgetTab';
 import NameTab from './NameTab';
 import NumberOfMembersTab from './NumberOfMembersTab';
-import BudgetTab from './BudgetTab';
 import PeriodTab from './PeriodTab';
 import TagsTab from './TagsTab';
 
@@ -74,47 +74,55 @@ const ModifyPlanModal: React.FC = () => {
     <div>
       <input type="checkbox" id="modify-name-modal" className="modal-toggle" />
       <label htmlFor="modify-name-modal" className="modal cursor-pointer">
-        <label className="modal-box relative" htmlFor="">
-          <div className="space-y-4">
-            <div className="tabs tabs-boxed">
-              <a
-                onClick={() => setTabIndex(0)}
-                className={'tab ' + (tabIndex === 0 ? 'tab-active' : '')}
-              >
-                이름
-              </a>
-              <a
-                onClick={() => setTabIndex(1)}
-                className={'tab ' + (tabIndex === 1 ? 'tab-active' : '')}
-              >
-                인원 수
-              </a>
-              <a
-                onClick={() => setTabIndex(2)}
-                className={'tab ' + (tabIndex === 2 ? 'tab-active' : '')}
-              >
-                예산
-              </a>
-              <a
-                onClick={() => setTabIndex(3)}
-                className={'tab ' + (tabIndex === 3 ? 'tab-active' : '')}
-              >
-                날짜
-              </a>
-              <a
-                onClick={() => setTabIndex(4)}
-                className={'tab ' + (tabIndex === 4 ? 'tab-active' : '')}
-              >
-                태그
-              </a>
+        <label className="modal-box relative max-w-3xl h-screen" htmlFor="">
+          <h2 className="text-2xl font-bold pb-4">
+            여행 정보 변경
+          </h2>
+          <div className="flex flex-col h-[93%]">
+            <div>
+              <div className="tabs tabs-boxed justify-center bg-slate-100">
+                <a
+                  onClick={() => setTabIndex(0)}
+                  className={'tab tab-lg ' + (tabIndex === 0 ? 'tab-active' : '')}
+                >
+                  이름
+                </a>
+                <a
+                  onClick={() => setTabIndex(1)}
+                  className={'tab tab-lg ' + (tabIndex === 1 ? 'tab-active' : '')}
+                >
+                  인원
+                </a>
+                <a
+                  onClick={() => setTabIndex(2)}
+                  className={'tab tab-lg ' + (tabIndex === 2 ? 'tab-active' : '')}
+                >
+                  예산
+                </a>
+                <a
+                  onClick={() => setTabIndex(3)}
+                  className={'tab tab-lg ' + (tabIndex === 3 ? 'tab-active' : '')}
+                >
+                  날짜
+                </a>
+                <a
+                  onClick={() => setTabIndex(4)}
+                  className={'tab tab-lg ' + (tabIndex === 4 ? 'tab-active' : '')}
+                >
+                  태그
+                </a>
+              </div>
             </div>
-            {GetTab()}
-            <div className="flex flex-row justify-end gap-x-2">
-              <label className="btn btn-error" htmlFor="modify-name-modal">
+            <div className="py-4 grow">
+              {GetTab()}
+            </div>
+            <div className="divider"></div>
+            <div className="flex justify-end gap-x-4">
+              <label className="grow btn btn-outline" htmlFor="modify-name-modal">
                 취소
               </label>
               <label
-                className="btn btn-success"
+                className="grow btn btn-primary"
                 htmlFor="modify-name-modal"
                 onClick={onConfirm}
               >

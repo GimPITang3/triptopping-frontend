@@ -28,6 +28,7 @@ const PeriodTab: FC<{
   };
   return (
     <div>
+      <h3 className="text-lg font-bold my-4">변경할 날짜를 입력해주세요</h3>
       <div className="flex-grow">
         <div className="flex justify-center">
           <div className="tabs tabs-boxed bg-white">
