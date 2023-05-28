@@ -28,18 +28,18 @@ const CommunityCard: FC<{
             {article.title || '지리는 여행'}
           </h2>
           <div className="badge badge-secondary">NEW</div>
-          <p className="line-clamp-2">
-            {article.content}
-          </p>
+          <p className="line-clamp-2">{article.content}</p>
           <div className="card-actions flex items-center justify-end">
             <div className="avatar placeholder">
               <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
                 <span className="text-lg">
-                  {article.author.nickname ? article.author.nickname.slice(0, 1) : ''}
+                  {article.author?.nickname
+                    ? article.author.nickname.slice(0, 1)
+                    : ''}
                 </span>
               </div>
             </div>
-            <p>{article.author.nickname}</p>
+            <p>{article.author?.nickname}</p>
             {['food', '1st'].map((tag, i) => (
               <div className="badge badge-outline" key={i}>
                 {tag}

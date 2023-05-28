@@ -19,7 +19,12 @@ import {
 
 import { UserContext } from '@/contexts';
 import { User, Article, Comment } from '@/types';
-import { getArticle, createComment, deleteComment, incLikes } from '@/services/articlesService';
+import {
+  getArticle,
+  createComment,
+  deleteComment,
+  incLikes,
+} from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
@@ -46,17 +51,39 @@ const Comments: FC<CommentProp> = ({
     <div>
       <div className="flex flex-row mb-2">
         <p className="font-bold">{name}</p>
-        <p className="grow text-sm text-gray-400 ml-2">| {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat('MM.dd')}</p>
-        {isSameUser ? (<label
-          onClick={(e) => {
-                e.stopPropagation();
-                onClickDelComment(id);
-              }}
-          htmlFor="del-modal"
-          className="btn btn-square btn-xs"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-        </label>) : ('')}
+        <p className="grow text-sm text-gray-400 ml-2">
+          |{' '}
+          {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat(
+            'MM.dd',
+          )}
+        </p>
+        {isSameUser ? (
+          <label
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickDelComment(id);
+            }}
+            htmlFor="del-modal"
+            className="btn btn-square btn-xs"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </label>
+        ) : (
+          ''
+        )}
       </div>
       <p>{content}</p>
       <div className="divider"></div>
@@ -157,7 +184,7 @@ const ArticlePage: NextPage = ({}) => {
     incLikes(id).then((article) => {
       setLikes(article.likes);
     });
-  }
+  };
 
   const handleDelId = (id: string) => {
     setDelId(id);
@@ -169,7 +196,7 @@ const ArticlePage: NextPage = ({}) => {
       setComments(article.comments);
       setDelId('');
       console.log(comments);
-    })
+    });
   };
 
   return (
@@ -185,9 +212,7 @@ const ArticlePage: NextPage = ({}) => {
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">댓글이 삭제돼요</h3>
-              <p className="py-4">
-                댓글을 삭제하시겠습니까?
-              </p>
+              <p className="py-4">댓글을 삭제하시겠습니까?</p>
               <div className="modal-action">
                 <label
                   onClick={delComment}
@@ -216,155 +241,209 @@ const ArticlePage: NextPage = ({}) => {
                     <div className="avatar placeholder">
                       <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
                         <span className="text-lg">
-                          {article?.author.nickname.slice(0, 1)}
+                          {article?.author?.nickname.slice(0, 1)}
                         </span>
                       </div>
                     </div>
-                    <p className="text-base ml-1">{article?.author.nickname}</p>
-                    <p className="text-sm text-gray-400 ml-2"> |&nbsp;
+                    <p className="text-base ml-1">
+                      {article?.author?.nickname}
+                    </p>
+                    <p className="text-sm text-gray-400 ml-2">
+                      {' '}
+                      |&nbsp;
                       {article?.createdAt !== undefined &&
                         DateTime.fromISO(article.createdAt).toLocaleString()}
                     </p>
                   </div>
 
-                  {article?.author.userId===user?.userId ? (<div className="flex flex-row justify-end">
-                    <Link href="/community/new" className="text-sm">수정</Link>
-                    <p className="text-sm">&nbsp;|&nbsp;</p>
-                    <Link href="/community" className="text-sm">삭제</Link>
-                  </div>) : ('')}
+                  {article?.author?.userId === user?.userId ? (
+                    <div className="flex flex-row justify-end">
+                      <Link href="/community/new" className="text-sm">
+                        수정
+                      </Link>
+                      <p className="text-sm">&nbsp;|&nbsp;</p>
+                      <Link href="/community" className="text-sm">
+                        삭제
+                      </Link>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                   <div className="divider mb-4"></div>
                   {article?.plan ? (
-                  <div>
-                    <LoadScript
-                    googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
-                    libraries={['places']}
-                  >
-                      <div className="h-full">
-                        <GoogleMap
-                          options={{ disableDefaultUI: true }}
-                          mapContainerStyle={containerStyle}
-                          zoom={12}
-                          onLoad={onLoad}
-                          onUnmount={onUnmount}
+                    <div>
+                      <LoadScript
+                        googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
+                        libraries={['places']}
+                      >
+                        <div className="h-full">
+                          <GoogleMap
+                            options={{ disableDefaultUI: true }}
+                            mapContainerStyle={containerStyle}
+                            zoom={12}
+                            onLoad={onLoad}
+                            onUnmount={onUnmount}
+                          >
+                            {itineraryDaily
+                              .filter((itinerary) => itinerary.type === 'place')
+                              .map((itinerary, index) =>
+                                itineraryDaily.length - 1 === index ||
+                                index === 0 ? (
+                                  <Marker
+                                    key={`it-${index}`}
+                                    position={
+                                      flattenScheduleSlot(itinerary).details
+                                        .geometry?.location || {
+                                        lat: 0,
+                                        lng: 0,
+                                      }
+                                    }
+                                    icon={GetIcon()}
+                                  />
+                                ) : (
+                                  <Marker
+                                    key={`it-${index}`}
+                                    position={
+                                      flattenScheduleSlot(itinerary).details
+                                        .geometry?.location || {
+                                        lat: 0,
+                                        lng: 0,
+                                      }
+                                    }
+                                    label={(index + 1).toString()}
+                                  />
+                                ),
+                              )}
+
+                            <Polyline
+                              options={{
+                                strokeColor: '#b41412',
+                                strokeOpacity: 0.8,
+                                strokeWeight: 3,
+                                clickable: false,
+                                draggable: false,
+                                editable: false,
+                                visible: true,
+                                path: itineraryDaily.slice(0, -1).map(
+                                  (itinerary) =>
+                                    flattenScheduleSlot(itinerary).details
+                                      .geometry?.location || {
+                                      lat: 0,
+                                      lng: 0,
+                                    },
+                                ),
+                                zIndex: 1,
+                              }}
+                            />
+                          </GoogleMap>
+                        </div>
+                      </LoadScript>
+                      <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
+                        {plan.itinerary.map((_value, index) => (
+                          <button
+                            key={`page-${index}`}
+                            onClick={() => {
+                              setPage(index);
+                              setFocusedPlace(
+                                flattenScheduleSlot(plan.itinerary[index][0])
+                                  .details,
+                              );
+                            }}
+                            className={
+                              'tab tab-lg flex-shrink-0' +
+                              (index === page ? ' tab-active' : '')
+                            }
+                          >
+                            Day {index + 1}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="rounded-md shadow-inner bg-white/80 h-64 overflow-y-auto">
+                        <ul
+                          key={`day-${page}`}
+                          className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
                         >
                           {itineraryDaily
                             .filter((itinerary) => itinerary.type === 'place')
-                            .map((itinerary, index) =>
-                              itineraryDaily.length - 1 === index || index === 0 ? (
-                                <Marker
-                                  key={`it-${index}`}
-                                  position={
-                                    flattenScheduleSlot(itinerary).details.geometry
-                                      ?.location || {
-                                      lat: 0,
-                                      lng: 0,
-                                    }
-                                  }
-                                  icon={GetIcon()}
-                                />
-                              ) : (
-                                <Marker
-                                  key={`it-${index}`}
-                                  position={
-                                    flattenScheduleSlot(itinerary).details.geometry
-                                      ?.location || {
-                                      lat: 0,
-                                      lng: 0,
-                                    }
-                                  }
-                                  label={(index + 1).toString()}
-                                />
-                              ),
-                            )}
-
-                          <Polyline
-                            options={{
-                              strokeColor: '#b41412',
-                              strokeOpacity: 0.8,
-                              strokeWeight: 3,
-                              clickable: false,
-                              draggable: false,
-                              editable: false,
-                              visible: true,
-                              path: itineraryDaily.slice(0, -1).map(
-                                (itinerary) =>
-                                  flattenScheduleSlot(itinerary).details.geometry
-                                    ?.location || {
-                                    lat: 0,
-                                    lng: 0,
-                                  },
-                              ),
-                              zIndex: 1,
-                            }}
-                          />
-                        </GoogleMap>
+                            .map((itinerary, index) => (
+                              <li
+                                key={`it-${index}`}
+                                className="step step-neutral snap-always snap-start h-24 cursor-pointer"
+                                onClick={(e) => {
+                                  setFocusedPlace(
+                                    flattenScheduleSlot(
+                                      plan.itinerary[page][index],
+                                    ).details,
+                                  );
+                                }}
+                              >
+                                <div className="">
+                                  {flattenScheduleSlot(itinerary).details.name}
+                                </div>
+                              </li>
+                            ))}
+                        </ul>
                       </div>
-                    </LoadScript> 
-                    <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
-                      {plan.itinerary.map((_value, index) => (
-                        <button
-                          key={`page-${index}`}
-                          onClick={() => {
-                            setPage(index);
-                            setFocusedPlace(
-                              flattenScheduleSlot(plan.itinerary[index][0]).details,
-                            );
-                          }}
-                          className={
-                            'tab tab-lg flex-shrink-0' +
-                            (index === page ? ' tab-active' : '')
-                          }
-                        >
-                          Day {index + 1}
-                        </button>
-                      ))}
+                      <button className="btn btn-primary w-full mb-4">
+                        내 여행계획에 추가하기
+                      </button>
                     </div>
-                    <div className="rounded-md shadow-inner bg-white/80 h-64 overflow-y-auto">
-                      <ul
-                        key={`day-${page}`}
-                        className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
-                      >
-                        {itineraryDaily
-                          .filter((itinerary) => itinerary.type === 'place')
-                          .map((itinerary, index) => (
-                            <li
-                              key={`it-${index}`}
-                              className="step step-neutral snap-always snap-start h-24 cursor-pointer"
-                              onClick={(e) => {
-                                setFocusedPlace(
-                                  flattenScheduleSlot(plan.itinerary[page][index]).details,
-                                );
-                              }}
-                            >
-                              <div className="">
-                                {flattenScheduleSlot(itinerary).details.name}
-                              </div>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                    <button className="btn btn-primary w-full mb-4">내 여행계획에 추가하기</button>
-                  </div>) : ('')}
+                  ) : (
+                    ''
+                  )}
 
                   <div>
                     <p>{article?.content}</p>
                   </div>
                   <div className="flex flex-row mt-8">
-                    <CopyToClipboard text={ typeof window !== "undefined" ? window.location.href : ''}>
+                    <CopyToClipboard
+                      text={
+                        typeof window !== 'undefined'
+                          ? window.location.href
+                          : ''
+                      }
+                    >
                       <label>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
+                          />
                         </svg>
                       </label>
                     </CopyToClipboard>
                     <p className="text-sm">&nbsp;|&nbsp;</p>
-                    <label onClick={()=>toggleLikes()} className="swap">
+                    <label onClick={() => toggleLikes()} className="swap">
                       <input type="checkbox" />
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="swap-on w-6 h-6">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="swap-on w-6 h-6"
+                      >
                         <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
                       </svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="swap-off w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="swap-off w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                        />
                       </svg>
                     </label>
                     <p>{likes}</p>
@@ -381,15 +460,27 @@ const ArticlePage: NextPage = ({}) => {
                               name={comment.author.nickname}
                               content={comment.content}
                               createdAt={comment.createdAt}
-                              isSameUser={comment.author.userId===user?.userId}
+                              isSameUser={
+                                comment.author.userId === user?.userId
+                              }
                               onClickDelComment={handleDelId}
                             />
                           </li>
                         ))}
                       </ul>
                       <div className="flex flex-row items-end">
-                        <textarea value={comment} onChange={(e)=>setComment(e.target.value)} className="grow textarea textarea-bordered" placeholder="댓글을 입력하세요."></textarea>
-                        <button onClick={()=>onClickCreate()} className="btn btn-primary">등록</button>
+                        <textarea
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          className="grow textarea textarea-bordered"
+                          placeholder="댓글을 입력하세요."
+                        ></textarea>
+                        <button
+                          onClick={() => onClickCreate()}
+                          className="btn btn-primary"
+                        >
+                          등록
+                        </button>
                       </div>
                     </div>
                   </div>

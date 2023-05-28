@@ -77,12 +77,15 @@ export interface User {
   nickname: string;
   email: string;
   introduce: string;
+  google: {
+    profileUrl?: string;
+  };
 }
 
 export interface Article {
   articleId: string;
   title: string;
-  author: User;
+  author?: User;
   plan?: Plan;
   content: string;
   likes: number;
