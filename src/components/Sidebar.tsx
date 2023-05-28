@@ -2,14 +2,17 @@ import { FC, useCallback, useContext } from 'react';
 import Link from 'next/link';
 
 import { UserContext } from '@/contexts';
+import { useRouter } from 'next/router';
 
 const Sidebar: FC = () => {
+  const router = useRouter();
   const { user, setUser, setAccessToken } = useContext(UserContext);
 
   const onLogout = useCallback(() => {
     setUser(() => undefined);
     setAccessToken(() => undefined);
-  }, [setUser, setAccessToken]);
+    router.push('/');
+  }, [setUser, setAccessToken, router]);
 
   return (
     <div className="drawer-side">
