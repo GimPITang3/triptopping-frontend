@@ -4,7 +4,7 @@ import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
 import { Plan, Article } from '@/types';
 import { getPlans } from '@/services/plansService';
-import { createArticle } from '@/services/articlesService';
+import { getArticle, updateArticle } from '@/services/articlesService';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { DateTime } from 'luxon';
@@ -21,8 +21,22 @@ const NewArticlePage: NextPage = ({}) => {
   const [ title, setTitle ] = useState('');
   const [ content, setContent ] = useState('');
   const [ planId, setPlanId ] = useState('');
+  const [article, setArticle] = useState<Article>();
 
   const { id } = router.query;
+
+  useEffect(() => {
+    if (typeof id !== 'string') return;
+
+    getArticle(`${id}`).then((article) => {
+      setTitle(article.title);
+      setContent(article.content);
+      if(article.plan)
+      {
+        setPlanId(article.plan.planId);
+      }
+    });
+  }, [id]);
 
   useEffect(() => {
     const SetPlanList = async () => {
@@ -32,9 +46,10 @@ const NewArticlePage: NextPage = ({}) => {
     SetPlanList();
   }, []);
 
-  const onClickCreate = () => {
+  const onClickUpdate = () => {
+    if (typeof id !== 'string') return;
     setLoading(true);
-    createArticle({
+    updateArticle(id, {
       title: title,
       content: content,
       planId: planId,
@@ -62,6 +77,7 @@ const NewArticlePage: NextPage = ({}) => {
                 <div className="flex flex-col mb-4">
                   <select className="select select-bordered w-full max-w-xs"
                     onChange={(e)=>{setPlanId(e.target.value)}}
+                    value={planId}
                   >
                     <option value="">여행 계획을 선택하세요.</option>
                     <option value="">선택 안함</option>
@@ -76,15 +92,17 @@ const NewArticlePage: NextPage = ({}) => {
                   <div className="divider"></div>
                   <input type="text" placeholder="제목을 입력하세요." className="mb-4 input input-bordered w-full max-w-xs" 
                     onChange={(e)=>{setTitle(e.target.value)}}
+                    value={title}
                   />
                   <textarea className="textarea textarea-bordered h-64" placeholder="내용을 입력하세요."
                     onChange={(e)=>{setContent(e.target.value)}}
+                    defaultValue={content}
                   >
                   </textarea>
                 </div>
                 <div className="flex justify-between">
                   <button onClick={() => router.back()} className={"btn" + (loading ? ' btn-disabled' : '')}>취소</button>
-                  <button onClick={() => onClickCreate()} className={"btn btn-primary" + (loading ? ' btn-disabled' : '')}>등록</button>
+                  <button onClick={() => onClickUpdate()} className={"btn btn-primary" + (loading ? ' btn-disabled' : '')}>등록</button>
                 </div>
               </div>
             </div>

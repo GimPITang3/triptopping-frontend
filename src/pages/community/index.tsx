@@ -39,23 +39,10 @@ const dummyArticles: {
 const CommunityPage: NextPage = ({}) => {
   const router = useRouter();
 
-  const { user, setUser } = useContext(UserContext);
-  const [planList, setPlanList] = useState<Plan[]>([]);
-  const [delId, setDelId] = useState('');
-
   const [curPage, setCurPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
   const [articles, setArticles] = useState<Article[]>([]);
   const perPage = 4;
-
-  const handleDelId = (id: string) => {
-    setDelId(id);
-  };
-
-  const delPlan = () => {
-    setPlanList(planList.filter((item) => item.planId !== delId));
-    deletePlan(delId);
-  };
 
   const onPrevPage = useCallback(() => {
     setCurPage((page) => {

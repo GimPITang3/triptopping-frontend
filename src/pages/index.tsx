@@ -109,6 +109,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     getArticles({ limit: 3, skip: 0 }).then((articles) => {
       setArticles(articles.items);
+      console.log(articles.items);
     });
   }, []);
 

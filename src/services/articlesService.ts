@@ -11,6 +11,7 @@ interface CreateArticleDto {
 interface UpdateArticleDto {
   title?: string;
   content?: string;
+  planId: string;
 }
 
 interface CreateCommentDto {
