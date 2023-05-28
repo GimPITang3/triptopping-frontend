@@ -107,7 +107,7 @@ const Home: NextPage = () => {
   }, [user]);
 
   useEffect(() => {
-    getArticles({ limit: 3, skip: 0 }).then((articles) => {
+    getArticles({ limit: 4, skip: 0 }).then((articles) => {
       setArticles(articles.items);
       console.log(articles.items);
     });
@@ -132,6 +132,10 @@ const Home: NextPage = () => {
                 alt=""
                 priority={true}
               />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">❮</a>
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">❯</a>
+              </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
                 TripTopping
               </div>
@@ -143,8 +147,12 @@ const Home: NextPage = () => {
                 alt=""
                 priority={true}
               />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">❮</a>
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">❯</a>
+              </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
-                트으립토핑
+                여행 계획을 세워보세요
               </div>
             </div>
           </div>
@@ -214,14 +222,36 @@ const Home: NextPage = () => {
           </div>
 
           <div className="p-4 my-4">
-            <div className="font-bold pb-4 text-xl">커뮤니티</div>
-            <div className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14 scrollbar-hide">
+            <div className="flex justify-between">
+              <div className="font-bold pb-4 text-xl">커뮤니티</div>
+              <button
+                className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center my-2"
+                onClick={() => router.push('/community')}
+              >
+                <div>더보기</div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-chevron-right"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="w-full pb-14 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {articles.map((article, i) => (
-                <CommunityCard
-                  key={i}
-                  article={article}
-                // coverImage={article.coverImage} // TODO:
-                />
+                <div className="basis-1/2" key={i}>
+                  <CommunityCard
+                    article={article}
+                  // coverImage={article.coverImage} // TODO:
+                  />
+                </div>
               ))}
             </div>
           </div>
