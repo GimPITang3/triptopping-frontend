@@ -2,14 +2,13 @@ import { useCallback, useContext, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-
 import { useGoogleLogin } from '@react-oauth/google';
 
 import { UserContext } from '@/contexts';
+import { signinWithGoogle, signupWithGoogle } from '@/services/authService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
-import { signinWithGoogle, signupWithGoogle } from '@/services/authService';
 
 const LoginPage: NextPage = ({}) => {
   const router = useRouter();
@@ -18,7 +17,6 @@ const LoginPage: NextPage = ({}) => {
 
   const [isLogin, setIsLogin] = useState(true);
   const [nickname, setNickname] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
 
   const signin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -41,7 +39,6 @@ const LoginPage: NextPage = ({}) => {
     onSuccess: (tokenResponse) => {
       signupWithGoogle({
         code: tokenResponse.code,
-        email: email,
         nickname: nickname,
         introduce: '',
       }).then((resp) => {
@@ -65,10 +62,9 @@ const LoginPage: NextPage = ({}) => {
 
   const onSignup = useCallback(() => {
     if (nickname.trim().length === 0) return;
-    if (email.trim().length === 0) return;
 
     signup();
-  }, [signup, nickname, email]);
+  }, [signup, nickname]);
 
   return (
     <div className="min-h-screen">
@@ -99,15 +95,6 @@ const LoginPage: NextPage = ({}) => {
                   placeholder="your-nickname"
                   className="input input-primary w-full"
                   onChange={(e) => setNickname(e.target.value)}
-                ></input>
-                <label className="label">
-                  <span className="label-text">이메일을 입력해 주세요</span>
-                </label>
-                <input
-                  placeholder="youremail@gmail.com"
-                  className="input input-primary w-full"
-                  type="email"
-                  onChange={(e) => setEmail(e.target.value)}
                 ></input>
               </div>
             )}
