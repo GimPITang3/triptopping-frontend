@@ -25,22 +25,22 @@ import banner2 from '../../public/topbanner2.jpeg';
 const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
   const dateString = plan.startDate
     ? (() => {
-        const startDate = DateTime.fromISO(
-          new Date(plan.startDate).toISOString(),
-        );
-        const endDate = startDate.plus({ days: plan.period });
-        const diff = startDate.diff(DateTime.now(), ['days']).days;
-        const dDay = Math.ceil(diff);
+      const startDate = DateTime.fromISO(
+        new Date(plan.startDate).toISOString(),
+      );
+      const endDate = startDate.plus({ days: plan.period });
+      const diff = startDate.diff(DateTime.now(), ['days']).days;
+      const dDay = Math.ceil(diff);
 
-        return (
-          'D-' +
-          (dDay === 0 ? 'day' : dDay) +
-          ' | ' +
-          startDate.toFormat('MM.dd(EEE)') +
-          ' - ' +
-          endDate.toFormat('MM.dd(EEE)')
-        );
-      })()
+      return (
+        'D-' +
+        (dDay === 0 ? 'day' : dDay) +
+        ' | ' +
+        startDate.toFormat('MM.dd(EEE)') +
+        ' - ' +
+        endDate.toFormat('MM.dd(EEE)')
+      );
+    })()
     : plan.period - 1 + '박' + plan.period + '일';
 
   return (
@@ -59,7 +59,7 @@ const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
         </div>
       </div>
       <div>
-        <div className="avatar-group -space-x-6">
+        <div className="hidden sm:block avatar-group -space-x-6">
           {[...(plan.members || []), ...(plan.author ? [plan.author] : [])].map(
             (member) => {
               return (

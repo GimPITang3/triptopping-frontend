@@ -161,7 +161,7 @@ const Num: FC = () => {
                     type="text"
                     onChange={(e) => console.log(e.target.value)}
                     placeholder="도쿄"
-                    className="input input-primary input-bordered border-2 w-[400px]"
+                    className="input input-primary input-bordered border-2 sm:w-[400px]"
                   />
                 </StandaloneSearchBox>
               </div>
