@@ -1,25 +1,20 @@
-import BtmNavbar from '@/components/BtmNavbar';
-import Sidebar from '@/components/Sidebar';
-import Topbar from '@/components/Topbar';
-import { UserContext } from '@/contexts';
-import { deletePlan, getPlans } from '@/services/plansService';
-import { Plan } from '@/types';
-import { DateTime } from 'luxon';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useContext, useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
+
+import { UserContext } from '@/contexts';
+import { deletePlan, getPlansOfUser } from '@/services/plansService';
+import { Plan } from '@/types';
+
+import BtmNavbar from '@/components/BtmNavbar';
+import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
+
 import plusCircle from '../../../../public/pluscircle.svg';
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   context.params;
-
-//   return {
-//     props: {},
-//   };
-// };
 
 interface ItineraryListProps {
   planId: string;
@@ -74,9 +69,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
           </p>
         </div>
         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-          <div>
-            {/* 뭔가 더? */}
-          </div>
+          <div>{/* 뭔가 더? */}</div>
           <div className="btn-group">
             <label
               onClick={(e) => {
@@ -106,27 +99,47 @@ const ItineraryList: FC<ItineraryListProps> = ({
 
 const PlanPage: NextPage = ({}) => {
   const router = useRouter();
+
+  const { user } = useContext(UserContext);
+
   const [planList, setPlanList] = useState<Plan[]>([]);
+
+  const [totalPages, setTotalPages] = useState(0);
+  const [curPage, setCurPage] = useState(1);
+
   const [delId, setDelId] = useState('');
 
-  const handleDelId = (id: string) => {
-    setDelId(id);
-  };
-
-  const delPlan = () => {
-    setPlanList(planList.filter((item) => item.planId !== delId));
-    deletePlan(delId);
-  };
+  const perPage = 10;
 
   useEffect(() => {
-    const SetPlanList = async () => {
-      const plans = await getPlans();
-      setPlanList(plans);
-    };
-    SetPlanList();
+    if (!user) return;
+
+    getPlansOfUser(user.userId, {
+      skip: (curPage - 1) * perPage,
+      limit: perPage,
+    }).then((res) => {
+      setPlanList(res.items);
+      setTotalPages(Math.ceil(res.total / perPage));
+    });
+  }, [user, curPage]);
+
+  const onPrevPage = useCallback(() => {
+    setCurPage((i) => Math.max(i, 1));
   }, []);
 
-  const { user, setUser } = useContext(UserContext);
+  const onNextPage = useCallback(() => {
+    setCurPage((i) => Math.min(i, totalPages));
+  }, [totalPages]);
+
+  const onDeletePlan = useCallback((id: string) => {
+    setDelId(id);
+  }, []);
+
+  const onConfirmDeletePlan = useCallback(() => {
+    setPlanList(planList.filter((item) => item.planId !== delId));
+
+    deletePlan(delId);
+  }, [delId, planList]);
 
   return (
     <>
@@ -146,7 +159,7 @@ const PlanPage: NextPage = ({}) => {
               </p>
               <div className="modal-action">
                 <label
-                  onClick={delPlan}
+                  onClick={onConfirmDeletePlan}
                   htmlFor="del-modal"
                   className="btn btn-primary"
                 >
@@ -188,7 +201,10 @@ const PlanPage: NextPage = ({}) => {
                       </Link>
                     </li>
                     {planList.map(
-                      ({ planId, name, startDate, period, numberOfMembers }, index) => {
+                      (
+                        { planId, name, startDate, period, numberOfMembers },
+                        index,
+                      ) => {
                         return (
                           <li key={`plan-${index}`} className="py-3 sm:py-1">
                             <ItineraryList
@@ -196,7 +212,7 @@ const PlanPage: NextPage = ({}) => {
                               name={name}
                               date={startDate}
                               period={period}
-                              onClickDelPlan={handleDelId}
+                              onClickDelPlan={onDeletePlan}
                               numberOfMembers={numberOfMembers}
                             />
                           </li>
@@ -204,6 +220,16 @@ const PlanPage: NextPage = ({}) => {
                       },
                     )}
                   </ul>
+
+                  <div className="flex py-6 justify-center btn-group">
+                    <button className="btn" onClick={onPrevPage}>
+                      «
+                    </button>
+                    <button className="btn">Page {curPage}</button>
+                    <button className="btn" onClick={onNextPage}>
+                      »
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
