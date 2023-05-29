@@ -21,26 +21,15 @@ import Topbar from '@/components/Topbar';
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
 import younha from '../../public/younha.png';
+import UserProfileImage from '@/components/UserProfileImage';
 
-interface ItineraryListProps {
-  planId: string;
-  name: string;
-  date: Date | undefined;
-  period: number;
-  numberOfMembers: number;
-}
-
-const ItineraryList: FC<ItineraryListProps> = ({
-  planId,
-  name,
-  date,
-  period,
-  numberOfMembers,
-}) => {
-  let dateString = date
+const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
+  let dateString = plan.startDate
     ? (() => {
-        const startDate = DateTime.fromISO(new Date(date).toISOString());
-        const endDate = startDate.plus({ days: period });
+        const startDate = DateTime.fromISO(
+          new Date(plan.startDate).toISOString(),
+        );
+        const endDate = startDate.plus({ days: plan.period });
         const diff = startDate.diff(DateTime.now(), ['days']).days;
         const dDay = Math.ceil(diff);
 
@@ -53,17 +42,17 @@ const ItineraryList: FC<ItineraryListProps> = ({
           endDate.toFormat('MM.dd(EEE)')
         );
       })()
-    : period - 1 + '박' + period + '일';
+    : plan.period - 1 + '박' + plan.period + '일';
 
   return (
     <Link
-      href={'/plan/details/' + planId}
+      href={'/plan/details/' + plan.planId}
       className="flex p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
       <div className="grow flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-            {name}
+            {plan.name}
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
             {dateString}
@@ -72,17 +61,16 @@ const ItineraryList: FC<ItineraryListProps> = ({
       </div>
       <div>
         <div className="avatar-group -space-x-6">
-          {
-            // TODO:
-            // numberOfMembers 만큼 반복
-            [...Array(numberOfMembers)].map((_, i) => (
-              <div className="avatar border-gray-100" key={i}>
-                <div className="w-12">
-                  <Image src={younha} alt="" />
-                </div>
+          {plan.members?.map((member) => {
+            return (
+              <div
+                key={member.userId}
+                className="avatar border-gray-100 w-12 h-12 relative"
+              >
+                <UserProfileImage user={member} />
               </div>
-            ))
-          }
+            );
+          })}
         </div>
       </div>
     </Link>
@@ -199,24 +187,13 @@ const Home: NextPage = () => {
                     role="list"
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
-                    {planList.map(
-                      (
-                        { planId, name, startDate, period, numberOfMembers },
-                        index,
-                      ) => {
-                        return (
-                          <li key={`plan-${index}`} className="py-3 sm:py-1">
-                            <ItineraryList
-                              planId={planId}
-                              name={name}
-                              date={startDate}
-                              period={period}
-                              numberOfMembers={numberOfMembers}
-                            />
-                          </li>
-                        );
-                      },
-                    )}
+                    {planList.map((plan, index) => {
+                      return (
+                        <li key={`plan-${index}`} className="py-3 sm:py-1">
+                          <ItineraryList plan={plan} />
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ) : (

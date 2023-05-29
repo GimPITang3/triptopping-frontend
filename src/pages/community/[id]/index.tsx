@@ -28,6 +28,7 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import Image from 'next/image';
+import UserProfileImage from '@/components/UserProfileImage';
 
 interface CommentProp {
   id: string;
@@ -268,18 +269,11 @@ const ArticlePage: NextPage = ({}) => {
                   </p>
                   <div className="flex items-center justify-start">
                     <div className="avatar placeholder">
-                      <div className="bg-neutral-focus text-neutral-content rounded-full w-8 relative">
-                        {article?.author?.google.profileUrl ? (
-                          <Image
-                            src={article.author.google.profileUrl}
-                            alt="profile image"
-                            fill={true}
-                            className="object-cover"
-                          />
+                      <div className="rounded-full w-8 relative">
+                        {article?.author ? (
+                          <UserProfileImage user={article?.author} />
                         ) : (
-                          <span className="text-lg">
-                            {article?.author?.nickname?.slice(0, 1)}
-                          </span>
+                          <></>
                         )}
                       </div>
                     </div>
@@ -311,7 +305,10 @@ const ArticlePage: NextPage = ({}) => {
                   {article?.plan ? (
                     <div>
                       {plan.tags.map((tag, index) => (
-                        <div key={`tag-${index}`} className="badge badge-lg badge-outline mb-2 mr-2">
+                        <div
+                          key={`tag-${index}`}
+                          className="badge badge-lg badge-outline mb-2 mr-2"
+                        >
                           {'#' + tag}
                         </div>
                       ))}
