@@ -10,12 +10,11 @@ import {
   Marker,
   Polyline,
 } from '@react-google-maps/api';
+import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useCallback, useContext, useEffect, useState } from 'react';
-import arrowLeftCircle from '../../../../../public/arrowleftcircle.svg';
-import { TravelMode } from '@googlemaps/google-maps-services-js';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
@@ -26,31 +25,23 @@ const Topbar: FC = () => {
 
   return (
     <TopbarContainer>
-      <div className="relative flex items-center justify-between h-full">
-        <div className="flex-shrink-0 flex items-center font-bold text-xl gap-x-2">
-          <button onClick={onBackClick}>
-            <Image
-              src={arrowLeftCircle}
-              alt="arrowLeftCircle"
-              width={24}
-              height={24}
-            />
-          </button>
-          <div>{plan.name}</div>
+      <div className="navbar bg-white shadow-xl rounded-box">
+        <div className="navbar-start ps-1 w-fit">
+          <div className="">
+            <Link href="/plan/list">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-7 w-7" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+              </svg>
+            </Link>
+          </div>
         </div>
-        <div className="flex-shrink-0 flex items-center font-bold text-xl gap-x-2">
-          <Link href="/">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="h-6 w-6"
-              viewBox="0 0 16 16"
-            >
-              <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z" />
-            </svg>
-          </Link>
+        <div className="grow flex justify-center">
+          <div className="font-bold text-xl text-ellipsis text-center line-clamp-1">
+            {`${plan.name}`}
+          </div>
+        </div>
+        <div className="navbar-end w-[28px]">
+
         </div>
       </div>
     </TopbarContainer>
@@ -138,6 +129,9 @@ const Detail: FC = () => {
   };
   return (
     <div className="relative min-h-screen">
+      <Head>
+        <title>{`${plan.name}`}</title>
+      </Head>
       <LoadScript
         googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
         libraries={['places']}
@@ -204,45 +198,50 @@ const Detail: FC = () => {
       </LoadScript>
 
       <div className="absolute top-0 left-0 flex flex-col w-full items-start pointer-events-none h-screen">
-        <div className="backdrop-blur-sm bg-white/80 w-full pointer-events-auto">
+        <div className="w-full pointer-events-auto z-10">
           <Topbar />
         </div>
-        <div className="absolute top-12 w-full h-24 z-10 pointer-events-auto bg-white border-y-4 border-gray-100">
-          {focusedPlace && (
-            <div className="flex items-center pl-[21px] h-full">
-              <div className="rounded-full bg-[#3d4451] h-8 w-8 text-white text-center text-xl shrink-0">
-                {focusedIndex + 1}
-              </div>
-              <div className="overflow-hidden pl-3 pr-6">
-                <div className="text-2xl font-bold flex items-end">
-                  <div className="pr-3 line-clamp-1">
-                    {focusedPlace?.translated_name || focusedPlace?.name || ''}
-                  </div>
-                  <Image
-                    src={focusedPlace?.icon || ''}
-                    alt="icon"
-                    width={24}
-                    height={24}
-                  />
+        <div className="absolute top-[55px] h-20 z-10 w-full ">
+          <div className="h-20 z-10 pointer-events-auto bg-white mx-2 rounded-b-2xl">
+            {focusedPlace && (
+              <div className="flex items-center pl-[12px] h-full">
+                <div className="rounded-full bg-[#3d4451] h-8 w-8 text-white text-center text-xl shrink-0">
+                  {focusedIndex + 1}
                 </div>
-                <a
-                  className="text-sm line-clamp-1"
-                  href={GetGoogleMapUrl(
-                    focusedPlace?.geometry?.location.lat,
-                    focusedPlace?.geometry?.location.lng,
-                    focusedPlace.place_id,
-                  )}
-                  target="_blank"
-                >
-                  {focusedPlace?.formatted_address || ''}
-                </a>
+                <div className="overflow-hidden pl-3 pr-6">
+                  <div className="text-2xl font-bold flex items-end">
+                    <div className="pr-3 line-clamp-1">
+                      {focusedPlace?.translated_name || focusedPlace?.name || ''}
+                    </div>
+                    <Image
+                      src={focusedPlace?.icon || ''}
+                      alt="icon"
+                      width={24}
+                      height={24}
+                    />
+                  </div>
+                  <a
+                    className="text-sm line-clamp-1"
+                    href={GetGoogleMapUrl(
+                      focusedPlace?.geometry?.location.lat,
+                      focusedPlace?.geometry?.location.lng,
+                      focusedPlace.place_id,
+                    )}
+                    target="_blank"
+                  >
+                    {focusedPlace?.formatted_address || ''}
+                  </a>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        </div>
+        <div className="absolute top-2 h-[90px] w-[20px] z-10 pointer-events-none bg-white rounded-tl-2xl">
+
         </div>
         <div
           className={
-            'pointer-events-auto bg-white/90 grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out' +
+            '-mt-[33px] mb-[56px] pointer-events-auto bg-white grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out' +
             (folded ? ' pr-4' : '')
           }
         >
@@ -279,7 +278,7 @@ const Detail: FC = () => {
           </ul>
         </div>
 
-        <div className="tabs tabs-boxed justify-center backdrop-blur-sm bg-white/80 pointer-events-auto w-full rounded-none border-t-2 border-gray-300">
+        <div className="absolute bottom-0 tabs tabs-boxed justify-center bg-white pointer-events-auto w-full rounded-none flex-nowrap overflow-x-auto whitespace-nowrap">
           {plan.itinerary.map((_value, index) => (
             <button
               key={`page-${index}`}
@@ -291,7 +290,7 @@ const Detail: FC = () => {
                 setFocusedIndex(0);
               }}
               className={
-                'tab tab-lg flex-shrink-0' +
+                'tab tab-lg flex-shrink-0 inline-block' +
                 (index === page ? ' tab-active' : '')
               }
             >
