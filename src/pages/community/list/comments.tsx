@@ -1,18 +1,21 @@
-import BtmNavbar from '@/components/BtmNavbar';
-import Topbar from '@/components/Topbar';
-import { UserContext } from '@/contexts';
-import { deletePlan, getPlans } from '@/services/plansService';
-import { getArticles } from '@/services/articlesService';
-import { Plan, Article } from '@/types';
-import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState, useCallback } from 'react';
-import plusCircle from '../../../../public/pluscircle.svg';
+import { DateTime } from 'luxon';
+
+import { UserContext } from '@/contexts';
+import { Plan, Article } from '@/types';
+import { deletePlan, getPlans } from '@/services/plansService';
+import { getArticles } from '@/services/articlesService';
+
 import Sidebar from '@/components/Sidebar';
+import BtmNavbar from '@/components/BtmNavbar';
+import Topbar from '@/components/Topbar';
+
+import plusCircle from '../../../../public/pluscircle.svg';
 
 const MyCommentsPage: NextPage = ({}) => {
   const router = useRouter();
@@ -41,11 +44,16 @@ const MyCommentsPage: NextPage = ({}) => {
       skip: (curPage - 1) * perPage,
       limit: perPage,
     }).then((result) => {
-      setArticles([...result.items.filter((item)=>item.comments?.find((comment)=>comment.author?.userId===user?.userId))]);
+      setArticles([
+        ...result.items.filter((item) =>
+          item.comments?.find(
+            (comment) => comment.author?.userId === user?.userId,
+          ),
+        ),
+      ]);
       setTotalArticles(articles.length);
     });
-  }, [user, curPage]);
-
+  }, [user, curPage, articles]);
 
   return (
     <>
@@ -56,7 +64,6 @@ const MyCommentsPage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
-
           <Topbar />
 
           <div>
@@ -73,26 +80,26 @@ const MyCommentsPage: NextPage = ({}) => {
                     role="list"
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
-                    {articles.map(
-                      ({ title, articleId }, index) => {
-                        return (
-                          <li key={`plan-${index}`} className="py-3 sm:py-1">
-                            <a
-                              onClick={() => router.push(`/community/${articleId}`)}
-                              className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
-                            >
-                              <div className="flex items-center space-x-4">
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                    {title}
-                                  </p>
-                                </div>
+                    {articles.map(({ title, articleId }, index) => {
+                      return (
+                        <li key={`plan-${index}`} className="py-3 sm:py-1">
+                          <a
+                            onClick={() =>
+                              router.push(`/community/${articleId}`)
+                            }
+                            className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                  {title}
+                                </p>
                               </div>
-                            </a>
-                          </li>
-                        );
-                      },
-                    )}
+                            </div>
+                          </a>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 <div className="flex py-6 justify-center btn-group">

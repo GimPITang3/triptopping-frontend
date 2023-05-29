@@ -27,6 +27,7 @@ import {
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
+import Image from 'next/image';
 
 interface CommentProp {
   id: string;
@@ -268,10 +269,19 @@ const ArticlePage: NextPage = ({}) => {
                   </p>
                   <div className="flex items-center justify-start">
                     <div className="avatar placeholder">
-                      <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
-                        <span className="text-lg">
-                          {article?.author?.nickname?.slice(0, 1)}
-                        </span>
+                      <div className="bg-neutral-focus text-neutral-content rounded-full w-8 relative">
+                        {article?.author?.google.profileUrl ? (
+                          <Image
+                            src={article.author.google.profileUrl}
+                            alt="profile image"
+                            fill={true}
+                            className="object-cover"
+                          />
+                        ) : (
+                          <span className="text-lg">
+                            {article?.author?.nickname?.slice(0, 1)}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <p className="text-base ml-1">
@@ -444,7 +454,7 @@ const ArticlePage: NextPage = ({}) => {
                           viewBox="0 0 24 24"
                           strokeWidth={1.5}
                           stroke="currentColor"
-                          className="w-6 h-6"
+                          className="w-6 h-6 cursor-pointer"
                         >
                           <path
                             strokeLinecap="round"
@@ -494,30 +504,32 @@ const ArticlePage: NextPage = ({}) => {
                           <li key={`comment-${i}`}>
                             <Comments
                               id={comment.commentId}
-                              name={comment.author.nickname}
+                              name={comment.author?.nickname || ''}
                               content={comment.content}
                               createdAt={comment.createdAt}
                               isSameUser={
-                                comment.author.userId === user?.userId
+                                comment.author?.userId === user?.userId
                               }
                               onClickDelComment={handleDelId}
                             />
                           </li>
                         ))}
                       </ul>
-                      <div className="flex flex-row items-end">
+                      <div className="space-y-2">
                         <textarea
                           value={comment}
                           onChange={(e) => setComment(e.target.value)}
-                          className="grow textarea textarea-bordered"
+                          className="w-full textarea textarea-bordered"
                           placeholder="댓글을 입력하세요."
                         ></textarea>
-                        <button
-                          onClick={() => onClickCreate()}
-                          className="btn btn-primary"
-                        >
-                          등록
-                        </button>
+                        <div className="flex flex-row justify-end">
+                          <button
+                            onClick={() => onClickCreate()}
+                            className="btn btn-primary"
+                          >
+                            등록
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -96,7 +96,7 @@ export interface Article {
 
 export interface Comment {
   commentId: string;
-  author: User;
+  author?: User;
   content: string;
   createdAt: Date;
 }
