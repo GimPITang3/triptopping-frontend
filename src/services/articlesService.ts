@@ -1,28 +1,25 @@
 import client from './axiosClient';
 
-import { Article } from '@/types';
-
-interface PaginationOptionsDto {
-  skip: number;
-  limit: number;
-}
-
-interface PaginationResponseDto<T> {
-  items: T[];
-
-  skip: number;
-  limit: number;
-  total: number;
-}
+import { Article, PaginationOptionsDto, PaginationResponseDto } from '@/types';
 
 interface CreateArticleDto {
   title: string;
   content: string;
+  planId: string;
 }
 
 interface UpdateArticleDto {
   title?: string;
   content?: string;
+  planId: string;
+}
+
+interface CreateCommentDto {
+  content: string;
+}
+
+interface UpdateCommentDto {
+  content: string;
 }
 
 export const getArticles = async (
@@ -57,4 +54,52 @@ export const updateArticle = async (id: string, dto: UpdateArticleDto) => {
 
 export const deleteArticle = async (id: string) => {
   await client.delete(`/articles/${id}`);
+};
+
+export const createComment = async (
+  articleId: string,
+  dto: CreateCommentDto,
+): Promise<Article> => {
+  const resp = await client.post<Article>(
+    `/articles/${articleId}/comments`,
+    dto,
+  );
+
+  return resp.data;
+};
+
+export const updateComment = async (
+  articleId: string,
+  commentId: string,
+  dto: UpdateCommentDto,
+): Promise<Article> => {
+  const resp = await client.patch<Article>(
+    `/articles/${articleId}/comments/${commentId}`,
+    dto,
+  );
+
+  return resp.data;
+};
+
+export const deleteComment = async (
+  articleId: string,
+  commentId: string,
+): Promise<Article> => {
+  const resp = await client.delete<Article>(
+    `/articles/${articleId}/comments/${commentId}`,
+  );
+
+  return resp.data;
+};
+
+export const likeArticle = async (articleId: string): Promise<Article> => {
+  const resp = await client.post<Article>(`/articles/${articleId}/like`);
+
+  return resp.data;
+};
+
+export const unlikeArticle = async (articleId: string): Promise<Article> => {
+  const resp = await client.delete<Article>(`/articles/${articleId}/like`);
+
+  return resp.data;
 };

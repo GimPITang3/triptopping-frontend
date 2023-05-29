@@ -1,4 +1,5 @@
 import BtmNavbar from '@/components/BtmNavbar';
+import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import { UserContext } from '@/contexts';
 import { deletePlan, getPlans } from '@/services/plansService';
@@ -11,7 +12,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 import plusCircle from '../../../../public/pluscircle.svg';
-import Sidebar from '@/components/Sidebar';
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   context.params;
@@ -27,6 +27,7 @@ interface ItineraryListProps {
   date: Date | undefined;
   period: number;
   onClickDelPlan: Function;
+  numberOfMembers: number;
 }
 
 const ItineraryList: FC<ItineraryListProps> = ({
@@ -35,6 +36,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
   date,
   period,
   onClickDelPlan,
+  numberOfMembers,
 }) => {
   const router = useRouter();
 
@@ -72,6 +74,9 @@ const ItineraryList: FC<ItineraryListProps> = ({
           </p>
         </div>
         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+          <div>
+            {/* 뭔가 더? */}
+          </div>
           <div className="btn-group">
             <label
               onClick={(e) => {
@@ -183,7 +188,7 @@ const PlanPage: NextPage = ({}) => {
                       </Link>
                     </li>
                     {planList.map(
-                      ({ planId, name, startDate, period }, index) => {
+                      ({ planId, name, startDate, period, numberOfMembers }, index) => {
                         return (
                           <li key={`plan-${index}`} className="py-3 sm:py-1">
                             <ItineraryList
@@ -192,6 +197,7 @@ const PlanPage: NextPage = ({}) => {
                               date={startDate}
                               period={period}
                               onClickDelPlan={handleDelId}
+                              numberOfMembers={numberOfMembers}
                             />
                           </li>
                         );

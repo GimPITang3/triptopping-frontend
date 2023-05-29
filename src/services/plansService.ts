@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import client from '@/services/axiosClient';
-import { Plan } from '@/types';
+import { PaginationOptionsDto, PaginationResponseDto, Plan } from '@/types';
 
 export type UpdatePlanDto = Pick<
   Partial<Plan>,
@@ -16,6 +16,18 @@ export type UpdatePlanDto = Pick<
 
 export const getPlans = async (): Promise<Plan[]> => {
   const resp = await client.get<Plan[]>('/plans');
+
+  return resp.data;
+};
+
+export const getPlansOfUser = async (
+  userId: string,
+  dto: PaginationOptionsDto,
+): Promise<PaginationResponseDto<Plan>> => {
+  const resp = await client.get<PaginationResponseDto<Plan>>(
+    `/users/${userId}/plans`,
+    { params: { ...dto } },
+  );
 
   return resp.data;
 };

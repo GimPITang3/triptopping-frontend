@@ -2,7 +2,7 @@ import { PlanContext } from '@/contexts';
 import { DateTime } from 'luxon';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import Datepicker from 'react-tailwindcss-datepicker';
 import dash from '../../../../public/dash.svg';
 import plus from '../../../../public/plus.svg';
@@ -29,6 +29,18 @@ const DateSelector: FC = () => {
     const period = e.diff(s, 'days').days;
     setPlan({ ...plan, startDate: s.toJSDate(), period: period });
   };
+
+  useEffect(() => {
+    if (!selected) {
+      setPlan((prev) => {
+        return { ...prev, startDate: undefined };
+      });
+    } else {
+      setPlan((prev) => {
+        return { ...prev, period: 1 };
+      });
+    }
+  }, [selected, setPlan]);
 
   return (
     <div className="flex flex-col min-h-screen p-8">

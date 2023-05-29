@@ -182,7 +182,7 @@ const Num: FC = () => {
         <button
           className={
             "flex-1 btn btn-primary"
-            + (countryName && cityName ? '' : ' btn-disabled')
+            + (searchResult?.position.lat && searchResult.position.lng ? '' : ' btn-disabled')
           }
           onClick={() => router.push('/plan/new/budget')}
         >

@@ -4,7 +4,6 @@ import client from './axiosClient';
 
 export interface GoogleSignupDto {
   code: string;
-  email: string;
   nickname: string;
   introduce: string;
 }

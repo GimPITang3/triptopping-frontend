@@ -10,8 +10,9 @@ const NameTab: FC<{
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-bold">새로운 이름을 설정해주세요</h3>
+      <h3 className="text-lg font-bold my-4">변경할 이름을 설정해주세요</h3>
       <input
+        type="text"
         value={planName}
         className="input input-bordered py-4 w-full"
         onChange={onChangeName}

@@ -77,21 +77,39 @@ export interface User {
   nickname: string;
   email: string;
   introduce: string;
+  google: {
+    profileUrl?: string;
+  };
 }
 
 export interface Article {
   articleId: string;
   title: string;
-  author: User;
-  plan: Plan;
+  author?: User;
+  plan?: Plan;
   content: string;
-  comments: Comment[];
+  comments?: Comment[];
+  likes?: User[];
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Comment {
-  commentedUser: User;
+  commentId: string;
+  author: User;
   content: string;
   createdAt: Date;
+}
+
+export interface PaginationOptionsDto {
+  skip: number;
+  limit: number;
+}
+
+export interface PaginationResponseDto<T> {
+  items: T[];
+
+  skip: number;
+  limit: number;
+  total: number;
 }

@@ -1,88 +1,33 @@
 import { DateTime } from 'luxon';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FC, useContext, useEffect, useState } from 'react';
 
 import { UserContext } from '@/contexts';
-import { getPlans } from '@/services/plansService';
-import { Article, Plan, User } from '@/types';
 
-import CommunityCard from '@/components/CommunityCard';
-import Topbar from '@/components/Topbar';
+import { getArticles } from '@/services/articlesService';
+import { getPlansOfUser } from '@/services/plansService';
+
+import { Article, Plan } from '@/types';
 
 import BtmNavbar from '@/components/BtmNavbar';
+import CommunityCard from '@/components/CommunityCard';
+import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
+
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
-import Sidebar from '@/components/Sidebar';
-
-const dummyPlan: Plan = {
-  planId: "asdf",
-  name: "string",
-  author: [],
-  numberOfMembers: 2,
-  members: [],
-  period: 5,
-  budget: 5,
-  tags: [],
-  loc: {lat: 4, lng: 5},
-  itinerary: [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const dummyUser: User = {
-  email: '',
-  introduce: '',
-  nickname: '홍길동',
-  userId: '',
-};
-
-const dummyArticles: (Article & {
-  coverImage?: string | StaticImageData;
-})[] = [
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image3.jpg',
-  },
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image1.jpeg',
-  },
-  {
-    articleId: '',
-    title: '지수의 군산 콩국수 여행기',
-    author: dummyUser,
-    plan: dummyPlan,
-    comments: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    content: '콩국수 맛있겠다',
-    coverImage: '/imgs/image2.jpeg',
-  },
-];
+import younha from '../../public/younha.png';
 
 interface ItineraryListProps {
   planId: string;
   name: string;
   date: Date | undefined;
   period: number;
+  numberOfMembers: number;
 }
 
 const ItineraryList: FC<ItineraryListProps> = ({
@@ -90,31 +35,32 @@ const ItineraryList: FC<ItineraryListProps> = ({
   name,
   date,
   period,
+  numberOfMembers,
 }) => {
   let dateString = date
     ? (() => {
-        const startDate = DateTime.fromISO(new Date(date).toISOString());
-        const endDate = startDate.plus({ days: period });
-        const diff = startDate.diff(DateTime.now(), ['days']).days;
-        const dDay = Math.ceil(diff);
+      const startDate = DateTime.fromISO(new Date(date).toISOString());
+      const endDate = startDate.plus({ days: period });
+      const diff = startDate.diff(DateTime.now(), ['days']).days;
+      const dDay = Math.ceil(diff);
 
-        return (
-          'D-' +
-          (dDay === 0 ? 'day' : dDay) +
-          ' | ' +
-          startDate.toFormat('MM.dd(EEE)') +
-          ' - ' +
-          endDate.toFormat('MM.dd(EEE)')
-        );
-      })()
+      return (
+        'D-' +
+        (dDay === 0 ? 'day' : dDay) +
+        ' | ' +
+        startDate.toFormat('MM.dd(EEE)') +
+        ' - ' +
+        endDate.toFormat('MM.dd(EEE)')
+      );
+    })()
     : period - 1 + '박' + period + '일';
 
   return (
     <Link
       href={'/plan/details/' + planId}
-      className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+      className="flex p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
-      <div className="flex items-center space-x-4">
+      <div className="grow flex items-center space-x-4">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
             {name}
@@ -124,21 +70,47 @@ const ItineraryList: FC<ItineraryListProps> = ({
           </p>
         </div>
       </div>
+      <div>
+        <div className="avatar-group -space-x-6">
+          {
+            // numberOfMembers 만큼 반복
+            [...Array(numberOfMembers)].map((_, i) => (
+              <div className="avatar border-gray-100" key={i}>
+                <div className="w-12">
+                  <Image
+                    src={younha}
+                    alt=""
+                  />
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
     </Link>
   );
 };
 
 const Home: NextPage = () => {
   const router = useRouter();
+
+  const { user } = useContext(UserContext);
   const [planList, setPlanList] = useState<Plan[]>([]);
-  const { user, setUser } = useContext(UserContext);
+  const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
-    const SetPlanList = async () => {
-      const plans = await getPlans();
-      setPlanList(plans.slice(0, 3));
-    };
-    SetPlanList();
+    if (!user) return;
+
+    getPlansOfUser(user.userId, { limit: 3, skip: 0 }).then((plans) => {
+      setPlanList(plans.items);
+    });
+  }, [user]);
+
+  useEffect(() => {
+    getArticles({ limit: 4, skip: 0 }).then((articles) => {
+      setArticles(articles.items);
+      console.log(articles.items);
+    });
   }, []);
 
   return (
@@ -160,6 +132,10 @@ const Home: NextPage = () => {
                 alt=""
                 priority={true}
               />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">❮</a>
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">❯</a>
+              </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
                 TripTopping
               </div>
@@ -171,71 +147,111 @@ const Home: NextPage = () => {
                 alt=""
                 priority={true}
               />
+              <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">❮</a>
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">❯</a>
+              </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
-                트으립토핑
+                여행 계획을 세워보세요
               </div>
             </div>
           </div>
 
           <div className="p-4 pt-8">
-            <div className="w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-4">
-                <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
-                  내 여행 계획
+            <div className="flex flex-col w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 min-h-[348px]">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
+                <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white sm:ms-2">
+                  {user ?
+                    `${user?.nickname}님의 여행 계획`
+                    : '여행 계획'}
                 </h5>
-                <button
-                  className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center"
-                  onClick={() => router.push('/plan/list')}
-                >
-                  <div>모두 보기</div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="bi bi-chevron-right"
-                    viewBox="0 0 16 16"
+                {user ? (
+                  <button
+                    className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center my-2"
+                    onClick={() => router.push('/plan/list')}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
-                    />
-                  </svg>
-                </button>
+                    <div>모두 보기</div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      className="bi bi-chevron-right"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                      />
+                    </svg>
+                  </button>
+                ) : ''}
               </div>
-              <div className="flow-root">
-                <ul
-                  role="list"
-                  className="divide-y divide-gray-200 dark:divide-gray-700"
-                >
-                  {planList.map(
-                    ({ planId, name, startDate, period }, index) => {
-                      return (
-                        <li key={`plan-${index}`} className="py-3 sm:py-1">
-                          <ItineraryList
-                            planId={planId}
-                            name={name}
-                            date={startDate}
-                            period={period}
-                          />
-                        </li>
-                      );
-                    },
-                  )}
-                </ul>
-              </div>
+              {user ? (
+                <div className="flow-root">
+                  <ul
+                    role="list"
+                    className="divide-y divide-gray-200 dark:divide-gray-700"
+                  >
+                    {planList.map(
+                      ({ planId, name, startDate, period, numberOfMembers }, index) => {
+                        return (
+                          <li key={`plan-${index}`} className="py-3 sm:py-1">
+                            <ItineraryList
+                              planId={planId}
+                              name={name}
+                              date={startDate}
+                              period={period}
+                              numberOfMembers={numberOfMembers}
+                            />
+                          </li>
+                        );
+                      },
+                    )}
+                  </ul>
+                </div>
+              ) : (
+                <div className="flex justify-center items-center grow">
+                  <button className="btn btn-primary"
+                    onClick={() => router.push('/account/login')}>
+                    로그인이 필요합니다
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
           <div className="p-4 my-4">
-            <div className="font-bold pb-4 text-xl">커뮤니티</div>
-            <div className="relative w-full flex gap-6 snap-x snap-mandatory scroll-smooth overflow-x-auto pb-14 scrollbar-hide">
-              {dummyArticles.map((article, i) => (
-                <CommunityCard
-                  key={i}
-                  article={article}
-                  coverImage={article.coverImage}
-                />
+            <div className="flex justify-between">
+              <div className="font-bold pb-4 text-xl">커뮤니티</div>
+              <button
+                className="btn btn-ghost text-sm font-medium text-blue-600 hover:underline dark:text-blue-500 flex items-center my-2"
+                onClick={() => router.push('/community')}
+              >
+                <div>더보기</div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-chevron-right"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="w-full pb-14 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {articles.map((article, i) => (
+                <div className="basis-1/2" key={i}>
+                  <CommunityCard
+                    article={article}
+                  // coverImage={article.coverImage} // TODO:
+                  />
+                </div>
               ))}
             </div>
           </div>
