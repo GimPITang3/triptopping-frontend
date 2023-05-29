@@ -38,7 +38,6 @@ const MyArticlesPage: NextPage = ({}) => {
       skip: (curPage - 1) * perPage,
       limit: perPage,
     }).then((result) => {
-      console.log(result.items.filter((item)=>item.author?.userId === user?.userId))
       setArticles([...result.items.filter((item)=>item.author?.userId===user?.userId)]);
       setTotalArticles(articles.length);
     });

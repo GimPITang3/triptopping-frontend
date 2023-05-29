@@ -7,7 +7,7 @@ import { FC, useContext, useEffect, useState, useCallback } from 'react';
 import { DateTime } from 'luxon';
 
 import { UserContext } from '@/contexts';
-import { Plan, Article } from '@/types';
+import { Plan, Article, Comment } from '@/types';
 import { deletePlan, getPlans } from '@/services/plansService';
 import { getArticles } from '@/services/articlesService';
 
@@ -17,6 +17,12 @@ import Topbar from '@/components/Topbar';
 
 import plusCircle from '../../../../public/pluscircle.svg';
 
+interface CommentsWithArticle {
+  comment: Comment;
+  title: string;
+  articleId: string;
+}
+
 const MyCommentsPage: NextPage = ({}) => {
   const router = useRouter();
 
@@ -25,6 +31,7 @@ const MyCommentsPage: NextPage = ({}) => {
   const [curPage, setCurPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [commentList, setCommentList] = useState<CommentsWithArticle[]>([]);
   const perPage = 10;
 
   const onPrevPage = useCallback(() => {
@@ -44,16 +51,22 @@ const MyCommentsPage: NextPage = ({}) => {
       skip: (curPage - 1) * perPage,
       limit: perPage,
     }).then((result) => {
-      setArticles([
-        ...result.items.filter((item) =>
-          item.comments?.find(
-            (comment) => comment.author?.userId === user?.userId,
-          ),
-        ),
-      ]);
-      setTotalArticles(articles.length);
+      setArticles(result.items);
     });
-  }, [user, curPage, articles]);
+  }, [user, curPage]);
+
+  useEffect(() => {
+    setCommentList([]);
+    articles.map((item) => {
+      item.comments?.map((comment) => {
+        if(comment.author?.userId === user?.userId)
+        {
+          setCommentList(commentList => [...commentList, {comment: comment, title: item.title, articleId: item.articleId}]);
+        }
+      })
+    })
+    setTotalArticles(commentList.length);
+  }, [user, articles]);
 
   return (
     <>
@@ -80,26 +93,29 @@ const MyCommentsPage: NextPage = ({}) => {
                     role="list"
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
-                    {articles.map(({ title, articleId }, index) => {
-                      return (
-                        <li key={`plan-${index}`} className="py-3 sm:py-1">
+                    {commentList.map(
+                      ({ title, comment, articleId }, index) => {
+                        return (
+                          <li key={`plan-${index}`} className="py-3 sm:py-1">
                           <a
-                            onClick={() =>
-                              router.push(`/community/${articleId}`)
-                            }
+                            onClick={() => router.push(`/community/${articleId}`)}
                             className="block p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
                           >
                             <div className="flex items-center space-x-4">
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                  {comment.content}
+                                </p>
+                                <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                                   {title}
                                 </p>
                               </div>
                             </div>
                           </a>
                         </li>
-                      );
-                    })}
+                        );
+                      },
+                    )}
                   </ul>
                 </div>
                 <div className="flex py-6 justify-center btn-group">

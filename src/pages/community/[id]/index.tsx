@@ -135,7 +135,6 @@ const ArticlePage: NextPage = ({}) => {
         setFocusedPlace(
           flattenScheduleSlot(article.plan.itinerary[0][0]).details || null,
         );
-        console.log(article.plan);
       }
     });
   }, [id, setPlan]);

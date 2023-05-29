@@ -64,7 +64,6 @@ const CommunityPage: NextPage = ({}) => {
     }).then((result) => {
       setArticles(result.items);
       setTotalArticles(result.total);
-      console.log(result.items[0]);
     });
   }, [curPage]);
 
@@ -94,7 +93,6 @@ const CommunityPage: NextPage = ({}) => {
                 <div className="flex items-center justify-center">
                   <div className="grid grid-cols-2 gap-4">
                     {articles.map((article) => {
-                      console.log(article.plan?.tags);
                       return (
                         <CommunityCard
                           article={article}
