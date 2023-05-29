@@ -41,7 +41,7 @@ const MyCommentsPage: NextPage = ({}) => {
       skip: (curPage - 1) * perPage,
       limit: perPage,
     }).then((result) => {
-      setArticles([...result.items.filter((item)=>item.comments.find((comment)=>comment.author.userId===user?.userId))]);
+      setArticles([...result.items.filter((item)=>item.comments.find((comment)=>comment.author?.userId===user?.userId))]);
       setTotalArticles(articles.length);
     });
   }, [user, curPage]);

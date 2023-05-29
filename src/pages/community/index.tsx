@@ -39,6 +39,7 @@ const dummyArticles: {
 const CommunityPage: NextPage = ({}) => {
   const router = useRouter();
 
+  const [plan, setPlan] = useState<Plan>();
   const [curPage, setCurPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
   const [articles, setArticles] = useState<Article[]>([]);
@@ -63,7 +64,7 @@ const CommunityPage: NextPage = ({}) => {
     }).then((result) => {
       setArticles(result.items);
       setTotalArticles(result.total);
-      console.log(result.items);
+      console.log(result.items[0]);
     });
   }, [curPage]);
 
@@ -92,12 +93,16 @@ const CommunityPage: NextPage = ({}) => {
 
                 <div className="flex items-center justify-center">
                   <div className="grid grid-cols-2 gap-4">
-                    {articles.map((article) => (
-                      <CommunityCard
-                        article={article}
-                        key={article.articleId}
-                      />
-                    ))}
+                    {articles.map((article) => {
+                      console.log(article.plan?.tags);
+                      return (
+                        <CommunityCard
+                          article={article}
+                          key={article.articleId}
+                          tags={article.plan?.tags}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 

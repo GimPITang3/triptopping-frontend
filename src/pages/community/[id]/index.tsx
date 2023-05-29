@@ -301,6 +301,11 @@ const ArticlePage: NextPage = ({}) => {
                   <div className="divider mb-4"></div>
                   {article?.plan ? (
                     <div>
+                      {plan.tags.map((tag, index) => (
+                        <div key={`tag-${index}`} className="badge badge-lg badge-outline mb-2 mr-2">
+                          {'#' + tag}
+                        </div>
+                      ))}
                       <LoadScript
                         googleMapsApiKey="AIzaSyDPoOWUBAYwH31p72YcFFFiyJ5576f1i3E"
                         libraries={['places']}

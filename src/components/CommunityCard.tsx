@@ -1,14 +1,21 @@
 import { FC } from 'react';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
+import { DateTime } from 'luxon';
 
 import younha from '../../public/younha.png';
 import { Article } from '@/types';
 
 const CommunityCard: FC<{
   article: Article;
+  tags?: string[];
   coverImage?: string | StaticImageData;
-}> = ({ article, coverImage }) => {
+}> = ({ article, tags, coverImage }) => {
+  
+  const diffTimes = DateTime.now().diff(DateTime.fromISO(article.createdAt), 'hours');
+  const diffHours = diffTimes.toObject().hours;
+  const isNew = diffHours ? (diffHours < 24) : false;
+
   return (
     <Link
       href={`/community/${article.articleId}`}
@@ -27,7 +34,9 @@ const CommunityCard: FC<{
           <h2 className="card-name font-bold text-xl truncate">
             {article.title || '지리는 여행'}
           </h2>
-          <div className="badge badge-secondary">NEW</div>
+          {
+            isNew ? (<div className="badge badge-secondary place-self-end">NEW</div>) : ('')
+          }
           <p className="line-clamp-2">{article.content}</p>
           <div className="card-actions flex items-center justify-end">
             <div className="avatar placeholder">
@@ -38,12 +47,12 @@ const CommunityCard: FC<{
               </div>
             </div>
             <p>{article.author ? article.author.nickname : ''}</p>
-            {['food', '1st'].map((tag, i) => (
-              <div className="badge badge-outline" key={i}>
-                {tag}
-              </div>
-            ))}
           </div>
+          {tags ? (tags.splice(0,2).map((tag, index) => (
+            <div key={`tag-${index}`} className="badge badge-outline">
+              {tag}
+            </div>
+          ))) : ('')}
         </div>
       </div>
     </Link>

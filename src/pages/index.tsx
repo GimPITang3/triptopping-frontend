@@ -109,7 +109,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     getArticles({ limit: 4, skip: 0 }).then((articles) => {
       setArticles(articles.items);
-      console.log(articles.items);
+      console.log(articles.items[0].plan);
     });
   }, []);
 
@@ -249,7 +249,8 @@ const Home: NextPage = () => {
                 <div className="basis-1/2" key={i}>
                   <CommunityCard
                     article={article}
-                  // coverImage={article.coverImage} // TODO:
+                    // coverImage={article.coverImage} // TODO:
+                    tags={article.plan?.tags}
                   />
                 </div>
               ))}
