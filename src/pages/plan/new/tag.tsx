@@ -29,11 +29,17 @@ const Tag: FC = () => {
 
     createPlan({
       ...plan,
-    }).then((plan) => {
-      setLoading(false);
+    })
+      .then((plan) => {
+        setLoading(false);
 
-      router.push('/plan/' + plan.planId);
-    });
+        router.push('/plan/' + plan.planId);
+      })
+      .catch((err) => {
+        setLoading(false);
+        // console.log(err);
+        alert(err.response.data.message);
+      });
   };
 
   return (
