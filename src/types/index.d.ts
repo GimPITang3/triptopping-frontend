@@ -55,9 +55,9 @@ export interface LatLng {
 export interface Plan {
   planId: string;
   name: string;
-  author: Types.ObjectId;
+  author?: User;
   numberOfMembers: number;
-  members: Types.ObjectId[];
+  members?: User[];
   startDate?: Date;
   period: number;
   budget: number;

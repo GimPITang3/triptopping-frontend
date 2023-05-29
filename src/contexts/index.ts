@@ -9,7 +9,6 @@ export const PlanContext = createContext<{
   plan: {
     name: '',
     numberOfMembers: 1,
-    author: '',
     members: [],
     budget: 0,
     period: 1,

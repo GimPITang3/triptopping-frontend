@@ -7,7 +7,6 @@ export const initPlan = (): Plan => ({
   name: '',
   numberOfMembers: 1,
   members: [],
-  author: '',
   budget: 0,
   period: 1,
   tags: [],
