@@ -35,7 +35,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
 }) => {
   const router = useRouter();
 
-  let dateString = date
+  const dateString = date
     ? (() => {
         console.log(date);
         const startDate = DateTime.fromISO(new Date(date).toISOString());
@@ -65,7 +65,7 @@ const ItineraryList: FC<ItineraryListProps> = ({
             {name}
           </p>
           <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-            {dateString}
+            {`${dateString} · ${numberOfMembers}명`}
           </p>
         </div>
         <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">

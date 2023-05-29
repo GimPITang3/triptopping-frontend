@@ -39,20 +39,20 @@ const ItineraryList: FC<ItineraryListProps> = ({
 }) => {
   let dateString = date
     ? (() => {
-      const startDate = DateTime.fromISO(new Date(date).toISOString());
-      const endDate = startDate.plus({ days: period });
-      const diff = startDate.diff(DateTime.now(), ['days']).days;
-      const dDay = Math.ceil(diff);
+        const startDate = DateTime.fromISO(new Date(date).toISOString());
+        const endDate = startDate.plus({ days: period });
+        const diff = startDate.diff(DateTime.now(), ['days']).days;
+        const dDay = Math.ceil(diff);
 
-      return (
-        'D-' +
-        (dDay === 0 ? 'day' : dDay) +
-        ' | ' +
-        startDate.toFormat('MM.dd(EEE)') +
-        ' - ' +
-        endDate.toFormat('MM.dd(EEE)')
-      );
-    })()
+        return (
+          'D-' +
+          (dDay === 0 ? 'day' : dDay) +
+          ' | ' +
+          startDate.toFormat('MM.dd(EEE)') +
+          ' - ' +
+          endDate.toFormat('MM.dd(EEE)')
+        );
+      })()
     : period - 1 + '박' + period + '일';
 
   return (
@@ -73,14 +73,12 @@ const ItineraryList: FC<ItineraryListProps> = ({
       <div>
         <div className="avatar-group -space-x-6">
           {
+            // TODO:
             // numberOfMembers 만큼 반복
             [...Array(numberOfMembers)].map((_, i) => (
               <div className="avatar border-gray-100" key={i}>
                 <div className="w-12">
-                  <Image
-                    src={younha}
-                    alt=""
-                  />
+                  <Image src={younha} alt="" />
                 </div>
               </div>
             ))
@@ -133,8 +131,12 @@ const Home: NextPage = () => {
                 priority={true}
               />
               <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#item2" className="btn btn-circle bg-gray-400/30">❮</a>
-                <a href="#item2" className="btn btn-circle bg-gray-400/30">❯</a>
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">
+                  ❮
+                </a>
+                <a href="#item2" className="btn btn-circle bg-gray-400/30">
+                  ❯
+                </a>
               </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
                 TripTopping
@@ -148,8 +150,12 @@ const Home: NextPage = () => {
                 priority={true}
               />
               <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-                <a href="#item1" className="btn btn-circle bg-gray-400/30">❮</a>
-                <a href="#item1" className="btn btn-circle bg-gray-400/30">❯</a>
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">
+                  ❮
+                </a>
+                <a href="#item1" className="btn btn-circle bg-gray-400/30">
+                  ❯
+                </a>
               </div>
               <div className="absolute bottom-10 left-10 text-white text-xl font-bold">
                 여행 계획을 세워보세요
@@ -161,9 +167,7 @@ const Home: NextPage = () => {
             <div className="flex flex-col w-full p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 min-h-[348px]">
               <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
                 <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white sm:ms-2">
-                  {user ?
-                    `${user?.nickname}님의 여행 계획`
-                    : '여행 계획'}
+                  {user ? `${user?.nickname}님의 여행 계획` : '여행 계획'}
                 </h5>
                 {user ? (
                   <button
@@ -185,7 +189,9 @@ const Home: NextPage = () => {
                       />
                     </svg>
                   </button>
-                ) : ''}
+                ) : (
+                  ''
+                )}
               </div>
               {user ? (
                 <div className="flow-root">
@@ -194,7 +200,10 @@ const Home: NextPage = () => {
                     className="divide-y divide-gray-200 dark:divide-gray-700"
                   >
                     {planList.map(
-                      ({ planId, name, startDate, period, numberOfMembers }, index) => {
+                      (
+                        { planId, name, startDate, period, numberOfMembers },
+                        index,
+                      ) => {
                         return (
                           <li key={`plan-${index}`} className="py-3 sm:py-1">
                             <ItineraryList
@@ -212,8 +221,10 @@ const Home: NextPage = () => {
                 </div>
               ) : (
                 <div className="flex justify-center items-center grow">
-                  <button className="btn btn-primary"
-                    onClick={() => router.push('/account/login')}>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => router.push('/account/login')}
+                  >
                     로그인이 필요합니다
                   </button>
                 </div>
