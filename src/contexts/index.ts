@@ -35,6 +35,7 @@ export const UserContext = createContext<{
     nickname: '',
     email: '',
     introduce: '',
+    google: {},
   },
   setUser: () => {},
   accessToken: '',
