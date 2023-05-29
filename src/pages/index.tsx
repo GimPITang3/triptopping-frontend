@@ -59,8 +59,8 @@ const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
         </div>
       </div>
       <div>
-        <div className="hidden sm:block avatar-group -space-x-6">
-          {[...(plan.members || []), ...(plan.author ? [plan.author] : [])].map(
+        <div className="avatar-group -space-x-6">
+          {[...(plan.members?.slice(0, 2) || []), ...(plan.author ? [plan.author] : [])].map(
             (member) => {
               return (
                 <div
