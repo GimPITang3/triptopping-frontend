@@ -17,14 +17,13 @@ import BtmNavbar from '@/components/BtmNavbar';
 import CommunityCard from '@/components/CommunityCard';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
+import UserProfileImage from '@/components/UserProfileImage';
 
 import banner1 from '../../public/topbanner1.jpeg';
 import banner2 from '../../public/topbanner2.jpeg';
-import younha from '../../public/younha.png';
-import UserProfileImage from '@/components/UserProfileImage';
 
 const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
-  let dateString = plan.startDate
+  const dateString = plan.startDate
     ? (() => {
         const startDate = DateTime.fromISO(
           new Date(plan.startDate).toISOString(),
@@ -61,16 +60,18 @@ const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
       </div>
       <div>
         <div className="avatar-group -space-x-6">
-          {plan.members?.map((member) => {
-            return (
-              <div
-                key={member.userId}
-                className="avatar border-gray-100 w-12 h-12 relative"
-              >
-                <UserProfileImage user={member} />
-              </div>
-            );
-          })}
+          {[...(plan.members || []), ...(plan.author ? [plan.author] : [])].map(
+            (member) => {
+              return (
+                <div
+                  key={member.userId}
+                  className="avatar border-gray-100 w-12 h-12 relative"
+                >
+                  <UserProfileImage user={member} />
+                </div>
+              );
+            },
+          )}
         </div>
       </div>
     </Link>
