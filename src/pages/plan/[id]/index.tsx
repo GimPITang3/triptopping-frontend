@@ -42,6 +42,7 @@ import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
 import x from '../../../../public/x.svg';
 import younha from '../../../../public/younha.png';
+import { AddressType } from '@googlemaps/google-maps-services-js';
 
 interface SearchResult {
   position: {
@@ -168,7 +169,7 @@ const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   );
 };
 
-const PlanPage: NextPage = ({ }) => {
+const PlanPage: NextPage = ({}) => {
   const router = useRouter();
   const { id } = router.query;
   const { plan, setPlan } = useContext(PlanContext);
@@ -193,16 +194,34 @@ const PlanPage: NextPage = ({ }) => {
   };
 
   const onClickDeleteItinerary = async (day: number, index: number) => {
-    const excludePlaceIds = plan.itinerary[day]
-      .splice(index, 1)
-      .map(
-        (item) => (flattenScheduleSlot(item) as Place).details?.place_id || '',
-      );
-    await excludePlaces(id as string, excludePlaceIds);
+    if (plan.itinerary[day][index].system?.details) {
+      const excludePlaceIds = plan.itinerary[day]
+        .splice(index, 1)
+        .map(
+          (item) =>
+            (flattenScheduleSlot(item) as Place).details?.place_id || '',
+        );
+      await excludePlaces(id as string, excludePlaceIds);
+      setPlan((prev) => {
+        prev.excludes = Array.isArray(prev.excludes)
+          ? prev.excludes.concat(excludePlaceIds)
+          : excludePlaceIds;
+        return { ...prev };
+      });
+    } else {
+      setPlan((prev) => {
+        prev.itinerary[day].splice(index, 1);
+        return { ...prev };
+      });
+    }
+  };
+
+  const onClickAddItinerary = async (day: number) => {
     setPlan((prev) => {
-      prev.excludes = Array.isArray(prev.excludes)
-        ? prev.excludes.concat(excludePlaceIds)
-        : excludePlaceIds;
+      prev.itinerary[day].splice(prev.itinerary[day].length - 1, 0, {
+        type: 'place',
+        system: {},
+      });
       return { ...prev };
     });
   };
@@ -222,6 +241,8 @@ const PlanPage: NextPage = ({ }) => {
 
     const sourceIdx = result.source.index;
     const destIdx = result.destination.index;
+    if (destIdx === 0 || destIdx === plan.itinerary[destinationDay].length - 1)
+      return;
 
     const item = plan.itinerary[sourceDay][sourceIdx];
     // change system to manual
@@ -282,8 +303,18 @@ const PlanPage: NextPage = ({ }) => {
             <div className="navbar-start ps-1 w-fit">
               <div className="">
                 <Link href="/plan/list">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-7 w-7" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="h-7 w-7"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                    />
                   </svg>
                 </Link>
               </div>
@@ -302,7 +333,9 @@ const PlanPage: NextPage = ({ }) => {
           <header className="flex justify-between items-end">
             <div className="space-y-2 text-lg">
               <div className="indicator">
-                <span className="indicator-item badge badge-info">{plan.numberOfMembers}명</span>
+                <span className="indicator-item badge badge-info">
+                  {plan.numberOfMembers}명
+                </span>
                 <div className="avatar-group -space-x-6">
                   {
                     // 임시로 기본사진
@@ -310,10 +343,7 @@ const PlanPage: NextPage = ({ }) => {
                     [...Array(plan.numberOfMembers)].map((_, i) => (
                       <div className="avatar border-gray-100" key={i}>
                         <div className="w-12">
-                          <Image
-                            src={younha}
-                            alt=""
-                          />
+                          <Image src={younha} alt="" />
                         </div>
                       </div>
                     ))
@@ -372,6 +402,7 @@ const PlanPage: NextPage = ({ }) => {
             >
               {plan.itinerary
                 .flatMap((schedule) => schedule)
+                .filter((schedule) => schedule.system?.details)
                 .map((schedule, idx) => {
                   return (
                     <Marker
@@ -408,7 +439,9 @@ const PlanPage: NextPage = ({ }) => {
                               key={`itinerary${dayIdx}-${idx}`}
                               draggableId={`itinerary${dayIdx}-${idx}`}
                               index={idx}
-                              isDragDisabled={idx === 0 || idx === itineraryDaily.length - 1}
+                              isDragDisabled={
+                                idx === 0 || idx === itineraryDaily.length - 1
+                              }
                             >
                               {(provided) => {
                                 const place = flattenScheduleSlot(itinerary)
@@ -418,14 +451,16 @@ const PlanPage: NextPage = ({ }) => {
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                     ref={provided.innerRef}
-                                    onClick={() =>
-                                      map?.panTo(
-                                        place.geometry?.location || {
-                                          lat: 0,
-                                          lng: 0,
-                                        },
-                                      )
-                                    }
+                                    onClick={() => {
+                                      if (place) {
+                                        map?.panTo(
+                                          place.geometry?.location || {
+                                            lat: 0,
+                                            lng: 0,
+                                          },
+                                        );
+                                      }
+                                    }}
                                   >
                                     <div
                                       className="py-1"
@@ -448,69 +483,92 @@ const PlanPage: NextPage = ({ }) => {
                                         <div
                                           className={
                                             'card-body rounded-lg shadow-md bg-[#ffffff] ' +
-                                            (
-                                              // itinerary idx가 처음 또는 마지막이면 회색
-                                              // itinerary에 manual이 있으면 시안, 없으면 핑크
-                                              idx === 0 ||
-                                                idx === itineraryDaily.length - 1
-                                                ? 'shadow-gray-500'
-                                                : (
-                                                  itinerary?.manual
-                                                    ? 'shadow-cyan-300'
-                                                    : 'shadow-pink-300'
-                                                )
-                                            )
+                                            // itinerary idx가 처음 또는 마지막이면 회색
+                                            // itinerary에 manual이 있으면 시안, 없으면 핑크
+                                            (idx === 0 ||
+                                            idx === itineraryDaily.length - 1
+                                              ? 'shadow-gray-500'
+                                              : itinerary?.manual
+                                              ? 'shadow-cyan-300'
+                                              : 'shadow-pink-300')
                                           }
                                         >
                                           <h2 className="card-title">
                                             <p className="flex-1 line-clamp-1">
-                                              {place.translated_name ||
-                                                place.name ||
-                                                '테스트'}
+                                              {place
+                                                ? place.translated_name ||
+                                                  place.name ||
+                                                  '테스트'
+                                                : '자동 추천 일정'}
                                             </p>
-                                            <button
-                                              onClick={() =>
-                                                ToggleSchedule(dayIdx, idx)
-                                              }
-                                            >
-                                              <Image
-                                                src={
-                                                  !plan.itinerary[dayIdx][idx]
-                                                    .manual
-                                                    ? check
-                                                    : x
-                                                }
-                                                alt="check"
-                                                width={28}
-                                                height={28}
-                                              />
-                                            </button>
-                                            <button
-                                              onClick={() =>
-                                                onClickDeleteItinerary(
-                                                  dayIdx,
-                                                  idx,
-                                                )
-                                              }
-                                            >
-                                              <Image
-                                                src={trash}
-                                                alt="delete"
-                                                width={20}
-                                                height={20}
-                                              />
-                                            </button>
+                                            {place &&
+                                              !place?.types?.includes(
+                                                AddressType.airport,
+                                              ) &&
+                                              !place?.types?.includes(
+                                                AddressType.lodging,
+                                              ) && (
+                                                <button
+                                                  onClick={() =>
+                                                    ToggleSchedule(dayIdx, idx)
+                                                  }
+                                                >
+                                                  <Image
+                                                    src={
+                                                      !plan.itinerary[dayIdx][
+                                                        idx
+                                                      ].manual
+                                                        ? check
+                                                        : x
+                                                    }
+                                                    alt="check"
+                                                    width={28}
+                                                    height={28}
+                                                  />
+                                                </button>
+                                              )}
+                                            {place &&
+                                              !place?.types?.includes(
+                                                AddressType.airport,
+                                              ) &&
+                                              !place?.types?.includes(
+                                                AddressType.lodging,
+                                              ) && (
+                                                <button
+                                                  onClick={() =>
+                                                    onClickDeleteItinerary(
+                                                      dayIdx,
+                                                      idx,
+                                                    )
+                                                  }
+                                                >
+                                                  <Image
+                                                    src={trash}
+                                                    alt="delete"
+                                                    width={20}
+                                                    height={20}
+                                                  />
+                                                </button>
+                                              )}
                                           </h2>
                                           <a
                                             className="line-clamp-1"
                                             target="_blank"
-                                            href={GetGoogleMapUrl(
-                                              place.geometry?.location.lat || 0,
-                                              place.geometry?.location.lng || 0,
-                                              place.place_id || '',
-                                            )}
+                                            href={
+                                              place
+                                                ? GetGoogleMapUrl(
+                                                    place.geometry?.location
+                                                      .lat || 0,
+                                                    place.geometry?.location
+                                                      .lng || 0,
+                                                    place.place_id || '',
+                                                  )
+                                                : undefined
+                                            }
                                           >
-                                            {place.formatted_address}
+                                            {place
+                                              ? place.formatted_address
+                                              : '저장 및 추천을 눌러 자동으로 추천 받으세요'}
                                           </a>
                                         </div>
                                       </div>
@@ -537,11 +595,18 @@ const PlanPage: NextPage = ({ }) => {
                     {/* 새 AI 추천 일정 추가 */}
                     <label
                       className="btn btn-ghost bg-white flex justify-center shadow-lg mt-2 w-1/2 underline decoration-sky-500/80 decoration-2 underline-offset-4 decoration-wavy shadow-sky-500/50"
-                      onClick={() => setSelectDay(dayIdx)}
-                      htmlFor="modal-google-map"
+                      onClick={() => onClickAddItinerary(dayIdx)}
+                      htmlFor=""
                     >
                       <div className="text-sky-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="mr-2 w-5 h-5" viewBox="0 0 16 16">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="mr-2 w-5 h-5"
+                          viewBox="0 0 16 16"
+                        >
                           <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828l.645-1.937zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.734 1.734 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.734 1.734 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.734 1.734 0 0 0 3.407 2.31l.387-1.162zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L10.863.1z" />
                         </svg>
                       </div>
@@ -570,7 +635,7 @@ const PlanPage: NextPage = ({ }) => {
             className="btn btn-primary w-40 shadow-lg shadow-primary"
             onClick={() => {
               setPlan(initPlan());
-              router.push(`/plan/details/${plan.planId}`)
+              router.push(`/plan/details/${plan.planId}`);
             }}
           >
             최종 계획 확인
