@@ -88,9 +88,8 @@ export interface Article {
   author?: User;
   plan?: Plan;
   content: string;
-  likes: number;
-  comments: Comment[];
-  likes: number;
+  comments?: Comment[];
+  likes?: User[];
   createdAt: string;
   updatedAt: string;
 }

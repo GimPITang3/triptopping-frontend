@@ -92,8 +92,14 @@ export const deleteComment = async (
   return resp.data;
 };
 
-export const incLikes = async (articleId: string): Promise<Article> => {
-  const resp = await client.post<Article>(`/articles/${articleId}/likes`);
+export const likeArticle = async (articleId: string): Promise<Article> => {
+  const resp = await client.post<Article>(`/articles/${articleId}/like`);
+
+  return resp.data;
+};
+
+export const unlikeArticle = async (articleId: string): Promise<Article> => {
+  const resp = await client.delete<Article>(`/articles/${articleId}/like`);
 
   return resp.data;
 };

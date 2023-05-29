@@ -4,12 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
-import Image, { StaticImageData } from 'next/image';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-import { PlanContext } from '@/contexts';
-import { Place } from '@/types';
-import { flattenScheduleSlot } from '@/utils';
 import {
   GoogleMap,
   LoadScript,
@@ -17,9 +12,17 @@ import {
   Polyline,
 } from '@react-google-maps/api';
 
-import { UserContext } from '@/contexts';
-import { User, Article, Comment } from '@/types';
-import { getArticle, createComment, deleteComment, incLikes, deleteArticle } from '@/services/articlesService';
+import { Place, Article } from '@/types';
+import { flattenScheduleSlot } from '@/utils';
+import { UserContext, PlanContext } from '@/contexts';
+import {
+  getArticle,
+  createComment,
+  deleteComment,
+  likeArticle,
+  deleteArticle,
+  unlikeArticle,
+} from '@/services/articlesService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
@@ -46,17 +49,39 @@ const Comments: FC<CommentProp> = ({
     <div>
       <div className="flex flex-row mb-2">
         <p className="font-bold">{name}</p>
-        <p className="grow text-sm text-gray-400 ml-2">| {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat('MM.dd')}</p>
-        {isSameUser ? (<label
-          onClick={(e) => {
-                e.stopPropagation();
-                onClickDelComment(id);
-              }}
-          htmlFor="del-comment-modal"
-          className="btn btn-square btn-xs"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-        </label>) : ('')}
+        <p className="grow text-sm text-gray-400 ml-2">
+          |{' '}
+          {DateTime.fromISO(new Date(createdAt).toISOString()).toFormat(
+            'MM.dd',
+          )}
+        </p>
+        {isSameUser ? (
+          <label
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickDelComment(id);
+            }}
+            htmlFor="del-comment-modal"
+            className="btn btn-square btn-xs"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </label>
+        ) : (
+          ''
+        )}
       </div>
       <p>{content}</p>
       <div className="divider"></div>
@@ -68,15 +93,14 @@ const ArticlePage: NextPage = ({}) => {
   const router = useRouter();
 
   const { user, setUser } = useContext(UserContext);
+  const { plan, setPlan } = useContext(PlanContext);
+
   const [article, setArticle] = useState<Article>();
   const [delId, setDelId] = useState('');
-  const { plan, setPlan } = useContext(PlanContext);
   const [page, setPage] = useState(0);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [focusedPlace, setFocusedPlace] = useState<Place | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
   const [comment, setComment] = useState('');
-  const [likes, setLikes] = useState(0);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -105,25 +129,15 @@ const ArticlePage: NextPage = ({}) => {
 
     getArticle(`${id}`).then((article) => {
       setArticle(article);
-      setComments(article.comments);
-      setLikes(article.likes);
       if (article.plan) {
         setPlan(article.plan);
+        setFocusedPlace(
+          flattenScheduleSlot(article.plan.itinerary[0][0]).details || null,
+        );
+        console.log(article.plan);
       }
-      console.log(article.plan);
     });
-  }, [id]);
-
-  useEffect(() => {
-    if (article?.plan) {
-      setPlan(article.plan);
-      console.log(plan);
-      console.log(itineraryDaily);
-      setFocusedPlace(
-        flattenScheduleSlot(plan.itinerary[0][0]).details || null,
-      );
-    }
-  }, [article, setPlan]);
+  }, [id, setPlan]);
 
   useEffect(() => {
     if (map && focusedPlace !== null) {
@@ -141,7 +155,7 @@ const ArticlePage: NextPage = ({}) => {
       content: comment,
     }).then((res) => {
       getArticle(`${id}`).then((article) => {
-        setComments(article.comments);
+        setArticle(article);
         setComment('');
       });
     });
@@ -152,12 +166,20 @@ const ArticlePage: NextPage = ({}) => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
   };
 
-  const toggleLikes = () => {
+  const onClickLikeButton = useCallback(() => {
     if (typeof id !== 'string') return;
-    incLikes(id).then((article) => {
-      setLikes(article.likes);
-    });
-  };
+    if (!user || !article) return;
+
+    if (article.likes?.map((i) => i.userId).includes(user.userId)) {
+      unlikeArticle(id).then((article) => {
+        setArticle(article);
+      });
+    } else {
+      likeArticle(id).then((article) => {
+        setArticle(article);
+      });
+    }
+  }, [id, article, user]);
 
   const handleDelId = (id: string) => {
     setDelId(id);
@@ -167,15 +189,14 @@ const ArticlePage: NextPage = ({}) => {
     if (typeof id !== 'string') return;
     deleteArticle(id).then(() => {
       router.push('/community');
-    })
-  }
+    });
+  };
 
   const delComment = () => {
     if (typeof id !== 'string') return;
     deleteComment(id, delId).then((article) => {
-      setComments(article.comments);
+      setArticle(article);
       setDelId('');
-      console.log(comments);
     });
   };
 
@@ -188,7 +209,11 @@ const ArticlePage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
-          <input type="checkbox" id="del-comment-modal" className="modal-toggle" />
+          <input
+            type="checkbox"
+            id="del-comment-modal"
+            className="modal-toggle"
+          />
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">댓글이 삭제돼요</h3>
@@ -208,13 +233,15 @@ const ArticlePage: NextPage = ({}) => {
             </div>
           </div>
 
-          <input type="checkbox" id="del-article-modal" className="modal-toggle" />
+          <input
+            type="checkbox"
+            id="del-article-modal"
+            className="modal-toggle"
+          />
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">글이 삭제돼요</h3>
-              <p className="py-4">
-                글을 삭제하시겠습니까?
-              </p>
+              <p className="py-4">글을 삭제하시겠습니까?</p>
               <div className="modal-action">
                 <label
                   onClick={delArticle}
@@ -243,7 +270,7 @@ const ArticlePage: NextPage = ({}) => {
                     <div className="avatar placeholder">
                       <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
                         <span className="text-lg">
-                          {article?.author?.nickname.slice(0, 1)}
+                          {article?.author?.nickname?.slice(0, 1)}
                         </span>
                       </div>
                     </div>
@@ -258,11 +285,19 @@ const ArticlePage: NextPage = ({}) => {
                     </p>
                   </div>
 
-                  {article?.author?.userId===user?.userId ? (<div className="flex flex-row justify-end">
-                    <Link href={`/community/${id}/edit`} className="text-sm">수정</Link>
-                    <p className="text-sm">&nbsp;|&nbsp;</p>
-                    <label htmlFor="del-article-modal" className="text-sm">삭제</label>
-                  </div>) : ('')}
+                  {article?.author?.userId === user?.userId ? (
+                    <div className="flex flex-row justify-end">
+                      <Link href={`/community/${id}/edit`} className="text-sm">
+                        수정
+                      </Link>
+                      <p className="text-sm">&nbsp;|&nbsp;</p>
+                      <label htmlFor="del-article-modal" className="text-sm">
+                        삭제
+                      </label>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                   <div className="divider mb-4"></div>
                   {article?.plan ? (
                     <div>
@@ -415,39 +450,42 @@ const ArticlePage: NextPage = ({}) => {
                       </label>
                     </CopyToClipboard>
                     <p className="text-sm">&nbsp;|&nbsp;</p>
-                    <label onClick={() => toggleLikes()} className="swap">
-                      <input type="checkbox" />
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="swap-on w-6 h-6"
-                      >
-                        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                      </svg>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="swap-off w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                        />
-                      </svg>
-                    </label>
-                    <p>{likes}</p>
+                    <span onClick={onClickLikeButton} className="">
+                      {article?.likes?.find((i) => i.userId == user?.userId) !==
+                      undefined ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                          />
+                        </svg>
+                      )}
+                    </span>
+                    <p>{article?.likes?.length}</p>
                   </div>
                   <div className="divider"></div>
-                  <p className="mb-4">댓글 {article?.comments.length}개</p>
+                  <p className="mb-4">댓글 {article?.comments?.length}개</p>
                   <div className="overflow-x-auto text-sm mb-12">
                     <div className="flex flex-col">
                       <ul>
-                        {comments.map((comment, i) => (
+                        {article?.comments?.map((comment, i) => (
                           <li key={`comment-${i}`}>
                             <Comments
                               id={comment.commentId}
