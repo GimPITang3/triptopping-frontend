@@ -1,3 +1,6 @@
+import { NextPage } from 'next';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
 import {
   ChangeEvent,
   useCallback,
@@ -5,18 +8,14 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { NextPage } from 'next';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
 
 import { UserContext } from '@/contexts';
 
 import { getUser, updateUser } from '@/services/usersService';
 
 import BtmNavbar from '@/components/BtmNavbar';
-import Topbar from '@/components/Topbar';
 import Sidebar from '@/components/Sidebar';
-import Image from 'next/image';
+import Topbar from '@/components/Topbar';
 import UserProfileImage from '@/components/UserProfileImage';
 
 const AccountPage: NextPage = ({}) => {
@@ -74,7 +73,7 @@ const AccountPage: NextPage = ({}) => {
           <Topbar />
 
           <div className="flex justify-center">
-            <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full max-w-sm p-4 mt-6 mb-24 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="space-y-6">
                 <h5 className="text-xl font-medium text-gray-900 dark:text-white">
                   프로필 변경
