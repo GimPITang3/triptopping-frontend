@@ -405,7 +405,7 @@ const ArticlePage: NextPage = ({}) => {
                           </button>
                         ))}
                       </div>
-                      <div className="rounded-md shadow-inner bg-white/80 h-64 overflow-y-auto">
+                      <div className="rounded-md shadow-inner bg-white/80 h-64 overflow-y-auto mb-4">
                         <ul
                           key={`day-${page}`}
                           className="steps steps-vertical snap-y snap-mandatory h-full overflow-y-auto scrollbar-hide pl-4"
@@ -431,9 +431,6 @@ const ArticlePage: NextPage = ({}) => {
                             ))}
                         </ul>
                       </div>
-                      <button className="btn btn-primary w-full mb-4">
-                        내 여행계획에 추가하기
-                      </button>
                     </div>
                   ) : (
                     ''
