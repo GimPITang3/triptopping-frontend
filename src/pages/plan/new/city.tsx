@@ -114,10 +114,23 @@ const Num: FC = () => {
         marker.setMap(map);
         console.log(results);
         const result = results.find(item => item.types[0] == 'plus_code');
-        const country = result?.address_components.find(item => item.types[0] == 'country')?.long_name;
-        const city = result?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
-        setCountryName(country ? country : '');
-        setCityName(city ? city : '');
+        if(result?.address_components.find(item => item.types[0] == 'country'))
+        {
+          const country = result?.address_components.find(item => item.types[0] == 'country')?.long_name;
+          const city = result?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
+          setCountryName(country ? country : '');
+          setCityName(city ? city : '');
+        }
+        else
+        {
+          console.log("here");
+          console.log(result);
+          const secResult = results.find(item => item.types[0] == 'administrative_area_level_1');
+          const country = secResult?.address_components.find(item => item.types[0] == 'country')?.long_name;
+          const city = secResult?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
+          setCountryName(country ? country : '');
+          setCityName(city ? city : '');
+        }
         return results;
       })
       .catch((e) => {
