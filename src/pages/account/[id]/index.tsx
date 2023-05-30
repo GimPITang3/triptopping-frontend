@@ -1,4 +1,10 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -51,6 +57,11 @@ const AccountPage: NextPage = ({}) => {
     });
   };
 
+  const onClickChangeProfileImage = useCallback(() => {
+    // TODO:
+    alert('not yet implemented');
+  }, []);
+
   return (
     <div className="min-h-screen">
       <Head>
@@ -70,8 +81,15 @@ const AccountPage: NextPage = ({}) => {
                 </h5>
                 <div className="flex justify-center">
                   <div className="avatar placeholder">
-                    <div className="bg-neutral-focus text-neutral-content rounded-full w-24 relative">
+                    <div className="rounded-full w-24 relative">
                       {user ? <UserProfileImage user={user} /> : <></>}
+
+                      <div
+                        className="absolute flex flex-row justify-center items-center w-full h-full text-gray-300 bg-gray-950/40 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                        onClick={onClickChangeProfileImage}
+                      >
+                        <div>변경</div>
+                      </div>
                     </div>
                   </div>
                 </div>
