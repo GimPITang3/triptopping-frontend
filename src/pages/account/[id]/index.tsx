@@ -1,16 +1,22 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 import { UserContext } from '@/contexts';
 
 import { getUser, updateUser } from '@/services/usersService';
 
 import BtmNavbar from '@/components/BtmNavbar';
-import Topbar from '@/components/Topbar';
 import Sidebar from '@/components/Sidebar';
-import Image from 'next/image';
+import Topbar from '@/components/Topbar';
+import UserProfileImage from '@/components/UserProfileImage';
 
 const AccountPage: NextPage = ({}) => {
   const router = useRouter();
@@ -50,6 +56,11 @@ const AccountPage: NextPage = ({}) => {
     });
   };
 
+  const onClickChangeProfileImage = useCallback(() => {
+    // TODO:
+    alert('not yet implemented');
+  }, []);
+
   return (
     <div className="min-h-screen">
       <Head>
@@ -62,26 +73,22 @@ const AccountPage: NextPage = ({}) => {
           <Topbar />
 
           <div className="flex justify-center">
-            <div className="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-full max-w-sm p-4 mt-6 mb-24 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
               <div className="space-y-6">
                 <h5 className="text-xl font-medium text-gray-900 dark:text-white">
                   프로필 변경
                 </h5>
                 <div className="flex justify-center">
                   <div className="avatar placeholder">
-                    <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
-                      {user?.google.profileUrl ? (
-                        <Image
-                          src={user.google.profileUrl}
-                          alt=""
-                          className="object-cover rounded-full"
-                          fill
-                        />
-                      ) : (
-                        <span className="text-3xl">
-                          {user?.nickname.slice(0, 1)}
-                        </span>
-                      )}
+                    <div className="rounded-full w-24 relative">
+                      {user ? <UserProfileImage user={user} /> : <></>}
+
+                      <div
+                        className="absolute flex flex-row justify-center items-center w-full h-full text-gray-300 bg-gray-950/40 opacity-0 hover:opacity-100 transition-opacity cursor-pointer"
+                        onClick={onClickChangeProfileImage}
+                      >
+                        <div>변경</div>
+                      </div>
                     </div>
                   </div>
                 </div>

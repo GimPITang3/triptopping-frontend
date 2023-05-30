@@ -1,8 +1,9 @@
 import { FC, useCallback, useContext } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { UserContext } from '@/contexts';
-import { useRouter } from 'next/router';
+import UserProfileImage from './UserProfileImage';
 
 const Sidebar: FC = () => {
   const router = useRouter();
@@ -21,8 +22,8 @@ const Sidebar: FC = () => {
         {user?.userId ? (
           <div className="flex flex-col">
             <div className="avatar placeholder flex justify-center">
-              <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
-                <span className="text-3xl">{user.nickname.slice(0, 1)}</span>
+              <div className="bg-neutral-focus text-neutral-content rounded-full w-24 relative">
+                <UserProfileImage user={user} />
               </div>
             </div>
             <h2 className="card-title justify-center my-4">{user.nickname}</h2>

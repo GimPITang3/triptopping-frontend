@@ -86,7 +86,12 @@ const CommunityPage: NextPage = ({}) => {
                     자유게시판
                   </h5>
                   <div className="flex justify-end">
-                    <button onClick={() => router.push('/community/new')} className="btn btn-primary">글 작성</button>
+                    <button
+                      onClick={() => router.push('/community/new')}
+                      className="btn btn-primary"
+                    >
+                      글 작성
+                    </button>
                   </div>
                 </div>
 
@@ -98,6 +103,7 @@ const CommunityPage: NextPage = ({}) => {
                           article={article}
                           key={article.articleId}
                           tags={article.plan?.tags}
+                          coverImage={article.coverImageUrl}
                         />
                       );
                     })}

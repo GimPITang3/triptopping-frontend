@@ -6,12 +6,14 @@ interface CreateArticleDto {
   title: string;
   content: string;
   planId: string;
+  coverImageUrl?: string;
 }
 
 interface UpdateArticleDto {
   title?: string;
   content?: string;
-  planId: string;
+  planId?: string;
+  coverImageUrl?: string;
 }
 
 interface CreateCommentDto {

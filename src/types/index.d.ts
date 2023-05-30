@@ -90,6 +90,7 @@ export interface Article {
   content: string;
   comments?: Comment[];
   likes?: User[];
+  coverImageUrl?: string;
   createdAt: string;
   updatedAt: string;
 }

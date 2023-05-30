@@ -1,9 +1,44 @@
-import { FC, useContext, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { FC, useContext, useEffect, useState } from 'react';
 
 import { PlanContext } from '@/contexts';
 import { createPlan } from '@/services/plansService';
+
+const LoadingMessage: FC = () => {
+  const messages = [
+    '여행 #태그 취향을 분석중이에요!',
+    '여행 일정을 생각중이에요!',
+    '유명 여행지를 찾아보고 있어요!',
+    '여행 일정을 배분하고 있어요!',
+    '여행 계획을 작성중이에요!',
+  ];
+  const [index, setIndex] = useState(0);
+  const [message, setMessage] = useState(messages[0]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((currentIndex) => {
+        const newIndex = currentIndex + 1;
+        if (newIndex < messages.length) {
+          setMessage(messages[newIndex]);
+          return newIndex;
+        } else {
+          clearInterval(timer);
+          return currentIndex;
+        }
+      });
+    }, 2000);
+
+    return () => clearInterval(timer); // 컴포넌트가 unmount 되었을 때 타이머를 정리합니다.
+  }, [messages]);
+
+  return (
+    <div>
+      {message}
+    </div>
+  );
+};;
 
 const Tag: FC = () => {
   const router = useRouter();
@@ -133,7 +168,7 @@ const Tag: FC = () => {
       </div>
 
       {loading ? (
-        <div className="fixed inset-0 flex items-center justify-center bg-slate-500/20">
+        <div className="fixed inset-0 flex flex-col items-center justify-center bg-slate-500/20">
           <div role="status">
             <svg
               aria-hidden="true"
@@ -151,7 +186,9 @@ const Tag: FC = () => {
                 fill="currentFill"
               />
             </svg>
-            <span className="sr-only">Loading...</span>
+          </div>
+          <div className="mt-4">
+            <LoadingMessage />
           </div>
         </div>
       ) : null}
