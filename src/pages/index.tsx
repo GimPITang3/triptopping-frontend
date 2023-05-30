@@ -60,18 +60,19 @@ const ItineraryList: FC<{ plan: Plan }> = ({ plan }) => {
       </div>
       <div>
         <div className="avatar-group -space-x-6">
-          {[...(plan.members?.slice(0, 2) || []), ...(plan.author ? [plan.author] : [])].map(
-            (member) => {
-              return (
-                <div
-                  key={member.userId}
-                  className="avatar border-gray-100 w-12 h-12 relative"
-                >
-                  <UserProfileImage user={member} />
-                </div>
-              );
-            },
-          )}
+          {[
+            ...(plan.members?.slice(0, 2) || []),
+            ...(plan.author ? [plan.author] : []),
+          ].map((member) => {
+            return (
+              <div
+                key={member.userId}
+                className="avatar border-gray-100 w-12 h-12 relative"
+              >
+                <UserProfileImage user={member} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </Link>
@@ -237,7 +238,7 @@ const Home: NextPage = () => {
                 <div className="basis-1/2" key={i}>
                   <CommunityCard
                     article={article}
-                    // coverImage={article.coverImage} // TODO:
+                    coverImage={article.coverImageUrl}
                     tags={article.plan?.tags}
                   />
                 </div>

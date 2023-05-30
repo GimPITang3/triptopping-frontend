@@ -23,6 +23,7 @@ const NewArticlePage: NextPage = ({}) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [planId, setPlanId] = useState('');
+  const [coverImageUrl, setCoverImageUrl] = useState<string>();
 
   useEffect(() => {
     if (!user) return;
@@ -35,12 +36,15 @@ const NewArticlePage: NextPage = ({}) => {
 
   const onClickCreate = () => {
     setLoading(true);
+
     createArticle({
       title: title,
       content: content,
       planId: planId,
+      coverImageUrl: coverImageUrl,
     }).then(() => {
       setLoading(false);
+
       router.push('/community');
     });
   };
@@ -85,6 +89,14 @@ const NewArticlePage: NextPage = ({}) => {
                       setTitle(e.target.value);
                     }}
                   />
+                  <input
+                    type="text"
+                    placeholder="커버 이미지의 URL을 입력해 주세요"
+                    className="mb-4 input input-bordered w-full max-w-xs"
+                    onChange={(e) => {
+                      setCoverImageUrl(e.target.value);
+                    }}
+                  />
                   <textarea
                     className="textarea textarea-bordered h-64"
                     placeholder="내용을 입력하세요."
@@ -101,7 +113,7 @@ const NewArticlePage: NextPage = ({}) => {
                     취소
                   </button>
                   <button
-                    onClick={() => onClickCreate()}
+                    onClick={onClickCreate}
                     className={
                       'btn btn-primary' + (loading ? ' btn-disabled' : '')
                     }
