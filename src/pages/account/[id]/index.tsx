@@ -11,6 +11,7 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Topbar from '@/components/Topbar';
 import Sidebar from '@/components/Sidebar';
 import Image from 'next/image';
+import UserProfileImage from '@/components/UserProfileImage';
 
 const AccountPage: NextPage = ({}) => {
   const router = useRouter();
@@ -69,19 +70,8 @@ const AccountPage: NextPage = ({}) => {
                 </h5>
                 <div className="flex justify-center">
                   <div className="avatar placeholder">
-                    <div className="bg-neutral-focus text-neutral-content rounded-full w-24">
-                      {user?.google.profileUrl ? (
-                        <Image
-                          src={user.google.profileUrl}
-                          alt=""
-                          className="object-cover rounded-full"
-                          fill
-                        />
-                      ) : (
-                        <span className="text-3xl">
-                          {user?.nickname.slice(0, 1)}
-                        </span>
-                      )}
+                    <div className="bg-neutral-focus text-neutral-content rounded-full w-24 relative">
+                      {user ? <UserProfileImage user={user} /> : <></>}
                     </div>
                   </div>
                 </div>
