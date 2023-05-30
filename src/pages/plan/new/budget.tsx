@@ -1,19 +1,28 @@
 import { PlanContext } from '@/contexts';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { ChangeEvent, FC, useContext } from 'react';
+import { ChangeEvent, FC, useContext, useEffect, useState } from 'react';
 
 const Budget: FC = () => {
   const router = useRouter();
   const { plan, setPlan } = useContext(PlanContext);
+  const [budgetString, setBudgetString] = useState('');
 
   const addBudget = (num: number) => {
+    setBudgetString((plan.budget + num).toLocaleString());
     setPlan({ ...plan, budget: plan.budget + num });
   };
   const changeEnteredBudget = (e: ChangeEvent<HTMLInputElement>) => {
-    const budgetValue = parseInt(e.target.value.replace(/\,/g, ''));
-    setPlan({ ...plan, budget: budgetValue });
+    const budget = Number(e.target.value.replace(/\,/g, ''));
+    if (isNaN(budget)) {
+      setBudgetString('');
+    } else {
+      setBudgetString(budget.toLocaleString());
+    }
+    setPlan({ ...plan, budget: budget ? budget : 0 });
   };
+
+  console.log(plan);
 
   return (
     <div className="flex flex-col min-h-screen p-8">
@@ -30,7 +39,7 @@ const Budget: FC = () => {
               <span className="shrink-0">금액</span>
               <input
                 type="text"
-                value={plan.budget.toLocaleString()}
+                value={budgetString}
                 onChange={changeEnteredBudget}
                 className="input input-bordered text-right grow min-w-0"
               />
