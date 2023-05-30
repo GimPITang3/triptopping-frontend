@@ -22,8 +22,6 @@ const Budget: FC = () => {
     setPlan({ ...plan, budget: budget ? budget : 0 });
   };
 
-  console.log(plan);
-
   return (
     <div className="flex flex-col min-h-screen p-8">
       <Head>
