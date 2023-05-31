@@ -332,7 +332,7 @@ const PlanPage: NextPage = ({}) => {
         <div className="px-4 my-4 space-y-4">
           <header className="flex justify-between items-end">
             <div className="space-y-2 text-lg">
-              <div className="indicator">
+              {/* <div className="indicator">
                 <span className="indicator-item badge badge-info">
                   {plan.numberOfMembers}명
                 </span>
@@ -349,7 +349,7 @@ const PlanPage: NextPage = ({}) => {
                     ))
                   }
                 </div>
-              </div>
+              </div> */}
               <div>
                 {plan.startDate ? (
                   <div>
