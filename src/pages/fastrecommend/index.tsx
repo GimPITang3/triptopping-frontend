@@ -24,22 +24,26 @@ const FastRecommend: FC = () => {
     setMap(null);
   }, []);
 
-  const onClickRecommend = async () => {
-    const recommends = await getRecommendPlaces(pos);
-    setRecommendPlaces(recommends);
-  };
-
   useEffect(() => {
     if (navigator) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           setPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          // TODO... very strange...
+          // console.log(localStorage);
+          // await new Promise((resolve) => setTimeout(resolve, 50));
+          const recommends = await getRecommendPlaces({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+          });
+          setRecommendPlaces(recommends);
         },
         (err) => console.log(err),
         { timeout: 1000 },
       );
     }
   }, []);
+
   if (pos.lat === 0 && pos.lng === 0) return <div>loading...</div>;
   return (
     <div>
@@ -65,9 +69,6 @@ const FastRecommend: FC = () => {
           ))}
         </GoogleMap>
       </LoadScript>
-      <button className="btn" onClick={onClickRecommend}>
-        빠른 일정 추천
-      </button>
       {recommendPlaces.map((place, idx) => (
         <div key={`recommend-${idx}`}>{place.name}</div>
       ))}
