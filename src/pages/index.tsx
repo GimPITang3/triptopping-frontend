@@ -245,6 +245,19 @@ const Home: NextPage = () => {
               ))}
             </div>
           </div>
+
+          <div className="sticky bottom-24 flex space-x-4 px-4 justify-end">
+            <button
+              className="btn btn-error shadow-lg shadow-error rounded-full w-16 h-16"
+              onClick={() => {
+                router.push(`/fastrecommend`);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-6 w-6" viewBox="0 0 16 16">
+                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <BtmNavbar currentPath={1} />
