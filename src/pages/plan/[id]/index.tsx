@@ -52,6 +52,27 @@ interface SearchResult {
   name: string;
 }
 
+const InviteMemberModal: React.FC = () => {
+  return (
+    <div>
+      <input
+        type="checkbox"
+        id="invite-member-modal"
+        className="modal-toggle"
+      />
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="text-lg font-bold">Hello!</h3>
+          <p className="py-4">This modal works with a hidden checkbox!</p>
+        </div>
+        <label className="modal-backdrop" htmlFor="invite-member-modal">
+          Close
+        </label>
+      </div>
+    </div>
+  );
+};
+
 const GoogleMapModal: React.FC<{ day: number }> = ({ day }) => {
   const { plan, setPlan } = useContext(PlanContext);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -312,7 +333,7 @@ const PlanPage: NextPage = ({}) => {
                     viewBox="0 0 16 16"
                   >
                     <path
-                      fill-rule="evenodd"
+                      fillRule="evenodd"
                       d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
                     />
                   </svg>
@@ -332,7 +353,7 @@ const PlanPage: NextPage = ({}) => {
         <div className="px-4 my-4 space-y-4">
           <header className="flex justify-between items-end">
             <div className="space-y-2 text-lg">
-              {/* <div className="indicator">
+              <div className="indicator">
                 <span className="indicator-item badge badge-info">
                   {plan.numberOfMembers}명
                 </span>
@@ -348,8 +369,15 @@ const PlanPage: NextPage = ({}) => {
                       </div>
                     ))
                   }
+                  <div className="avatar border-gray-100 bg-white">
+                    <div className="w-12">
+                      <label htmlFor="invite-member-modal">
+                        <Image src={plus} alt="" />
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              </div> */}
+              </div>
               <div>
                 {plan.startDate ? (
                   <div>
@@ -619,6 +647,7 @@ const PlanPage: NextPage = ({}) => {
           </div>
         </DragDropContext>
         <ModifyPlanModal />
+        <InviteMemberModal />
         <GoogleMapModal day={selectDay} />
         <div className="h-32"></div>
         <div className="sticky bottom-20 flex space-x-4 px-4 justify-center">

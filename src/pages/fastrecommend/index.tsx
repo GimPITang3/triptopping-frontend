@@ -31,9 +31,13 @@ const FastRecommend: FC = () => {
 
   useEffect(() => {
     if (navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-      });
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setPos({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        },
+        (err) => console.log(err),
+        { timeout: 1000 },
+      );
     }
   }, []);
   if (pos.lat === 0 && pos.lng === 0) return <div>loading...</div>;
@@ -52,6 +56,13 @@ const FastRecommend: FC = () => {
           onUnmount={onUnmount}
         >
           <Marker position={pos}></Marker>
+          {recommendPlaces.map((place, idx) => (
+            <Marker
+              key={`recommend-${idx}`}
+              position={place.geometry?.location || { lat: 0, lng: 0 }}
+              label={`${idx + 1}`}
+            />
+          ))}
         </GoogleMap>
       </LoadScript>
       <button className="btn" onClick={onClickRecommend}>
