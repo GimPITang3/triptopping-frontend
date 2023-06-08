@@ -17,16 +17,23 @@ import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
 import UserProfileImage from '@/components/UserProfileImage';
+import Link from 'next/link';
 
 const AccountPage: NextPage = ({}) => {
   const router = useRouter();
 
-  const { user, setUser } = useContext(UserContext);
+  const { user, setUser, setAccessToken } = useContext(UserContext);
 
   const [nickname, setNickname] = useState(user?.nickname);
   const [introduce, setIntroduce] = useState(user?.introduce);
 
   const { id } = router.query;
+
+  const onLogout = useCallback(() => {
+    setUser(() => undefined);
+    setAccessToken(() => undefined);
+    router.push('/');
+  }, [setUser, setAccessToken, router]);
 
   useEffect(() => {
     if (typeof id !== 'string') return;
@@ -70,6 +77,30 @@ const AccountPage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
+          <input
+            type="checkbox"
+            id="del-user-modal"
+            className="modal-toggle"
+          />
+          <div className="modal">
+            <div className="modal-box">
+              <h3 className="font-bold text-lg">회원 탈퇴</h3>
+              <p className="py-4">정말 탈퇴하시겠습니까?</p>
+              <div className="modal-action">
+                <label
+                  onClick={onLogout}
+                  htmlFor="del-article-modal"
+                  className="btn btn-primary"
+                >
+                  예
+                </label>
+                <label htmlFor="del-article-modal" className="btn">
+                  아니오
+                </label>
+              </div>
+            </div>
+          </div>
+
           <Topbar />
 
           <div className="flex justify-center">
@@ -127,13 +158,16 @@ const AccountPage: NextPage = ({}) => {
                     defaultValue={user?.introduce}
                   ></textarea>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleClickNext}
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  저장
-                </button>
+                <div className="flex justify-between">
+                  <button
+                    type="button"
+                    onClick={handleClickNext}
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    저장
+                  </button>
+                  <label htmlFor="del-user-modal" className="place-self-center link link-error text-sm">회원 탈퇴</label>
+                </div>
               </div>
             </div>
           </div>
