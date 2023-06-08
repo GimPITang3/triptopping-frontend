@@ -74,7 +74,7 @@ const CommunityCard: FC<{
                 <></>
               )}
             </div>
-            <p>{article.author ? article.author.nickname : ''}</p>
+            <p>{article.author ? article.author.nickname : '탈퇴한 사용자'}</p>
           </div>
           <div className="flex flex-row">
             {tags

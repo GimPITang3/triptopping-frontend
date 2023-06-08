@@ -288,7 +288,7 @@ const ArticlePage: NextPage = ({}) => {
                       </div>
                     </div>
                     <p className="text-base ml-1">
-                      {article?.author?.nickname}
+                      {article?.author ? article.author.nickname : '탈퇴한 사용자'}
                     </p>
                     <p className="text-sm text-gray-400 ml-2">
                       {' '}
@@ -520,7 +520,7 @@ const ArticlePage: NextPage = ({}) => {
                           <li key={`comment-${i}`}>
                             <Comments
                               id={comment.commentId}
-                              name={comment.author?.nickname || ''}
+                              name={comment.author?.nickname || '탈퇴한 사용자'}
                               content={comment.content}
                               createdAt={comment.createdAt}
                               isSameUser={

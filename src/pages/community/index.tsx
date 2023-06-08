@@ -14,28 +14,6 @@ import Topbar from '@/components/Topbar';
 import CommunityCard from '@/components/CommunityCard';
 import { getArticles } from '@/services/articlesService';
 
-const dummyArticles: {
-  title: string;
-  description: string;
-  coverImage?: string | StaticImageData;
-}[] = [
-  {
-    title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
-    coverImage: '/imgs/image3.jpg',
-  },
-  {
-    title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
-    coverImage: '/imgs/image1.jpeg',
-  },
-  {
-    title: '지수의 군산 콩국수 여행기',
-    description: '콩국수 맛있겠다',
-    coverImage: '/imgs/image2.jpeg',
-  },
-];
-
 const CommunityPage: NextPage = ({}) => {
   const router = useRouter();
 
