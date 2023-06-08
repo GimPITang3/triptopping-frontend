@@ -21,3 +21,7 @@ export const updateUser = async (
 
   return resp.data;
 };
+
+export const withdrawUser = async (id: string): Promise<void> => {
+  await client.delete('/auth/account');
+};

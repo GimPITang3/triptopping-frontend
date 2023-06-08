@@ -11,7 +11,7 @@ import {
 
 import { UserContext } from '@/contexts';
 
-import { getUser, updateUser } from '@/services/usersService';
+import { getUser, updateUser, withdrawUser } from '@/services/usersService';
 
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
@@ -34,6 +34,15 @@ const AccountPage: NextPage = ({}) => {
     setAccessToken(() => undefined);
     router.push('/');
   }, [setUser, setAccessToken, router]);
+
+  const onWithdrawal = useCallback(async () => {
+    if (user) {
+      await withdrawUser(user.userId);
+      setUser(() => undefined);
+      setAccessToken(() => undefined);
+      router.push('/');
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof id !== 'string') return;
@@ -77,18 +86,14 @@ const AccountPage: NextPage = ({}) => {
       <div className="drawer drawer-end">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
-          <input
-            type="checkbox"
-            id="del-user-modal"
-            className="modal-toggle"
-          />
+          <input type="checkbox" id="del-user-modal" className="modal-toggle" />
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">회원 탈퇴</h3>
               <p className="py-4">정말 탈퇴하시겠습니까?</p>
               <div className="modal-action">
                 <label
-                  onClick={onLogout}
+                  onClick={onWithdrawal}
                   htmlFor="del-article-modal"
                   className="btn btn-primary"
                 >
@@ -166,7 +171,12 @@ const AccountPage: NextPage = ({}) => {
                   >
                     저장
                   </button>
-                  <label htmlFor="del-user-modal" className="place-self-center link link-error text-sm">회원 탈퇴</label>
+                  <label
+                    htmlFor="del-user-modal"
+                    className="place-self-center link link-error text-sm"
+                  >
+                    회원 탈퇴
+                  </label>
                 </div>
               </div>
             </div>
