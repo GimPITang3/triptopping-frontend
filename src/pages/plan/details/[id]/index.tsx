@@ -1,8 +1,10 @@
-import { TopbarContainer } from '@/components/TopbarContainer';
-import { PlanContext } from '@/contexts';
-import { getPlanDetails } from '@/services/plansService';
-import { Place } from '@/types';
-import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
+import { AxiosError } from 'axios';
+import Head from 'next/head';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
+
 import { decode } from '@googlemaps/polyline-codec';
 import {
   GoogleMap,
@@ -10,18 +12,16 @@ import {
   Marker,
   Polyline,
 } from '@react-google-maps/api';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
+
+import { PlanContext } from '@/contexts';
+import { getPlanDetails } from '@/services/plansService';
+import { Place } from '@/types';
+import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
+
+import { TopbarContainer } from '@/components/TopbarContainer';
 
 const Topbar: FC = () => {
   const { plan } = useContext(PlanContext);
-  const router = useRouter();
-  const onBackClick = () => {
-    router.back();
-  };
 
   return (
     <TopbarContainer>
@@ -29,8 +29,18 @@ const Topbar: FC = () => {
         <div className="navbar-start ps-1 w-fit">
           <div className="">
             <Link href="/plan/list">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="h-7 w-7" viewBox="0 0 16 16">
-                <path fillRule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                className="h-7 w-7"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                />
               </svg>
             </Link>
           </div>
@@ -40,9 +50,7 @@ const Topbar: FC = () => {
             {`${plan.name}`}
           </div>
         </div>
-        <div className="navbar-end w-[28px]">
-
-        </div>
+        <div className="navbar-end w-[28px]"></div>
       </div>
     </TopbarContainer>
   );
@@ -99,14 +107,19 @@ const Detail: FC = () => {
   };
 
   useEffect(() => {
-    if (id) {
-      getPlanDetails(`${id}`).then((plan) => {
+    if (!id) return;
+
+    getPlanDetails(`${id}`)
+      .then((plan) => {
         setPlan(plan);
         setFocusedPlace(
           flattenScheduleSlot(plan.itinerary[0][0]).details || null,
         );
+      })
+      .catch((e: AxiosError) => {
+        // TODO: do some appropriate behaviour
+        console.log(e);
       });
-    }
   }, [id, setPlan]);
 
   useEffect(() => {
@@ -124,8 +137,11 @@ const Detail: FC = () => {
   }
 
   const itineraryDaily = plan.itinerary[page];
-  const GetIcon = () => {
+  const GetHotelIcon = () => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
+  };
+  const GetAirportIcon = () => {
+    return 'https://cdn.discordapp.com/attachments/1107627544850731028/1113792642187280475/cute_airplane.png';
   };
   return (
     <div className="relative min-h-screen">
@@ -157,7 +173,7 @@ const Detail: FC = () => {
                         lng: 0,
                       }
                     }
-                    icon={GetIcon()}
+                    icon={((index===0&&page===0)||(index===itineraryDaily.length - 1&&page===plan.itinerary.length-1)) ? GetAirportIcon() : GetHotelIcon()}
                   />
                 ) : (
                   <Marker
@@ -211,7 +227,9 @@ const Detail: FC = () => {
                 <div className="overflow-hidden pl-3 pr-6">
                   <div className="text-2xl font-bold flex items-end">
                     <div className="pr-3 line-clamp-1">
-                      {focusedPlace?.translated_name || focusedPlace?.name || ''}
+                      {focusedPlace?.translated_name ||
+                        focusedPlace?.name ||
+                        ''}
                     </div>
                     <Image
                       src={focusedPlace?.icon || ''}
@@ -236,9 +254,7 @@ const Detail: FC = () => {
             )}
           </div>
         </div>
-        <div className="absolute top-2 h-[90px] w-[20px] z-10 pointer-events-none bg-white rounded-tl-2xl">
-
-        </div>
+        <div className="absolute top-2 h-[90px] w-[20px] z-10 pointer-events-none bg-white rounded-tl-2xl"></div>
         <div
           className={
             '-mt-[33px] mb-[56px] pointer-events-auto bg-white grow overflow-y-auto scrollbar-hide shadow-[10px_0_10px_-5px_rgba(0,0,0,0.2)] transition-all duration-300 ease-out' +

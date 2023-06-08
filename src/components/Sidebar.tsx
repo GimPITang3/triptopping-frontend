@@ -27,9 +27,9 @@ const Sidebar: FC = () => {
               </div>
             </div>
             <h2 className="card-title justify-center my-4">{user.nickname}</h2>
-            <div className="flex flex-row justify-end gap-x-2">
+            <div className="flex flex-row justify-evenly flex-wrap gap-x-2">
               <button
-                className="btn btn-error"
+                className="btn btn-secondary"
                 onClick={() => router.push('/premium')}
               >
                 프리미엄
