@@ -1,10 +1,10 @@
-import { FC } from 'react';
-import Link from 'next/link';
-import Image, { StaticImageData } from 'next/image';
 import { DateTime } from 'luxon';
+import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
+import { FC } from 'react';
 
-import younha from '../../public/younha.png';
 import { Article } from '@/types';
+import younha from '../../public/younha.png';
 import UserProfileImage from './UserProfileImage';
 
 const CommunityCard: FC<{
@@ -24,7 +24,7 @@ const CommunityCard: FC<{
       href={`/community/${article.articleId}`}
       className="block p-1 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
     >
-      <div className="card shrink-0 bg-base-100 shadow-xl">
+      <div className="card shrink-0 bg-base-100 shadow-xl h-[576px]">
         <figure className="relative w-full aspect-square">
           {
             coverImage ? (
@@ -65,7 +65,7 @@ const CommunityCard: FC<{
               ''
             )}
           </div>
-          <p className="line-clamp-2">{article.content}</p>
+          <p className="line-clamp-1">{article.content}</p>
           <div className="card-actions flex items-center justify-end">
             <div className="avatar w-8 aspect-square rounded-full placeholder relative overflow-hidden">
               {article.author ? (
