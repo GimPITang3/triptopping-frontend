@@ -137,8 +137,11 @@ const Detail: FC = () => {
   }
 
   const itineraryDaily = plan.itinerary[page];
-  const GetIcon = () => {
+  const GetHotelIcon = () => {
     return 'https://cdn.discordapp.com/attachments/1107627544850731028/1107627583601922158/lodging-icon.png';
+  };
+  const GetAirportIcon = () => {
+    return 'https://cdn.discordapp.com/attachments/1107627544850731028/1113792642187280475/cute_airplane.png';
   };
   return (
     <div className="relative min-h-screen">
@@ -170,7 +173,7 @@ const Detail: FC = () => {
                         lng: 0,
                       }
                     }
-                    icon={GetIcon()}
+                    icon={((index===0&&page===0)||(index===itineraryDaily.length - 1&&page===plan.itinerary.length-1)) ? GetAirportIcon() : GetHotelIcon()}
                   />
                 ) : (
                   <Marker
