@@ -37,7 +37,6 @@ const ItineraryList: FC<ItineraryListProps> = ({
 
   const dateString = date
     ? (() => {
-        console.log(date);
         const startDate = DateTime.fromISO(new Date(date).toISOString());
         const endDate = startDate.plus({ days: period });
         const diff = startDate.diff(DateTime.now(), ['days']).days;
