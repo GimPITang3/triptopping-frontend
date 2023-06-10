@@ -2,16 +2,11 @@ import { PlanContext } from '@/contexts';
 import {
   GoogleMap,
   LoadScript,
-  StandaloneSearchBox
+  StandaloneSearchBox,
 } from '@react-google-maps/api';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import {
-  FC,
-  useCallback,
-  useContext,
-  useState
-} from 'react';
+import { FC, useCallback, useContext, useState } from 'react';
 
 interface SearchResult {
   position: {
@@ -112,22 +107,28 @@ const Num: FC = () => {
         map.setCenter(results[0].geometry.location);
         marker.setPosition(results[0].geometry.location);
         marker.setMap(map);
-        console.log(results);
-        const result = results.find(item => item.types[0] == 'plus_code');
-        if(result?.address_components.find(item => item.types[0] == 'country'))
-        {
-          const country = result?.address_components.find(item => item.types[0] == 'country')?.long_name;
-          const city = result?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
+        const result = results.find((item) => item.types[0] == 'plus_code');
+        if (
+          result?.address_components.find((item) => item.types[0] == 'country')
+        ) {
+          const country = result?.address_components.find(
+            (item) => item.types[0] == 'country',
+          )?.long_name;
+          const city = result?.address_components.find(
+            (item) => item.types[0] == 'administrative_area_level_1',
+          )?.long_name;
           setCountryName(country ? country : '');
           setCityName(city ? city : '');
-        }
-        else
-        {
-          console.log("here");
-          console.log(result);
-          const secResult = results.find(item => item.types[0] == 'administrative_area_level_1');
-          const country = secResult?.address_components.find(item => item.types[0] == 'country')?.long_name;
-          const city = secResult?.address_components.find(item => item.types[0] == 'administrative_area_level_1')?.long_name;
+        } else {
+          const secResult = results.find(
+            (item) => item.types[0] == 'administrative_area_level_1',
+          );
+          const country = secResult?.address_components.find(
+            (item) => item.types[0] == 'country',
+          )?.long_name;
+          const city = secResult?.address_components.find(
+            (item) => item.types[0] == 'administrative_area_level_1',
+          )?.long_name;
           setCountryName(country ? country : '');
           setCityName(city ? city : '');
         }
@@ -172,7 +173,6 @@ const Num: FC = () => {
                 >
                   <input
                     type="text"
-                    onChange={(e) => console.log(e.target.value)}
                     placeholder="도쿄"
                     className="input input-primary input-bordered border-2 sm:w-[400px]"
                   />
@@ -194,8 +194,10 @@ const Num: FC = () => {
         </button>
         <button
           className={
-            "flex-1 btn btn-primary"
-            + (searchResult?.position.lat && searchResult.position.lng ? '' : ' btn-disabled')
+            'flex-1 btn btn-primary' +
+            (searchResult?.position.lat && searchResult.position.lng
+              ? ''
+              : ' btn-disabled')
           }
           onClick={() => router.push('/plan/new/budget')}
         >
