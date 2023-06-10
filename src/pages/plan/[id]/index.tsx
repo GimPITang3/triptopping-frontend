@@ -41,13 +41,13 @@ import { TopbarContainer } from '@/components/TopbarContainer';
 import BtmNavbar from '@/components/BtmNavbar';
 import { initPlan } from '@/components/PlanContextProvider';
 import Sidebar from '@/components/Sidebar';
+import UserProfileImage from '@/components/UserProfileImage';
 import { GetGoogleMapUrl, flattenScheduleSlot } from '@/utils';
+import { AddressType } from '@googlemaps/google-maps-services-js';
 import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
 import x from '../../../../public/x.svg';
-import { AddressType } from '@googlemaps/google-maps-services-js';
-import UserProfileImage from '@/components/UserProfileImage';
 
 interface SearchResult {
   position: {
@@ -84,18 +84,20 @@ const InviteMemberModal: React.FC = () => {
       />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">일행 이메일을 넣어주세요</h3>
-          <input
-            className="input input-bordered"
-            value={email}
-            onChange={onChangeEmail}
-          />
-          <button className="btn" onClick={onClickAdd}>
-            추가
-          </button>
-          <div className="modal-action">
+          <h3 className="font-bold text-lg mb-4">계획을 공유할 일행의 이메일을 넣어주세요</h3>
+          <div className="flex space-x-4">
+            <input
+              className="input input-bordered grow"
+              value={email}
+              onChange={onChangeEmail}
+            />
+            <button className="btn btn-primary" onClick={onClickAdd}>
+              추가
+            </button>
+          </div>
+          <div className="modal-action pt-4">
             <label htmlFor="invite-member-modal" className="btn">
-              확인
+              닫기
             </label>
           </div>
         </div>

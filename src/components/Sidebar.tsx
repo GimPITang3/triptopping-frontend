@@ -1,6 +1,6 @@
-import { FC, useCallback, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { FC, useCallback, useContext } from 'react';
 
 import { UserContext } from '@/contexts';
 import UserProfileImage from './UserProfileImage';
@@ -28,22 +28,23 @@ const Sidebar: FC = () => {
             </div>
             <h2 className="card-title justify-center my-4">{user.nickname}</h2>
             <div className="flex flex-row justify-evenly flex-wrap gap-x-2">
-              <button
-                className="btn btn-secondary"
-                onClick={() => router.push('/premium')}
-              >
-                프리미엄
-              </button>
               <Link
                 href={'/account/' + user.userId}
-                className="flex justify-end btn btn-primary"
+                className="flex justify-end btn btn-primary w-[110px]"
               >
                 프로필 편집
               </Link>
-              <button className="btn btn-error" onClick={onLogout}>
+              <button className="btn btn-error w-[110px]" onClick={onLogout}>
                 로그아웃
               </button>
             </div>
+            <div className="divider"></div>
+            <button
+              className="btn btn-secondary"
+              onClick={() => router.push('/premium')}
+            >
+              프리미엄
+            </button>
             <div className="divider"></div>
             <li>
               <Link href="/plan/list">내 여행 계획</Link>

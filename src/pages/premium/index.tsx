@@ -1,9 +1,8 @@
-import Head from 'next/head';
-import React from 'react';
-import { FC } from 'react';
-import Topbar from '@/components/Topbar';
 import BtmNavbar from '@/components/BtmNavbar';
 import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
+import Head from 'next/head';
+import { FC } from 'react';
 
 const Premium: FC = () => {
   return (
@@ -15,7 +14,7 @@ const Premium: FC = () => {
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content scrollbar-hide">
           <Topbar />
-          <section className="bg-white dark:bg-gray-900">
+          <section className="dark:bg-gray-900">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
               <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
                 <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
@@ -23,14 +22,19 @@ const Premium: FC = () => {
                 </h2>
               </div>
               <div className="space-y-8 lg:grid lg:grid-cols-2 sm:gap-6 xl:gap-10 lg:space-y-0">
-                <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                <div className="w-full flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
                   <h3 className="mb-4 text-2xl font-semibold">Freemium</h3>
                   <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                     무료로 강력한 기능을 <br />
                     사용해보세요
                   </p>
-                  <div className="flex justify-center items-baseline my-8">
-                    <span className="mr-2 text-5xl font-extrabold">$0</span>
+                  <div className="flex flex-col justify-center items-baseline my-8">
+                    <div className="flex items-baseline w-full justify-center">
+                      <span className="mr-2 text-5xl font-extrabold">$0</span>
+                    </div>
+                    <div className="flex items-baseline w-full justify-center">
+                      <span className="mr-2 text-2xl">Free forever</span>
+                    </div>
                   </div>
                   <ul role="list" className="mb-8 space-y-4 text-left">
                     <li className="flex items-center space-x-3">
@@ -117,7 +121,7 @@ const Premium: FC = () => {
                   </a>
                 </div>
 
-                <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
+                <div className="w-full flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border border-gray-100 shadow dark:border-gray-600 xl:p-8 dark:bg-gray-800 dark:text-white">
                   <h3 className="mb-4 text-2xl font-semibold">Premium</h3>
                   <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">
                     프리미엄으로 더욱 강력한 기능을 <br /> 사용해보세요
