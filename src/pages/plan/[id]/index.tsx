@@ -25,6 +25,7 @@ import {
   Place,
   ScheduleSlot,
   TranslatedPlaceData,
+  User,
 } from '@/types';
 
 import {
@@ -84,7 +85,9 @@ const InviteMemberModal: React.FC = () => {
       />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg mb-4">계획을 공유할 일행의 이메일을 넣어주세요</h3>
+          <h3 className="font-bold text-lg mb-4">
+            계획을 공유할 일행의 이메일을 넣어주세요
+          </h3>
           <div className="flex space-x-4">
             <input
               className="input input-bordered grow"
@@ -391,13 +394,18 @@ const PlanPage: NextPage = ({}) => {
                   {plan.numberOfMembers}명
                 </span>
                 <div className="avatar-group -space-x-6">
-                  {(plan.members || []).map((member, i) => (
-                    <div className="avatar border-gray-100" key={`member-${i}`}>
-                      <div className="w-12">
-                        <UserProfileImage user={member} />
+                  {[plan.author, ...(plan.members || [])].map((member, i) =>
+                    member !== undefined ? (
+                      <div
+                        className="avatar border-gray-100"
+                        key={`member-${i}`}
+                      >
+                        <div className="w-12">
+                          <UserProfileImage user={member} />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ) : undefined,
+                  )}
                   <div className="avatar border-gray-100 bg-white">
                     <div className="w-12">
                       <label htmlFor="invite-member-modal">
