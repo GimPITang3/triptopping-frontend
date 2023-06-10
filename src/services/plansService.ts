@@ -84,6 +84,6 @@ export const excludePlaces = async (
 };
 
 export const addMember = async (id: string, email: string): Promise<Plan> => {
-  const resp = await client.get(`/plans/${id}/members`, { params: { email } });
+  const resp = await client.post(`/plans/${id}/members`, { email });
   return resp.data;
 };

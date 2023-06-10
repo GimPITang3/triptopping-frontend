@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 import {
   GoogleMap,
@@ -27,7 +27,12 @@ import {
   TranslatedPlaceData,
 } from '@/types';
 
-import { excludePlaces, getPlan, updatePlan } from '@/services/plansService';
+import {
+  addMember,
+  excludePlaces,
+  getPlan,
+  updatePlan,
+} from '@/services/plansService';
 
 import ModifyPlanModal from '@/components/ModifyPlanModal';
 import MenuToggle from '@/components/Topbar/MenuToggle';
@@ -41,8 +46,8 @@ import check from '../../../../public/check.svg';
 import plus from '../../../../public/plus.svg';
 import trash from '../../../../public/trash.svg';
 import x from '../../../../public/x.svg';
-import younha from '../../../../public/younha.png';
 import { AddressType } from '@googlemaps/google-maps-services-js';
+import UserProfileImage from '@/components/UserProfileImage';
 
 interface SearchResult {
   position: {
@@ -53,21 +58,47 @@ interface SearchResult {
 }
 
 const InviteMemberModal: React.FC = () => {
+  const { plan, setPlan } = useContext(PlanContext);
+  const [email, setEmail] = useState('');
+  const ref = useRef<HTMLInputElement>(null);
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+  const onClickAdd = async () => {
+    try {
+      const memberAddedPlan = await addMember(plan.planId, email);
+      setPlan(memberAddedPlan);
+      setEmail('');
+      ref.current?.click();
+    } catch (err) {
+      alert('추가에 실패했습니다.');
+    }
+  };
   return (
     <div>
       <input
         type="checkbox"
         id="invite-member-modal"
         className="modal-toggle"
+        ref={ref}
       />
       <div className="modal">
         <div className="modal-box">
-          <h3 className="text-lg font-bold">Hello!</h3>
-          <p className="py-4">This modal works with a hidden checkbox!</p>
+          <h3 className="font-bold text-lg">일행 이메일을 넣어주세요</h3>
+          <input
+            className="input input-bordered"
+            value={email}
+            onChange={onChangeEmail}
+          />
+          <button className="btn" onClick={onClickAdd}>
+            추가
+          </button>
+          <div className="modal-action">
+            <label htmlFor="invite-member-modal" className="btn">
+              확인
+            </label>
+          </div>
         </div>
-        <label className="modal-backdrop" htmlFor="invite-member-modal">
-          Close
-        </label>
       </div>
     </div>
   );
@@ -358,17 +389,13 @@ const PlanPage: NextPage = ({}) => {
                   {plan.numberOfMembers}명
                 </span>
                 <div className="avatar-group -space-x-6">
-                  {
-                    // 임시로 기본사진
-                    // numberOfMembers 만큼 반복
-                    [...Array(plan.numberOfMembers)].map((_, i) => (
-                      <div className="avatar border-gray-100" key={i}>
-                        <div className="w-12">
-                          <Image src={younha} alt="" />
-                        </div>
+                  {(plan.members || []).map((member, i) => (
+                    <div className="avatar border-gray-100" key={`member-${i}`}>
+                      <div className="w-12">
+                        <UserProfileImage user={member} />
                       </div>
-                    ))
-                  }
+                    </div>
+                  ))}
                   <div className="avatar border-gray-100 bg-white">
                     <div className="w-12">
                       <label htmlFor="invite-member-modal">
