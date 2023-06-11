@@ -1,17 +1,14 @@
-import { useCallback, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import { StaticImageData } from 'next/image';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
 
-import { UserContext } from '@/contexts';
-import { deletePlan } from '@/services/plansService';
 import { Article, Plan } from '@/types';
 
 import BtmNavbar from '@/components/BtmNavbar';
+import CommunityCard from '@/components/CommunityCard';
 import Sidebar from '@/components/Sidebar';
 import Topbar from '@/components/Topbar';
-import CommunityCard from '@/components/CommunityCard';
 import { getArticles } from '@/services/articlesService';
 
 const CommunityPage: NextPage = ({}) => {
@@ -74,7 +71,7 @@ const CommunityPage: NextPage = ({}) => {
                 </div>
 
                 <div className="flex items-center justify-center">
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {articles.map((article) => {
                       return (
                         <CommunityCard
